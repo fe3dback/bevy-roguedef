@@ -1,0 +1,30 @@
+[package]
+name = "bevy-roguedef"
+version = "0.1.0"
+edition = "2021"
+
+# todo: bevy opts: https://bevyengine.org/learn/quick-start/getting-started/setup/
+# todo: dynamic_linking is only for dev (remove on release)
+# todo: use default linker (remove .cargo/config.toml)
+# todo: use stable toolchain
+
+[toolchain]
+channel = "nightly"
+
+[dependencies]
+bevy = { version = "0.15.0", features = ["dynamic_linking"] }
+ron_asset_manager = { version = "0.5.1" }
+iyes_perf_ui = { git="https://github.com/IyesGames/iyes_perf_ui.git", branch = "main" }
+
+[workspace.metadata.dylint]
+libraries = [
+    { git = "https://github.com/MinerSebas/bevy_lint", branch = "main" },
+]
+
+# Enable a small amount of optimization in the dev profile.
+[profile.dev]
+opt-level = 1
+
+# Enable a large amount of optimization in the dev profile for dependencies.
+[profile.dev.package."*"]
+opt-level = 3
