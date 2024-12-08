@@ -3976,9 +3976,7 @@ dependencies = [
 
 [[package]]
 name = "ron_asset_manager"
-version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ef2137bc8f08e317f32f0bdd5a2756e56f738ffdf219c1308e177280938e6ae6"
+version = "0.5.2"
 dependencies = [
  "bevy",
  "ron",
