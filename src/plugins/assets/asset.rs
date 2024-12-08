@@ -1,9 +1,11 @@
-use crate::plugins::assets::asset_creatures::AssetCreature;
-use crate::plugins::assets::asset_game::AssetGame;
-use bevy::prelude::Res;
-use bevy::prelude::{Handle, Resource};
-use bevy::utils::HashMap;
-use bevy_asset_loader::prelude::AssetCollection;
+use {
+    crate::plugins::assets::{asset_creatures::AssetCreature, asset_game::AssetGame},
+    bevy::{
+        prelude::{Handle, Res, Resource},
+        utils::HashMap,
+    },
+    bevy_asset_loader::prelude::AssetCollection,
+};
 
 #[derive(AssetCollection, Resource)]
 pub struct GameAssets {

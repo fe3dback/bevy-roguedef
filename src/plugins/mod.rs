@@ -1,8 +1,8 @@
 pub mod plug;
 
+pub mod assets;
 mod core;
 mod editor;
-pub mod assets;
 mod gameplay;
 
 pub use core::state::enums::*;

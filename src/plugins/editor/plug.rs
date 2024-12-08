@@ -1,14 +1,15 @@
-use crate::plugins::editor::{inspector, stats};
-use bevy::app::App;
-use bevy::prelude::Plugin;
+use {
+    crate::plugins::editor::{inspector, stats},
+    bevy::{app::App, prelude::Plugin},
+};
 
 pub struct Plug {}
 
 impl Plugin for Plug {
     fn build(&self, app: &mut App) {
         app
+            //
             .add_plugins(stats::plug::Plug {})
-            .add_plugins(inspector::plug::Plug {})
-        ;
+            .add_plugins(inspector::plug::Plug {});
     }
 }

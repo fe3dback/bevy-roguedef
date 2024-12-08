@@ -1,7 +1,7 @@
-use crate::components::lib::V2;
-use crate::components::movement::CmpMovement;
-use crate::components::transform::CmpTransform2D;
-use bevy::prelude::{Query, Res, Time};
+use {
+    crate::components::{lib::V2, movement::CmpMovement, transform::CmpTransform2D},
+    bevy::prelude::{Query, Res, Time},
+};
 
 pub fn apply_movement(mut query: Query<(&mut CmpTransform2D, &CmpMovement)>, time: Res<Time>) {
     for (mut transform, movement) in &mut query {

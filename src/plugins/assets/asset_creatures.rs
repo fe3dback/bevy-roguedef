@@ -1,7 +1,8 @@
-use bevy::prelude::{Asset, Image, TypePath};
-use ron_asset_manager::prelude::RonAsset;
-use ron_asset_manager::Shandle;
-use serde::Deserialize;
+use {
+    bevy::prelude::{Asset, Image, TypePath},
+    ron_asset_manager::{prelude::RonAsset, Shandle},
+    serde::Deserialize,
+};
 
 #[derive(Asset, TypePath, RonAsset, Deserialize, Debug)]
 pub struct AssetCreature {

@@ -1,17 +1,22 @@
-use crate::components::lib::V2;
-use crate::components::movement::CmpMovement;
-use crate::components::unit_creature_player::CmpUnitCreaturePlayer;
-use crate::prefabs::sup::SupPrefabs;
-use bevy::input::ButtonInput;
-use bevy::prelude::{Commands, KeyCode, Query, Res, With};
+use {
+    crate::{
+        components::{lib::V2, movement::CmpMovement, unit_creature_player::CmpUnitCreaturePlayer},
+        prefabs::sup::SupPrefabs,
+    },
+    bevy::{
+        input::ButtonInput,
+        prelude::{Commands, KeyCode, Query, Res, With},
+    },
+};
 
 pub fn spawn_player(mut cmd: Commands, mut prefabs: SupPrefabs) {
-    cmd.spawn(
-        prefabs.player()
-    );
+    cmd.spawn(prefabs.player());
 }
 
-pub fn wasd_movement(mut query: Query<&mut CmpMovement, With<CmpUnitCreaturePlayer>>, keyboard: Res<ButtonInput<KeyCode>>) {
+pub fn wasd_movement(
+    mut query: Query<&mut CmpMovement, With<CmpUnitCreaturePlayer>>,
+    keyboard: Res<ButtonInput<KeyCode>>,
+) {
     for mut ctl in &mut query {
         let mut movement_vec = V2::ZERO;
 

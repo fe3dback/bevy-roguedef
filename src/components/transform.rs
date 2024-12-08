@@ -1,10 +1,11 @@
-use crate::components::lib::V2;
-use bevy::prelude::Transform;
-use bevy::prelude::{Component, Reflect};
+use {
+    crate::components::lib::V2,
+    bevy::prelude::{Component, Reflect, Transform},
+};
 
 #[derive(Component, Reflect, Default)]
 #[require(Transform)]
 pub struct CmpTransform2D {
     pub position: V2,
-    pub angle: f32,
+    pub angle:    f32,
 }

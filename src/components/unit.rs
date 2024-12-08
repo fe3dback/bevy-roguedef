@@ -1,7 +1,4 @@
-use bevy::prelude::Name;
-use bevy::prelude::Sprite;
-use bevy::prelude::Transform;
-use bevy::prelude::{Component, Reflect};
+use bevy::prelude::{Component, Name, Reflect, Sprite, Transform};
 
 #[derive(Component, Reflect, Default)]
 #[require(Transform, Sprite, Name)]

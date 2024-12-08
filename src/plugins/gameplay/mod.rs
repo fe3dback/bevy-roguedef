@@ -1,3 +1,3 @@
-pub mod plug;
 mod movement;
 mod player;
+pub mod plug;
