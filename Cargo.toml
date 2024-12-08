@@ -12,14 +12,16 @@ edition = "2021"
 channel = "nightly"
 
 [dependencies]
+# bevy staff
 bevy = { version = "0.15.0", features = ["dynamic_linking"] }
 bevy-inspector-egui = { version = "0.28.0" }
 bevy_asset_loader = { version = "0.22.0" }
 # ron_asset_manager = { version = "0.5.2" } // todo: use after PR merge
 ron_asset_manager = { path = "../ron_asset_manager" }
 iyes_perf_ui = { git="https://github.com/IyesGames/iyes_perf_ui.git", branch = "main" }
+# rust libs
 serde = { version = "1.0.215", features = ["derive"] }
-
+auto-impl-ops = { version = "0.2.1" }
 
 [workspace.metadata.dylint]
 libraries = [

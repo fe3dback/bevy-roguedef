@@ -15,6 +15,7 @@ fn main() {
 
         // game plugins
         .add_systems(Startup, setup)
+        .add_plugins(components::plug::Plug {})
         .add_plugins(plugins::plug::Plug {})
         .run()
     ;

@@ -1,27 +1,31 @@
-use crate::components::player::CmpMarkerPlayer;
+use crate::components::movement::CmpMovement;
+use crate::components::unit_creature_player::CmpUnitCreaturePlayer;
 use crate::plugins::assets::asset_creatures::AssetCreature;
 use crate::plugins::InGame;
 use crate::prefabs::sup::SupPrefabs;
-use bevy::prelude::{Handle, Name, StateScoped, Transform};
+use bevy::prelude::{default, Handle, Name, StateScoped};
 use bevy::sprite::Sprite;
 
 impl<'w, 's> SupPrefabs<'w, 's> {
-    pub(crate) fn player(&mut self) -> (StateScoped<InGame>, CmpMarkerPlayer, (Name, Transform, Sprite)) {
+    pub(crate) fn player(&mut self) -> (StateScoped<InGame>, CmpUnitCreaturePlayer, (Name, CmpMovement, Sprite)) {
         let game = self.assets_game.get(&self.assets.game).unwrap();
         let creature_h = self.asset_creature_handle_by_name(game.player.as_str());
         let creature = self.assets_creatures.get(&creature_h).unwrap();
         let player = self.creature(creature);
         (
             StateScoped(InGame),
-            CmpMarkerPlayer {},
+            CmpUnitCreaturePlayer {},
             player
         )
     }
 
-    fn creature(&self, creature: &AssetCreature) -> (Name, Transform, Sprite) {
+    fn creature(&self, creature: &AssetCreature) -> (Name, CmpMovement, Sprite) {
         (
             Name::from(creature.name.clone()),
-            Transform::default(),
+            CmpMovement {
+                speed: creature.movement.speed,
+                ..default()
+            },
             Sprite::from_image(
                 creature.agent.sprite.handle.clone(),
             )

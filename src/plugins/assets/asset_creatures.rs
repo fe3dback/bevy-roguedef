@@ -8,7 +8,15 @@ pub struct AssetCreature {
     pub name: String,
 
     #[asset]
+    pub movement: AssetCreatureMovement,
+
+    #[asset]
     pub agent: AssetCreatureAgent,
+}
+
+#[derive(RonAsset, Deserialize, Default, Debug)]
+pub struct AssetCreatureMovement {
+    pub speed: f32,
 }
 
 #[derive(RonAsset, Deserialize, Default, Debug)]
