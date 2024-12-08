@@ -1,0 +1,1 @@
+pub const PLAYABLE_AREA_SIZE: f32 = 1024.0;

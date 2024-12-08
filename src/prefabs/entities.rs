@@ -1,6 +1,9 @@
 use {
     crate::{
-        components::{movement::CmpMovement, unit_creature_player::CmpUnitCreaturePlayer},
+        components::{
+            movement::{CmpMarkerMovementRestrictInPlayableArea, CmpMovement},
+            unit_creature_player::CmpUnitCreaturePlayer,
+        },
         plugins::{assets::asset_creatures::AssetCreature, InGame},
         prefabs::sup::SupPrefabs,
     },
@@ -16,7 +19,12 @@ impl<'w, 's> SupPrefabs<'w, 's> {
     ) -> (
         StateScoped<InGame>,
         CmpUnitCreaturePlayer,
-        (Name, CmpMovement, Sprite),
+        (
+            Name,
+            CmpMovement,
+            CmpMarkerMovementRestrictInPlayableArea,
+            Sprite,
+        ),
     ) {
         let game = self.assets_game.get(&self.assets.game).unwrap();
         let creature_h = self.asset_creature_handle_by_name(game.player.as_str());
@@ -25,13 +33,22 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         (StateScoped(InGame), CmpUnitCreaturePlayer {}, player)
     }
 
-    fn creature(&self, creature: &AssetCreature) -> (Name, CmpMovement, Sprite) {
+    fn creature(
+        &self,
+        creature: &AssetCreature,
+    ) -> (
+        Name,
+        CmpMovement,
+        CmpMarkerMovementRestrictInPlayableArea,
+        Sprite,
+    ) {
         (
             Name::from(creature.name.clone()),
             CmpMovement {
                 speed: creature.movement.speed,
                 ..default()
             },
+            CmpMarkerMovementRestrictInPlayableArea {},
             Sprite::from_image(creature.agent.sprite.handle.clone()),
         )
     }

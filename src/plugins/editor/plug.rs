@@ -1,5 +1,5 @@
 use {
-    crate::plugins::editor::{inspector, stats},
+    crate::plugins::editor::{grid, inspector, stats},
     bevy::{app::App, prelude::Plugin},
 };
 
@@ -10,6 +10,7 @@ impl Plugin for Plug {
         app
             //
             .add_plugins(stats::plug::Plug {})
-            .add_plugins(inspector::plug::Plug {});
+            .add_plugins(inspector::plug::Plug {})
+            .add_plugins(grid::plug::Plug {});
     }
 }

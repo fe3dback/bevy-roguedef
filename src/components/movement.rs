@@ -18,3 +18,6 @@ impl Default for CmpMovement {
         }
     }
 }
+
+#[derive(Component, Reflect)]
+pub struct CmpMarkerMovementRestrictInPlayableArea {}
