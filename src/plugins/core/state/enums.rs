@@ -1,4 +1,4 @@
-use bevy::prelude::States;
+use bevy::prelude::{ComputedStates, States};
 
 #[derive(States, Clone, Debug, Eq, PartialEq, Hash, Default)]
 pub enum GameState {
@@ -9,25 +9,21 @@ pub enum GameState {
     },
 }
 
-// readme: https://bevyengine.org/news/bevy-0-14/#computed-states-sub-states
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+pub struct InGame;
 
-// #[derive(Clone, PartialEq, Eq, Hash, Debug)]
-// struct InGame;
-// 
-// impl ComputedStates for InGame {
-//     // Computed states can be calculated from one or many source states.
-//     type SourceStates = GameState;
-// 
-//     // Now, we define the rule that determines the value of our computed state.
-//     fn compute(sources: GameState) -> Option<InGame> {
-//         match sources {
-//             // We can use pattern matching to express the
-//             //"I don't care whether or not the game is paused" logic!
-//             GameState::InGame {..} => Some(InGame),
-//             _ => None,
-//         }
-//     }
-// }
+impl ComputedStates for InGame {
+    // Computed states can be calculated from one or many source states.
+    type SourceStates = GameState;
+
+    // Now, we define the rule that determines the value of our computed state.
+    fn compute(sources: GameState) -> Option<InGame> {
+        match sources {
+            GameState::InGame { .. } => Some(InGame),
+            _ => None,
+        }
+    }
+}
 
 // #[derive(SubStates, Clone, PartialEq, Eq, Hash, Debug, Default)]
 // // This macro means that `GamePhase` will only exist when we're in the `InGame` computed state.

@@ -1,1 +1,3 @@
-pub mod stats;
+mod stats;
+mod inspector;
+pub mod plug;

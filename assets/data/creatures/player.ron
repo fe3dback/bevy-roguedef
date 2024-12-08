@@ -1,0 +1,6 @@
+(
+    name: "Player",
+    agent: (
+        sprite: "sprites/creatures/wizzard.png"
+    )
+)

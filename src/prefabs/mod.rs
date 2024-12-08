@@ -1,2 +1,2 @@
-mod entities;
+pub mod entities;
 pub mod sup;
