@@ -1,5 +1,6 @@
 mod components;
 mod consts;
+mod game;
 mod plugins;
 mod prefabs;
 
@@ -26,6 +27,7 @@ fn main() {
         // 3-rd plugins
         // game plugins
         .add_systems(Startup, setup)
+        .add_plugins(game::plug::Plug {})
         .add_plugins(components::plug::Plug {})
         .add_plugins(plugins::plug::Plug {})
         .run();

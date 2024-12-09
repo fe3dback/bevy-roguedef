@@ -4,11 +4,12 @@ use {
             movement::{CmpMarkerMovementRestrictInPlayableArea, CmpMovement},
             unit_creature_player::CmpUnitCreaturePlayer,
         },
+        game::collisions::CmpCollisionDesiredVolume,
         plugins::{assets::asset_creatures::AssetCreature, InGame},
         prefabs::sup::SupPrefabs,
     },
     bevy::{
-        prelude::{default, Handle, Name, StateScoped},
+        prelude::{default, Circle, Handle, Name, StateScoped},
         sprite::Sprite,
     },
 };
@@ -19,6 +20,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
     ) -> (
         StateScoped<InGame>,
         CmpUnitCreaturePlayer,
+        CmpCollisionDesiredVolume,
         (
             Name,
             CmpMovement,
@@ -30,7 +32,12 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         let creature_h = self.asset_creature_handle_by_name(game.player.as_str());
         let creature = self.assets_creatures.get(&creature_h).unwrap();
         let player = self.creature(creature);
-        (StateScoped(InGame), CmpUnitCreaturePlayer {}, player)
+        (
+            StateScoped(InGame),
+            CmpUnitCreaturePlayer {},
+            CmpCollisionDesiredVolume::Circle(Circle::new(32.0)),
+            player,
+        )
     }
 
     fn creature(
