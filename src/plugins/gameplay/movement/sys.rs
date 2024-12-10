@@ -1,9 +1,13 @@
 use {
     crate::{
-        components::{lib::V2, movement::CmpMovement, transform::CmpTransform2D},
+        components::{
+            lib::V2,
+            movement::{CmpMarkerMovementRestrictInPlayableArea, CmpMovement},
+            transform::CmpTransform2D,
+        },
         consts::PLAYABLE_AREA_SIZE,
     },
-    bevy::prelude::{Query, Res, Time},
+    bevy::prelude::{Query, Res, Time, With},
 };
 
 pub fn apply_movement(mut query: Query<(&mut CmpTransform2D, &CmpMovement)>, time: Res<Time>) {
@@ -16,7 +20,9 @@ pub fn apply_movement(mut query: Query<(&mut CmpTransform2D, &CmpMovement)>, tim
     }
 }
 
-pub fn restrict_movement_in_playable_area(mut query: Query<(&mut CmpTransform2D)>) {
+pub fn restrict_movement_in_playable_area(
+    mut query: Query<(&mut CmpTransform2D), With<CmpMarkerMovementRestrictInPlayableArea>>,
+) {
     for mut transform in &mut query {
         let distance = transform.position.distance(V2::ZERO);
         if distance < PLAYABLE_AREA_SIZE {

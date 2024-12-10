@@ -423,6 +423,7 @@ dependencies = [
  "bevy-inspector-egui",
  "bevy_asset_loader",
  "iyes_perf_ui",
+ "rand_chacha",
  "ron_asset_manager",
  "serde",
 ]

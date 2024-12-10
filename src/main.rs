@@ -4,12 +4,15 @@ mod game;
 mod plugins;
 mod prefabs;
 
-use bevy::{
-    app::*,
-    prelude::{Camera2d, Commands, Window, WindowPlugin},
-    utils::default,
-    window::PresentMode,
-    DefaultPlugins,
+use {
+    crate::game::common::CmpMainCamera,
+    bevy::{
+        app::*,
+        prelude::{Camera2d, Commands, Window, WindowPlugin},
+        utils::default,
+        window::PresentMode,
+        DefaultPlugins,
+    },
 };
 
 fn main() {
@@ -34,5 +37,5 @@ fn main() {
 }
 
 fn setup(mut commands: Commands) {
-    commands.spawn(Camera2d);
+    commands.spawn((Camera2d, CmpMainCamera {}));
 }

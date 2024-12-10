@@ -3,8 +3,8 @@ use {
         components::{lib::V2, transform::CmpTransform2D},
         game::{
             collisions::{CmpCollisionCurrentVolume, CmpCollisionDesiredVolume},
-            damage::{Damage, DamageCastSource},
-            teams::Team,
+            damage::{Damage, DamageCastSource, DamageCastTarget, EvtOnDamageCast},
+            teams::{CmpTeam, Team},
         },
     },
     bevy::{
@@ -15,7 +15,10 @@ use {
             ops,
             Commands,
             Component,
+            DespawnRecursiveExt,
             Dir2,
+            Entity,
+            EventWriter,
             Gizmos,
             Query,
             Ray2d,
@@ -33,6 +36,7 @@ use {
 #[require(CmpCollisionDesiredVolume)]
 pub struct CmpProjectile {
     pub team:                Team,
+    pub caster:              Option<Entity>,
     pub acceleration:        f32,
     pub speed:               f32,
     pub allow_friendly_fire: bool,
@@ -43,21 +47,31 @@ impl Default for CmpProjectile {
     fn default() -> Self {
         Self {
             team:                Team::default(),
+            caster:              None,
             speed:               1000.0,
             acceleration:        500.0,
-            allow_friendly_fire: false,
+            allow_friendly_fire: true,
             damage:              Damage::default(),
         }
     }
 }
 
 pub fn move_projectiles(
-    mut gizmos: Gizmos,
-    mut query_projectiles: Query<(&mut CmpTransform2D, &mut CmpProjectile)>,
-    query_objects: Query<(&CmpTransform2D, &CmpCollisionCurrentVolume), Without<CmpProjectile>>,
+    mut cmd: Commands,
+    mut damage_writer: EventWriter<EvtOnDamageCast>,
+    mut query_projectiles: Query<(Entity, &mut CmpTransform2D, &mut CmpProjectile)>,
+    query_objects: Query<
+        (
+            Entity,
+            &CmpTransform2D,
+            &CmpTeam,
+            &CmpCollisionCurrentVolume,
+        ),
+        Without<CmpProjectile>,
+    >,
     time: Res<Time>,
 ) {
-    for (mut bullet_trx, mut bullet) in &mut query_projectiles {
+    for (bullet_ent, mut bullet_trx, mut bullet) in &mut query_projectiles {
         let mut intersected = false;
 
         bullet.speed += bullet.acceleration * time.delta().as_secs_f32();
@@ -67,12 +81,14 @@ pub fn move_projectiles(
         let pos_cur = bullet_trx.position;
         let pos_next = bullet_trx.position + position_diff;
 
-        for (obj_transform, obj_vol) in &query_objects {
+        for (obj_ent, obj_transform, obj_team, obj_vol) in &query_objects {
             if bullet_trx.position.distance(obj_transform.position) > 256.0 {
                 continue;
             }
 
-            // todo: check friendly fire
+            if bullet.allow_friendly_fire && bullet.team == obj_team.team {
+                continue;
+            }
 
             let ray = Ray2d {
                 origin:    pos_cur.as_2d(),
@@ -81,8 +97,6 @@ pub fn move_projectiles(
                 ),
             };
             let ray_cast = RayCast2d::from_ray(ray, distance);
-            draw_ray(&mut gizmos, &ray_cast); // todo: remove
-
             let intersect = match obj_vol {
                 CmpCollisionCurrentVolume::Aabb(vol) => ray_cast.aabb_intersection_at(vol),
                 CmpCollisionCurrentVolume::Circle(vol) => ray_cast.circle_intersection_at(vol),
@@ -96,16 +110,23 @@ pub fn move_projectiles(
             let intersect_point =
                 V2::from_2d(ray_cast.ray.origin + ray_cast.ray.direction * intersect.unwrap());
 
-            let damage_cast = DamageCastSource {
-                caster:     None, // todo: entity,
-                owner_team: bullet.team,
-                origin:     intersect_point,
-                damage:     bullet.damage,
-            };
+            damage_writer.send(EvtOnDamageCast {
+                cast:   DamageCastSource {
+                    projectile: Some(bullet_ent),
+                    caster:     bullet.caster,
+                    owner_team: bullet.team,
+                    origin:     intersect_point,
+                    damage:     bullet.damage,
+                },
+                target: DamageCastTarget {
+                    targets: vec![obj_ent],
+                },
+            });
 
-            // todo: send event
-
-            // todo: delete this bullet entity
+            match cmd.get_entity(bullet_ent) {
+                Some(e) => e.despawn_recursive(),
+                None => {}
+            }
         }
 
         if intersected {
@@ -116,20 +137,11 @@ pub fn move_projectiles(
     }
 }
 
-// todo: remove this
-fn draw_ray(gizmos: &mut Gizmos, ray: &RayCast2d) {
-    gizmos.line_2d(
-        ray.ray.origin,
-        ray.ray.origin + *ray.ray.direction * ray.max,
-        tailwind::RED_700,
-    );
-}
-
 pub fn draw_projectiles(
     mut gizmos: Gizmos,
     query_projectiles: Query<&CmpTransform2D, With<CmpProjectile>>,
 ) {
-    for (trx) in &query_projectiles {
+    for trx in &query_projectiles {
         gizmos.circle_2d(trx.position.as_2d(), 10.0, tailwind::LIME_800);
     }
 }

@@ -54,12 +54,12 @@ pub fn update_collision_volumes(
             CmpCollisionDesiredVolume::Aabb(shape) => {
                 commands
                     .entity(entity)
-                    .insert(CmpCollisionCurrentVolume::Aabb(shape.aabb_2d(isometry)));
+                    .try_insert(CmpCollisionCurrentVolume::Aabb(shape.aabb_2d(isometry)));
             }
             CmpCollisionDesiredVolume::Circle(shape) => {
                 commands
                     .entity(entity)
-                    .insert(CmpCollisionCurrentVolume::Circle(
+                    .try_insert(CmpCollisionCurrentVolume::Circle(
                         shape.bounding_circle(isometry),
                     ));
             }

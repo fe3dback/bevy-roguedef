@@ -1,6 +1,6 @@
 use bevy::prelude::{Component, Reflect};
 
-#[derive(Default, Debug, Reflect, Copy, Clone)]
+#[derive(Default, Debug, Reflect, Copy, Clone, PartialEq, Eq)]
 pub enum Team {
     Player,
     Enemies,

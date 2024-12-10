@@ -21,6 +21,7 @@ iyes_perf_ui = { git="https://github.com/IyesGames/iyes_perf_ui.git", branch = "
 # rust libs
 serde = { version = "1.0.215", features = ["derive"] }
 auto-impl-ops = { version = "0.2.1" }
+rand_chacha = "0.3.1"
 
 [workspace.metadata.dylint]
 libraries = [
