@@ -9,7 +9,7 @@ use {
         prefabs::sup::SupPrefabs,
     },
     bevy::{
-        prelude::{default, Circle, Handle, Name, StateScoped},
+        prelude::{default, Circle, Handle, Name, SpatialListener, StateScoped},
         sprite::Sprite,
     },
 };
@@ -21,6 +21,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         StateScoped<InGame>,
         CmpUnitCreaturePlayer,
         CmpCollisionDesiredVolume,
+        SpatialListener,
         (
             Name,
             CmpMovement,
@@ -36,6 +37,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
             StateScoped(InGame),
             CmpUnitCreaturePlayer {},
             CmpCollisionDesiredVolume::Circle(Circle::new(32.0)),
+            SpatialListener::new(100.0),
             player,
         )
     }

@@ -8,6 +8,7 @@ use {
     crate::game::common::CmpMainCamera,
     bevy::{
         app::*,
+        audio::{AudioPlugin, SpatialScale},
         prelude::{Camera2d, Commands, Window, WindowPlugin},
         utils::default,
         window::PresentMode,
@@ -15,18 +16,30 @@ use {
     },
 };
 
+/// Spatial audio uses the distance to attenuate the sound volume. In 2D with the default camera,
+/// 1 pixel is 1 unit of distance, so we use a scale
+/// 1m = 200px
+const AUDIO_SCALE: f32 = 1. / 200.0;
+
 fn main() {
     // todo: add bevy framepace (+limit fps)
     App::new()
         // std plugins
-        .add_plugins(DefaultPlugins.set(WindowPlugin {
-            primary_window: Some(Window {
-                name: Some(String::from("bevy roguedef")),
-                present_mode: PresentMode::AutoNoVsync,
-                ..default()
-            }),
-            ..default()
-        }))
+        .add_plugins(
+            DefaultPlugins
+                .set(WindowPlugin {
+                    primary_window: Some(Window {
+                        name: Some(String::from("bevy roguedef")),
+                        present_mode: PresentMode::AutoNoVsync,
+                        ..default()
+                    }),
+                    ..default()
+                })
+                .set(AudioPlugin {
+                    default_spatial_scale: SpatialScale::new_2d(AUDIO_SCALE),
+                    ..default()
+                }),
+        )
         // 3-rd plugins
         // game plugins
         .add_systems(Startup, setup)

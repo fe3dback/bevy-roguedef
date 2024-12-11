@@ -10,6 +10,7 @@ use {
             GlobalTransform,
             Query,
             Reflect,
+            ReflectResource,
             Res,
             ResMut,
             Resource,
@@ -36,6 +37,7 @@ pub struct CmpTimeToLife {
 }
 
 #[derive(Resource, Reflect, Default)]
+#[reflect(Resource)]
 pub struct ResMouse {
     pub screen_pos: V2,
     pub world_pos:  V2,

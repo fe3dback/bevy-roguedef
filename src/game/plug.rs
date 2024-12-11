@@ -23,7 +23,7 @@ use {
         enemies::{move_enemies_to_castle, spawn_enemies, ResEnemiesSpawnRules},
         projectiles::{draw_projectiles, move_projectiles, CmpProjectile},
         teams::CmpTeam,
-        weapons::shot,
+        weapons::{shot, ResPlayerWeapon},
     },
     bevy::{
         app::{App, Plugin},
@@ -42,6 +42,7 @@ impl Plugin for Plug {
             //
             .insert_resource(ResMouse::default())
             .insert_resource(ResEnemiesSpawnRules::default())
+            .insert_resource(ResPlayerWeapon::default())
             .insert_resource(ResRandomSource {
                 rnd: ChaCha8Rng::seed_from_u64(123)
             })
@@ -52,6 +53,9 @@ impl Plugin for Plug {
             .register_type::<CmpTeam>()
             .register_type::<CmpTimeToLife>()
             .register_type::<CmpHealth>()
+            .register_type::<ResPlayerWeapon>()
+            .register_type::<ResEnemiesSpawnRules>()
+            .register_type::<ResMouse>()
             // systems 
             .add_systems(Update, (update_mouse_pos_resource, remove_expired_ttl_entities))
             .add_systems(Update, (update_collision_volumes, collision_volumes_draw))

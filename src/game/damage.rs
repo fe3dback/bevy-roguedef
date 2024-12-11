@@ -1,7 +1,7 @@
 use {
     crate::{
         components::{lib::V2, transform::CmpTransform2D},
-        game::{common::ResRandomSource, teams::Team},
+        game::{common::ResRandomSource, sound::SupSounds, teams::Team},
     },
     bevy::{
         color::palettes::tailwind::{GRAY_300, LIME_800},
@@ -89,12 +89,13 @@ pub struct EvtOnDamageCast {
 
 pub fn damage_event_listener(
     mut consumer: EventReader<EvtOnDamageCast>,
-    mut target_query: Query<&mut CmpHealth>,
+    mut target_query: Query<(&mut CmpHealth, &CmpTransform2D)>,
     mut rand: ResMut<ResRandomSource>,
+    mut sounds: SupSounds,
 ) {
     for evt in &mut consumer.read() {
         for t in &evt.target.targets {
-            let mut cmp = match target_query.get_mut(*t) {
+            let (mut cmp, target_trm) = match target_query.get_mut(*t) {
                 Ok(cmp) => cmp,
                 Err(_) => continue,
             };
@@ -108,6 +109,10 @@ pub fn damage_event_listener(
             }
 
             cmp.health -= dmg;
+
+            if dmg > 0.0 {
+                sounds.play_impact(target_trm.position);
+            }
         }
     }
 }

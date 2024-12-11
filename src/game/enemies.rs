@@ -21,6 +21,7 @@ use {
         Component,
         Query,
         Reflect,
+        ReflectResource,
         Res,
         ResMut,
         Resource,
@@ -32,6 +33,7 @@ use {
 };
 
 #[derive(Resource, Default, Debug, Reflect)]
+#[reflect(Resource)]
 pub struct ResEnemiesSpawnRules {
     pub time_to_next_spawn: f32,
 }

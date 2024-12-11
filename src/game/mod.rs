@@ -4,5 +4,6 @@ pub mod damage;
 mod enemies;
 pub mod plug;
 pub mod projectiles;
+mod sound;
 pub mod teams;
 pub mod weapons;
