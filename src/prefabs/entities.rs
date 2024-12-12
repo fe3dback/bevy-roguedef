@@ -4,7 +4,11 @@ use {
             movement::{CmpMarkerMovementRestrictInPlayableArea, CmpMovement},
             unit_creature_player::CmpUnitCreaturePlayer,
         },
-        game::collisions::CmpCollisionDesiredVolume,
+        game::{
+            collisions::CmpCollisionDesiredVolume,
+            teams::{CmpTeam, Team},
+            weapons::CmpWeapon,
+        },
         plugins::{assets::asset_creatures::AssetCreature, InGame},
         prefabs::sup::SupPrefabs,
     },
@@ -22,6 +26,8 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         CmpUnitCreaturePlayer,
         CmpCollisionDesiredVolume,
         SpatialListener,
+        CmpWeapon,
+        CmpTeam,
         (
             Name,
             CmpMovement,
@@ -38,6 +44,8 @@ impl<'w, 's> SupPrefabs<'w, 's> {
             CmpUnitCreaturePlayer {},
             CmpCollisionDesiredVolume::Circle(Circle::new(32.0)),
             SpatialListener::new(100.0),
+            CmpWeapon::default(),
+            CmpTeam { team: Team::Player },
             player,
         )
     }

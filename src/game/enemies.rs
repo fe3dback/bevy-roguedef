@@ -9,11 +9,13 @@ use {
         game::{
             collisions::CmpCollisionDesiredVolume,
             common::ResRandomSource,
-            damage::CmpHealth,
+            damage::{CmpHealth, Damage, DamageKind},
             teams::{CmpTeam, Team},
+            weapons::{CmpWeapon, Weapon},
         },
     },
     bevy::prelude::{
+        default,
         info,
         AssetServer,
         Circle,
@@ -30,6 +32,7 @@ use {
         With,
     },
     rand_chacha::rand_core::RngCore,
+    std::time::Duration,
 };
 
 #[derive(Resource, Default, Debug, Reflect)]
@@ -78,6 +81,20 @@ pub fn spawn_enemies(
             CmpHealth {
                 health:     80.0,
                 max_health: 80.0,
+            },
+            CmpWeapon {
+                current: Weapon {
+                    name:                 String::from("claws"),
+                    shooting_reload_time: Duration::from_millis(500),
+                    magazine_reload_time: Duration::from_millis(700),
+                    damage:               Damage {
+                        amount: 1.0,
+                        kind: DamageKind::Melee,
+                        ..default()
+                    },
+                    ammo_in_magazine:     2,
+                },
+                ..default()
             },
             CmpCollisionDesiredVolume::Circle(Circle::new(24.0)),
             CmpUnitCreature::default(),

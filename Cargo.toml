@@ -8,12 +8,12 @@ edition = "2021"
 # todo: use default linker (remove .cargo/config.toml)
 # todo: use stable toolchain
 
-[toolchain]
-channel = "nightly"
+#[toolchain] # todo: is needed?
+#channel = "nightly"
 
 [dependencies]
 # bevy staff
-bevy = { version = "0.15.0", features = ["dynamic_linking"] }
+bevy = { version = "0.15.0", features = ["dynamic_linking", "wav"] }
 bevy-inspector-egui = { version = "0.28.0" }
 bevy_asset_loader = { version = "0.22.0" }
 ron_asset_manager = { version = "0.5.2" }

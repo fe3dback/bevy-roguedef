@@ -1,3 +1,4 @@
+mod buildings;
 pub mod collisions;
 pub mod common;
 pub mod damage;

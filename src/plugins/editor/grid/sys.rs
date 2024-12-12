@@ -12,8 +12,8 @@ pub fn draw_grid(mut gz: Gizmos) {
     gz.grid_2d(
         Isometry2d::IDENTITY,
         UVec2::new(100, 100),
-        Vec2::splat(48.0 * 2.0),
-        tailwind::SLATE_800,
+        Vec2::splat(24.0),
+        tailwind::SLATE_950,
     )
     .outer_edges();
 
