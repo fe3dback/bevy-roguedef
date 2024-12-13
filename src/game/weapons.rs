@@ -1,39 +1,34 @@
-use {
-    crate::{
-        components::{
-            lib::V2,
-            transform::CmpTransform2D,
-            unit_creature_player::CmpUnitCreaturePlayer,
-        },
-        game::{
-            common::{CmpTimeToLife, ResMouse},
-            damage::Damage,
-            projectiles::CmpProjectile,
-            sound::SupSounds,
-            teams::{CmpTeam, Team},
-        },
-    },
-    bevy::prelude::{
-        default,
-        info,
-        Bundle,
-        ButtonInput,
-        Commands,
-        Component,
-        Entity,
-        MouseButton,
-        Query,
-        Reflect,
-        ReflectComponent,
-        ReflectResource,
-        Res,
-        ResMut,
-        Resource,
-        Time,
-        With,
-    },
-    std::time::Duration,
+use std::time::Duration;
+
+use bevy::core::Name;
+use bevy::prelude::{
+    default,
+    info,
+    Bundle,
+    ButtonInput,
+    Commands,
+    Component,
+    Entity,
+    MouseButton,
+    Query,
+    Reflect,
+    ReflectComponent,
+    ReflectResource,
+    Res,
+    ResMut,
+    Resource,
+    Time,
+    With,
 };
+
+use crate::components::lib::V2;
+use crate::components::transform::CmpTransform2D;
+use crate::components::unit_creature_player::CmpUnitCreaturePlayer;
+use crate::game::common::{CmpTimeToLife, ResMouse};
+use crate::game::damage::Damage;
+use crate::game::projectiles::CmpProjectile;
+use crate::game::sound::SupSounds;
+use crate::game::teams::{CmpTeam, Team};
 
 #[derive(Reflect)]
 pub struct Weapon {
@@ -227,6 +222,7 @@ pub fn shooting(
         for _ in 0..ammo_need_fire {
             sounds.play_shot(trm2d.position);
             cmd.spawn((
+                Name::from(format!("bullet {:?}", team.team)),
                 CmpTimeToLife { seconds_left: 2.0 },
                 CmpTransform2D {
                     position: trm2d.position,
@@ -235,7 +231,7 @@ pub fn shooting(
                 CmpProjectile {
                     team: team.team,
                     caster: Some(ent),
-                    allow_friendly_fire: true,
+                    allow_friendly_fire: false,
                     damage: weapon.current.damage,
                     ..default()
                 },

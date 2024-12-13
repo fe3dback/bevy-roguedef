@@ -1,39 +1,33 @@
-use {
-    crate::{
-        components::{
-            lib::V2,
-            movement::CmpMovement,
-            transform::CmpTransform2D,
-            unit_creature::CmpUnitCreature,
-        },
-        game::{
-            collisions::CmpCollisionDesiredVolume,
-            common::ResRandomSource,
-            damage::{CmpHealth, Damage, DamageKind},
-            teams::{CmpTeam, Team},
-            weapons::{CmpWeapon, Weapon},
-        },
-    },
-    bevy::prelude::{
-        default,
-        info,
-        AssetServer,
-        Circle,
-        Commands,
-        Component,
-        Query,
-        Reflect,
-        ReflectResource,
-        Res,
-        ResMut,
-        Resource,
-        Sprite,
-        Time,
-        With,
-    },
-    rand_chacha::rand_core::RngCore,
-    std::time::Duration,
+use std::time::Duration;
+
+use bevy::prelude::{
+    default,
+    info,
+    AssetServer,
+    Circle,
+    Commands,
+    Component,
+    Query,
+    Reflect,
+    ReflectResource,
+    Res,
+    ResMut,
+    Resource,
+    Sprite,
+    Time,
+    With,
 };
+use rand_chacha::rand_core::RngCore;
+
+use crate::components::lib::V2;
+use crate::components::movement::CmpMovement;
+use crate::components::transform::CmpTransform2D;
+use crate::components::unit_creature::CmpUnitCreature;
+use crate::game::collisions::CmpCollisionDesiredVolume;
+use crate::game::common::ResRandomSource;
+use crate::game::damage::{CmpHealth, Damage, DamageKind};
+use crate::game::teams::{CmpTeam, Team};
+use crate::game::weapons::{CmpWeapon, Weapon};
 
 #[derive(Resource, Default, Debug, Reflect)]
 #[reflect(Resource)]
@@ -65,7 +59,7 @@ pub fn spawn_enemies(
 
     for _ in 0..rnd_cnt {
         let rnd_angle = f32::to_radians((rand.rnd.next_u64() % 360) as f32);
-        let rnd_dist = 700.0 + (rand.rnd.next_u64() % 300) as f32;
+        let rnd_dist = 30.0 + (rand.rnd.next_u64() % 10) as f32;
 
         let pos_spawn = V2::ZERO.polar_offset(rnd_dist, rnd_angle);
 

@@ -1,7 +1,7 @@
-use {
-    crate::components::{lib::V2, transform::CmpTransform2D},
-    bevy::prelude::{Component, Reflect, Vec2},
-};
+use bevy::prelude::{Component, Reflect, Vec2};
+
+use crate::components::lib::V2;
+use crate::components::transform::CmpTransform2D;
 
 #[derive(Component, Reflect)]
 #[require(CmpTransform2D)]
@@ -14,7 +14,7 @@ impl Default for CmpMovement {
     fn default() -> Self {
         CmpMovement {
             ctl_input: V2::ZERO,
-            speed:     50.0,
+            speed:     2.0,
         }
     }
 }

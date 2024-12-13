@@ -1,7 +1,7 @@
-use {
-    crate::game::{buildings::sup::SupBuildingSpawner, common::ResMouse},
-    bevy::prelude::{ButtonInput, MouseButton, Res},
-};
+use bevy::prelude::{ButtonInput, MouseButton, Res};
+
+use crate::game::buildings::sup::SupBuildingSpawner;
+use crate::game::common::ResMouse;
 
 pub fn spawn_building_on_mouse_click(
     mut manager: SupBuildingSpawner,
@@ -9,6 +9,6 @@ pub fn spawn_building_on_mouse_click(
     mouse_data: Res<ResMouse>,
 ) {
     if mouse.just_pressed(MouseButton::Right) {
-        manager.spawn_pole(mouse_data.world_pos)
+        manager.spawn_tower(mouse_data.world_pos)
     }
 }

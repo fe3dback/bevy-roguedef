@@ -2,11 +2,11 @@ pub mod plug;
 pub mod sup;
 mod sys;
 
-use {
-    crate::components::unit::CmpUnit,
-    bevy::prelude::{Component, Reflect},
-};
+use bevy::prelude::{Component, Reflect};
+
+use crate::components::unit::CmpUnit;
+use crate::components::unit_creature::CmpUnitBuilding;
 
 #[derive(Component, Reflect, Default)]
-#[require(CmpUnit)]
-pub struct CmpBuilding {}
+#[require(CmpUnitBuilding)]
+pub struct CmpBuildingElectricity {}

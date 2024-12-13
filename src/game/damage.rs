@@ -1,29 +1,28 @@
-use {
-    crate::{
-        components::{lib::V2, transform::CmpTransform2D},
-        game::{common::ResRandomSource, sound::SupSounds, teams::Team},
-    },
-    bevy::{
-        color::palettes::tailwind::{GRAY_300, LIME_800},
-        prelude::{
-            info,
-            Changed,
-            Commands,
-            Component,
-            DespawnRecursiveExt,
-            Entity,
-            Event,
-            EventReader,
-            Gizmos,
-            Isometry2d,
-            Query,
-            Reflect,
-            ResMut,
-            Rot2,
-        },
-    },
-    rand_chacha::rand_core::RngCore,
+use bevy::color::palettes::tailwind::{GRAY_300, LIME_800};
+use bevy::prelude::{
+    info,
+    Changed,
+    Commands,
+    Component,
+    DespawnRecursiveExt,
+    Entity,
+    Event,
+    EventReader,
+    Gizmos,
+    Isometry2d,
+    Query,
+    Reflect,
+    ResMut,
+    Rot2,
+    Vec2,
 };
+use rand_chacha::rand_core::RngCore;
+
+use crate::components::lib::V2;
+use crate::components::transform::CmpTransform2D;
+use crate::game::common::ResRandomSource;
+use crate::game::sound::SupSounds;
+use crate::game::teams::Team;
 
 #[derive(Component, Reflect)]
 pub struct CmpHealth {
@@ -132,16 +131,20 @@ pub fn death_by_health(
 
 pub fn draw_health_bar(mut gz: Gizmos, creatures: Query<(&CmpTransform2D, &CmpHealth)>) {
     for (trm, health) in &creatures {
+        if health.health == health.max_health {
+            continue;
+        }
+
         let percent = (health.health / health.max_health) * 100.0;
 
         gz.rect_2d(
-            Isometry2d::new((trm.position - V2::new(0.0, 36.0)).as_2d(), Rot2::IDENTITY),
-            V2::new(100.0 * 0.5, 4.0).as_2d(),
+            Isometry2d::new(trm.position.as_2d() - Vec2::new(0.0, 36.0), Rot2::IDENTITY),
+            Vec2::new(100.0 * 0.5, 4.0),
             GRAY_300,
         );
         gz.rect_2d(
-            Isometry2d::new((trm.position - V2::new(0.0, 36.0)).as_2d(), Rot2::IDENTITY),
-            V2::new(percent * 0.5, 2.0).as_2d(),
+            Isometry2d::new(trm.position.as_2d() - Vec2::new(0.0, 36.0), Rot2::IDENTITY),
+            Vec2::new(percent * 0.5, 2.0),
             LIME_800,
         );
     }

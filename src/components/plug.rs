@@ -1,13 +1,11 @@
-use {
-    crate::components::{
-        movement::CmpMovement,
-        transform::CmpTransform2D,
-        unit::CmpUnit,
-        unit_creature::CmpUnitCreature,
-        unit_creature_player::CmpUnitCreaturePlayer,
-    },
-    bevy::{app::App, prelude::Plugin},
-};
+use bevy::app::App;
+use bevy::prelude::Plugin;
+
+use crate::components::movement::CmpMovement;
+use crate::components::transform::CmpTransform2D;
+use crate::components::unit::CmpUnit;
+use crate::components::unit_creature::{CmpUnitBuilding, CmpUnitCreature};
+use crate::components::unit_creature_player::CmpUnitCreaturePlayer;
 
 pub struct Plug {}
 
@@ -18,6 +16,7 @@ impl Plugin for Plug {
             .register_type::<CmpTransform2D>()
             .register_type::<CmpMovement>()
             .register_type::<CmpUnit>()
+            .register_type::<CmpUnitBuilding>()
             .register_type::<CmpUnitCreature>()
             .register_type::<CmpUnitCreaturePlayer>();
     }

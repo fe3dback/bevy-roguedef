@@ -1,7 +1,7 @@
 (
     name: "Player",
     movement: (
-        speed: 150
+        speed: 7.0
     ),
     agent: (
         sprite: "sprites/creatures/wizzard.png"

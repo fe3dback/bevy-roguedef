@@ -1,38 +1,35 @@
-use {
-    crate::game::{
-        buildings,
-        collisions::{
-            collision_volumes_draw,
-            update_collision_volumes,
-            CmpCollisionCurrentVolume,
-            CmpCollisionDesiredVolume,
-        },
-        common::{
-            remove_expired_ttl_entities,
-            update_mouse_pos_resource,
-            CmpTimeToLife,
-            ResMouse,
-            ResRandomSource,
-        },
-        damage::{
-            damage_event_listener,
-            death_by_health,
-            draw_health_bar,
-            CmpHealth,
-            EvtOnDamageCast,
-        },
-        enemies::{move_enemies_to_castle, spawn_enemies, ResEnemiesSpawnRules},
-        projectiles::{draw_projectiles, move_projectiles, CmpProjectile},
-        sound::ResRandomSoundSource,
-        teams::CmpTeam,
-        weapons::{auto_reset_weapon_trigger, player_trigger_shot, shooting, CmpWeapon},
-    },
-    bevy::{
-        app::{App, Plugin},
-        prelude::Update,
-    },
-    rand_chacha::{rand_core::SeedableRng, ChaCha8Rng},
+use bevy::app::{App, Plugin};
+use bevy::prelude::Update;
+use rand_chacha::rand_core::SeedableRng;
+use rand_chacha::ChaCha8Rng;
+
+use crate::game::buildings;
+use crate::game::collisions::{
+    collision_volumes_draw,
+    update_collision_volumes,
+    CmpCollisionCurrentVolume,
+    CmpCollisionDesiredVolume,
 };
+use crate::game::common::{
+    remove_expired_ttl_entities,
+    update_mouse_pos_resource,
+    CmpTimeToLife,
+    ResMouse,
+    ResRandomSource,
+};
+use crate::game::damage::{
+    damage_event_listener,
+    death_by_health,
+    draw_health_bar,
+    CmpHealth,
+    EvtOnDamageCast,
+};
+use crate::game::enemies::{move_enemies_to_castle, spawn_enemies, ResEnemiesSpawnRules};
+use crate::game::projectiles::{draw_projectiles, move_projectiles, CmpProjectile};
+use crate::game::sound::ResRandomSoundSource;
+use crate::game::teams::CmpTeam;
+use crate::game::tower::tower_auto_attack_nearest_enemies;
+use crate::game::weapons::{auto_reset_weapon_trigger, player_trigger_shot, shooting, CmpWeapon};
 
 pub struct Plug {}
 
@@ -66,6 +63,7 @@ impl Plugin for Plug {
             .register_type::<ResMouse>()
             // systems 
             .add_systems(Update, auto_reset_weapon_trigger)
+            .add_systems(Update, tower_auto_attack_nearest_enemies)
             .add_systems(Update, (update_mouse_pos_resource, remove_expired_ttl_entities))
             .add_systems(Update, (update_collision_volumes, collision_volumes_draw))
             .add_systems(Update, (move_projectiles, draw_projectiles, draw_health_bar, damage_event_listener, death_by_health))

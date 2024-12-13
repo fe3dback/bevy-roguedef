@@ -1,36 +1,33 @@
-use {
-    crate::{
-        components::{lib::V2, transform::CmpTransform2D},
-        game::{
-            collisions::{CmpCollisionCurrentVolume, CmpCollisionDesiredVolume},
-            damage::{Damage, DamageCastSource, DamageCastTarget, EvtOnDamageCast},
-            teams::{CmpTeam, Team},
-        },
-    },
-    bevy::{
-        color::palettes::tailwind::{self, LIME_50, LIME_800},
-        math::bounding::RayCast2d,
-        prelude::{
-            info,
-            ops,
-            Commands,
-            Component,
-            DespawnRecursiveExt,
-            Dir2,
-            Entity,
-            EventWriter,
-            Gizmos,
-            Query,
-            Ray2d,
-            Reflect,
-            Res,
-            Time,
-            Vec2,
-            With,
-            Without,
-        },
-    },
+use bevy::color::palettes::tailwind::{self, LIME_50, LIME_800};
+use bevy::math::bounding::RayCast2d;
+use bevy::math::Direction2d;
+use bevy::prelude::{
+    info,
+    ops,
+    Commands,
+    Component,
+    DespawnRecursiveExt,
+    Dir2,
+    Entity,
+    EventWriter,
+    Gizmos,
+    Query,
+    Ray2d,
+    Reflect,
+    Res,
+    Rot2,
+    Time,
+    Vec2,
+    With,
+    Without,
 };
+
+use crate::components::lib::V2;
+use crate::components::transform::CmpTransform2D;
+use crate::consts::PIXELS_PER_METER;
+use crate::game::collisions::{CmpCollisionCurrentVolume, CmpCollisionDesiredVolume};
+use crate::game::damage::{Damage, DamageCastSource, DamageCastTarget, EvtOnDamageCast};
+use crate::game::teams::{CmpTeam, Team};
 
 #[derive(Component, Reflect)]
 #[require(CmpCollisionDesiredVolume)]
@@ -48,8 +45,8 @@ impl Default for CmpProjectile {
         Self {
             team:                Team::default(),
             caster:              None,
-            speed:               1000.0,
-            acceleration:        500.0,
+            speed:               50.0,
+            acceleration:        5.0,
             allow_friendly_fire: true,
             damage:              Damage::default(),
         }
@@ -82,21 +79,25 @@ pub fn move_projectiles(
         let pos_next = bullet_trx.position + position_diff;
 
         for (obj_ent, obj_transform, obj_team, obj_vol) in &query_objects {
-            if bullet_trx.position.distance(obj_transform.position) > 256.0 {
+            if bullet_trx.position.distance(obj_transform.position) > 5.0 {
                 continue;
             }
 
-            if bullet.allow_friendly_fire && bullet.team == obj_team.team {
-                continue;
+            if bullet.team.is_friendly_with(obj_team.team) {
+                if !bullet.allow_friendly_fire {
+                    continue;
+                }
             }
 
             let ray = Ray2d {
                 origin:    pos_cur.as_2d(),
                 direction: Dir2::new_unchecked(
-                    V2::ZERO.polar_offset(1.0, bullet_trx.angle).as_2d(),
+                    V2::ZERO
+                        .polar_offset(1.0 / PIXELS_PER_METER, bullet_trx.angle)
+                        .as_2d(),
                 ),
             };
-            let ray_cast = RayCast2d::from_ray(ray, distance);
+            let ray_cast = RayCast2d::from_ray(ray, distance * PIXELS_PER_METER);
             let intersect = match obj_vol {
                 CmpCollisionCurrentVolume::Aabb(vol) => ray_cast.aabb_intersection_at(vol),
                 CmpCollisionCurrentVolume::Circle(vol) => ray_cast.circle_intersection_at(vol),
