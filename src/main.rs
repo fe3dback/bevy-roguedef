@@ -4,17 +4,14 @@ mod game;
 mod plugins;
 mod prefabs;
 
-use {
-    crate::game::common::CmpMainCamera,
-    bevy::{
-        app::*,
-        audio::{AudioPlugin, SpatialScale},
-        prelude::{Camera2d, Commands, Window, WindowPlugin},
-        utils::default,
-        window::PresentMode,
-        DefaultPlugins,
-    },
-};
+use bevy::app::*;
+use bevy::audio::{AudioPlugin, SpatialScale};
+use bevy::prelude::{Camera2d, Commands, Window, WindowPlugin};
+use bevy::utils::default;
+use bevy::window::PresentMode;
+use bevy::DefaultPlugins;
+
+use crate::game::common::CmpMainCamera;
 
 /// Spatial audio uses the distance to attenuate the sound volume. In 2D with the default camera,
 /// 1 pixel is 1 unit of distance, so we use a scale

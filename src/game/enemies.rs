@@ -16,13 +16,16 @@ use bevy::prelude::{
     Sprite,
     Time,
     With,
+    Without,
 };
 use rand_chacha::rand_core::RngCore;
 
+use crate::components::ai::{CmpEnemyMarkerAttackWhenNear, CmpEnemyMarkerMoveToCastleAI};
 use crate::components::lib::V2;
 use crate::components::movement::CmpMovement;
 use crate::components::transform::CmpTransform2D;
 use crate::components::unit_creature::CmpUnitCreature;
+use crate::components::unit_creature_player::CmpUnitCreaturePlayer;
 use crate::game::collisions::CmpCollisionDesiredVolume;
 use crate::game::common::ResRandomSource;
 use crate::game::damage::{CmpHealth, Damage, DamageKind};
@@ -34,9 +37,6 @@ use crate::game::weapons::{CmpWeapon, Weapon};
 pub struct ResEnemiesSpawnRules {
     pub time_to_next_spawn: f32,
 }
-
-#[derive(Component, Reflect)]
-pub struct CmpEnemyMarkerMoveToCastleAI {}
 
 pub fn spawn_enemies(
     mut cmd: Commands,
@@ -68,6 +68,7 @@ pub fn spawn_enemies(
                 team: Team::Enemies,
             },
             CmpEnemyMarkerMoveToCastleAI {},
+            CmpEnemyMarkerAttackWhenNear {},
             CmpTransform2D {
                 position: pos_spawn,
                 angle:    pos_spawn.angle_to(V2::ZERO),

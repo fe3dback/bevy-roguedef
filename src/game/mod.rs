@@ -1,3 +1,4 @@
+mod ai;
 mod buildings;
 pub mod collisions;
 pub mod common;
@@ -7,5 +8,4 @@ pub mod plug;
 pub mod projectiles;
 mod sound;
 pub mod teams;
-mod tower;
 pub mod weapons;

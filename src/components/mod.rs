@@ -1,3 +1,4 @@
+pub mod ai;
 pub mod lib;
 pub mod movement;
 pub mod plug;

@@ -1,5 +1,4 @@
 use bevy::prelude::{
-    info,
     AssetServer,
     Assets,
     ButtonInput,
@@ -14,7 +13,7 @@ use bevy::prelude::{
 use crate::components::tiles::Tile;
 use crate::game::buildings::sup::SupBuildingSpawner;
 use crate::game::common::ResMouse;
-use crate::plugins::assets::asset_ldtk_circuit::{AssetLdtkCircuit, LdtkCircuitBuilding};
+use crate::plugins::assets::asset_ldtk_circuit::AssetLdtkCircuit;
 
 #[derive(Resource, Default)]
 pub struct ResLdtkHandles {
@@ -41,7 +40,6 @@ pub fn spawn_starting_buildings(
     };
 
     *spawned = true;
-    info!("loaded");
 
     let scene_offset = Tile::at(
         scene.width / 2 / scene.px_per_meter,

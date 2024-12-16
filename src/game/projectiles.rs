@@ -1,4 +1,14 @@
-use bevy::color::palettes::tailwind::{self, LIME_50, LIME_800};
+use bevy::color::palettes::css::WHITE_SMOKE;
+use bevy::color::palettes::tailwind::{
+    self,
+    GREEN_300,
+    LIME_50,
+    LIME_500,
+    LIME_800,
+    RED_200,
+    RED_400,
+    RED_700,
+};
 use bevy::math::bounding::RayCast2d;
 use bevy::math::Direction2d;
 use bevy::prelude::{
@@ -45,8 +55,8 @@ impl Default for CmpProjectile {
         Self {
             team:                Team::default(),
             caster:              None,
-            speed:               50.0,
-            acceleration:        5.0,
+            speed:               20.0,
+            acceleration:        15.0,
             allow_friendly_fire: true,
             damage:              Damage::default(),
         }
@@ -57,6 +67,7 @@ pub fn move_projectiles(
     mut cmd: Commands,
     mut damage_writer: EventWriter<EvtOnDamageCast>,
     mut query_projectiles: Query<(Entity, &mut CmpTransform2D, &mut CmpProjectile)>,
+    mut gz: Gizmos,
     query_objects: Query<
         (
             Entity,
@@ -134,6 +145,15 @@ pub fn move_projectiles(
             continue;
         }
 
+        gz.line_2d(
+            bullet_trx.position.as_2d(),
+            pos_next.as_2d(),
+            match bullet.team {
+                Team::Player => LIME_500,
+                Team::Enemies => RED_400,
+                _ => WHITE_SMOKE,
+            },
+        );
         bullet_trx.position = pos_next;
     }
 }
