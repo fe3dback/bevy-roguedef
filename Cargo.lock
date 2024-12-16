@@ -418,6 +418,7 @@ dependencies = [
 name = "bevy-roguedef"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "auto-impl-ops",
  "bevy",
  "bevy-inspector-egui",
@@ -426,6 +427,8 @@ dependencies = [
  "rand_chacha",
  "ron_asset_manager",
  "serde",
+ "serde_json",
+ "uuid",
 ]
 
 [[package]]

@@ -1,12 +1,13 @@
-use {
-    crate::plugins::{
-        assets::{asset::GameAssets, asset_creatures::AssetCreature, asset_game::AssetGame},
-        core::state::enums::GameState,
-    },
-    bevy::{app::App, prelude::Plugin},
-    bevy_asset_loader::prelude::*,
-    ron_asset_manager::RonAssetPlugin,
-};
+use bevy::app::App;
+use bevy::prelude::{AssetApp, Plugin};
+use bevy_asset_loader::prelude::*;
+use ron_asset_manager::RonAssetPlugin;
+
+use crate::plugins::assets::asset::GameAssets;
+use crate::plugins::assets::asset_creatures::AssetCreature;
+use crate::plugins::assets::asset_game::AssetGame;
+use crate::plugins::assets::asset_ldtk_circuit::{AssetLdtkCircuit, AssetLdtkCircuitLoader};
+use crate::plugins::core::state::enums::GameState;
 
 pub struct Plug {}
 
@@ -20,6 +21,8 @@ impl Plugin for Plug {
                 LoadingState::new(GameState::Loading)
                     .continue_to_state(GameState::InGame { paused: false })
                     .load_collection::<GameAssets>(),
-            );
+            )
+            .init_asset_loader::<AssetLdtkCircuitLoader>()
+            .init_asset::<AssetLdtkCircuit>();
     }
 }
