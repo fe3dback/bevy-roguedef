@@ -10,6 +10,7 @@ use bevy::prelude::{Camera2d, Commands, Window, WindowPlugin};
 use bevy::utils::default;
 use bevy::window::PresentMode;
 use bevy::DefaultPlugins;
+use bevy_vector_shapes::Shape2dPlugin;
 
 use crate::game::common::CmpMainCamera;
 
@@ -38,6 +39,7 @@ fn main() {
                 }),
         )
         // 3-rd plugins
+        .add_plugins(Shape2dPlugin::default())
         // game plugins
         .add_systems(Startup, setup)
         .add_plugins(game::plug::Plug {})

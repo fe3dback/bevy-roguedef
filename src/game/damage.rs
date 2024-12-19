@@ -15,7 +15,10 @@ use bevy::prelude::{
     ResMut,
     Rot2,
     Vec2,
+    Vec3,
+    Vec4,
 };
+use bevy_vector_shapes::prelude::{Alignment, RectPainter, ShapePainter};
 use rand_chacha::rand_core::RngCore;
 
 use crate::components::lib::V2;
@@ -129,7 +132,10 @@ pub fn death_by_health(
     }
 }
 
-pub fn draw_health_bar(mut gz: Gizmos, creatures: Query<(&CmpTransform2D, &CmpHealth)>) {
+pub fn draw_health_bar(mut painter: ShapePainter, creatures: Query<(&CmpTransform2D, &CmpHealth)>) {
+    painter.hollow = false;
+    painter.corner_radii = Vec4::splat(0.2);
+
     for (trm, health) in &creatures {
         if health.health == health.max_health {
             continue;
@@ -137,15 +143,11 @@ pub fn draw_health_bar(mut gz: Gizmos, creatures: Query<(&CmpTransform2D, &CmpHe
 
         let percent = (health.health / health.max_health) * 100.0;
 
-        gz.rect_2d(
-            Isometry2d::new(trm.position.as_2d() - Vec2::new(0.0, 36.0), Rot2::IDENTITY),
-            Vec2::new(100.0 * 0.5, 4.0),
-            GRAY_300,
-        );
-        gz.rect_2d(
-            Isometry2d::new(trm.position.as_2d() - Vec2::new(0.0, 36.0), Rot2::IDENTITY),
-            Vec2::new(percent * 0.5, 2.0),
-            LIME_800,
-        );
+        painter.color = GRAY_300.into();
+        painter.transform.translation = trm.position.as_3d() - Vec3::new(0.0, 36.0, 0.0);
+        painter.rect(Vec2::new(100.0 * 0.5, 4.0));
+
+        painter.color = LIME_800.into();
+        painter.rect(Vec2::new(percent * 0.5, 3.0));
     }
 }

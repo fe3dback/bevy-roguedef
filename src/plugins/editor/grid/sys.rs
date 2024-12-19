@@ -1,6 +1,6 @@
 use bevy::color::palettes::tailwind;
 use bevy::math::Isometry2d;
-use bevy::prelude::{Gizmos, UVec2};
+use bevy::prelude::{Alpha, Gizmos, UVec2};
 
 use crate::components::lib::V2;
 use crate::consts::{PIXELS_PER_METER, PLAYABLE_AREA_SIZE};
@@ -11,7 +11,7 @@ pub fn draw_grid(mut gz: Gizmos) {
         Isometry2d::IDENTITY,
         UVec2::new(100, 100),
         V2::splat(1.0).as_2d(),
-        tailwind::ZINC_800,
+        tailwind::ZINC_800.with_alpha(0.3),
     )
     .outer_edges();
 
