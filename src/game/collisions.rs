@@ -1,26 +1,24 @@
-use {
-    crate::components::transform::CmpTransform2D,
-    bevy::{
-        color::palettes::{tailwind, tailwind::LIME_50},
-        math::bounding::{Aabb2d, Bounded2d, BoundingCircle, BoundingVolume},
-        prelude::{
-            Changed,
-            Circle,
-            Commands,
-            Component,
-            Entity,
-            Gizmos,
-            Isometry2d,
-            Or,
-            Query,
-            Rectangle,
-            Reflect,
-            Rot2,
-            Transform,
-        },
-    },
-    bevy_inspector_egui::egui::Shape,
+use bevy::color::palettes::tailwind;
+use bevy::color::palettes::tailwind::LIME_50;
+use bevy::math::bounding::{Aabb2d, Bounded2d, BoundingCircle, BoundingVolume};
+use bevy::prelude::{
+    Changed,
+    Circle,
+    Commands,
+    Component,
+    Entity,
+    Gizmos,
+    Isometry2d,
+    Or,
+    Query,
+    Rectangle,
+    Reflect,
+    Rot2,
+    Transform,
 };
+use bevy_inspector_egui::egui::Shape;
+
+use crate::components::transform::CmpTransform2D;
 
 #[derive(Component, Reflect, Debug)]
 pub enum CmpCollisionDesiredVolume {
@@ -30,7 +28,7 @@ pub enum CmpCollisionDesiredVolume {
 
 impl Default for CmpCollisionDesiredVolume {
     fn default() -> Self {
-        Self::Circle(Circle::new(16.0))
+        Self::Circle(Circle::new(1.0))
     }
 }
 

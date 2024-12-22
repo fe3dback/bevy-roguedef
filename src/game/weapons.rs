@@ -6,6 +6,7 @@ use bevy::prelude::{
     info,
     Bundle,
     ButtonInput,
+    Circle,
     Commands,
     Component,
     Entity,
@@ -20,12 +21,17 @@ use bevy::prelude::{
     Time,
     With,
 };
+use bevy_trait_query::One;
 
 use crate::components::lib::V2;
 use crate::components::transform::CmpTransform2D;
+use crate::components::unit::EUnitType;
 use crate::components::unit_creature_player::CmpUnitCreaturePlayer;
+use crate::game::buildings::electro::cmp::CmpBuildingElectricity;
+use crate::game::collisions::CmpCollisionDesiredVolume;
 use crate::game::common::{CmpTimeToLife, ResMouse};
 use crate::game::damage::Damage;
+use crate::game::energy::CmpEnergyContainer;
 use crate::game::projectiles::CmpProjectile;
 use crate::game::sound::SupSounds;
 use crate::game::teams::{CmpTeam, Team};
@@ -142,10 +148,17 @@ pub fn player_trigger_shot(
 pub fn shooting(
     mut cmd: Commands,
     mut sounds: SupSounds,
-    mut query: Query<(Entity, &mut CmpWeapon, &CmpTeam, &CmpTransform2D)>,
+    mut query: Query<(
+        Entity,
+        &mut CmpWeapon,
+        &CmpTeam,
+        &CmpTransform2D,
+        One<&mut dyn CmpEnergyContainer>,
+        &EUnitType,
+    )>,
     time: Res<Time>,
 ) {
-    for (ent, mut weapon, team, trm2d) in &mut query {
+    for (ent, mut weapon, team, trm2d, mut energy, utype) in &mut query {
         if weapon.phase == ShootingPhase::Reloading {
             let reload_time_left = match weapon.reloading_time_left <= time.delta() {
                 true => Duration::ZERO,
@@ -218,16 +231,25 @@ pub fn shooting(
             continue;
         }
 
-        weapon.ammo_left -= ammo_need_fire as u8;
         for _ in 0..ammo_need_fire {
+            if utype.is_building() && !energy.try_spend(0.25) {
+                continue;
+            }
+
+            if weapon.ammo_left > 0 {
+                weapon.ammo_left -= 1;
+            }
+
             sounds.play_shot(trm2d.position);
             cmd.spawn((
                 Name::from(format!("bullet {:?}", team.team)),
                 CmpTimeToLife { seconds_left: 2.0 },
                 CmpTransform2D {
                     position: trm2d.position,
-                    angle:    trm2d.position.angle_to(weapon.aim_world_pos),
+                    angle: trm2d.position.angle_to(weapon.aim_world_pos),
+                    ..default()
                 },
+                CmpCollisionDesiredVolume::Circle(Circle::new(0.1)),
                 CmpProjectile {
                     team: team.team,
                     caster: Some(ent),

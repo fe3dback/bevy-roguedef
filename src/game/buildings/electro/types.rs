@@ -12,7 +12,7 @@ pub type Channel = u8;
 pub type ChannelBitSize = u8;
 
 pub const MAX_CHANNELS: usize = 16;
-pub const GRAPH_CONNECTION_RADIUS: f32 = 10.0;
+pub const GRAPH_CONNECTION_RADIUS: f32 = 12.0;
 
 lazy_static! {
     pub static ref CHANNEL_COLOR: HashMap<Channel, &'static Color> = {

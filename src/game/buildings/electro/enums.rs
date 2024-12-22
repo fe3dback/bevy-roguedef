@@ -1,4 +1,5 @@
-use {bevy::prelude::Reflect, serde::Deserialize};
+use bevy::prelude::Reflect;
+use serde::Deserialize;
 
 pub enum EChargeDirection {
     Out,
@@ -8,8 +9,8 @@ pub enum EChargeDirection {
 #[derive(Copy, Clone, Reflect, Debug, Default, PartialEq, Eq, Hash, Deserialize)]
 pub enum EArchetype {
     #[default]
-    Source,
-    Castle,
     Pole,
     Tower,
+    Castle,
+    Source,
 }

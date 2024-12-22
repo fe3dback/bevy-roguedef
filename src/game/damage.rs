@@ -1,6 +1,7 @@
 use bevy::color::palettes::tailwind::{GRAY_300, LIME_800};
 use bevy::prelude::{
     info,
+    warn,
     Changed,
     Commands,
     Component,
@@ -23,6 +24,7 @@ use rand_chacha::rand_core::RngCore;
 
 use crate::components::lib::V2;
 use crate::components::transform::CmpTransform2D;
+use crate::components::unit::EUnitType;
 use crate::game::common::ResRandomSource;
 use crate::game::sound::SupSounds;
 use crate::game::teams::Team;
@@ -121,17 +123,23 @@ pub fn damage_event_listener(
 
 pub fn death_by_health(
     mut cmd: Commands,
-    entities_q: Query<(Entity, &CmpHealth), Changed<CmpHealth>>,
+    entities_q: Query<(Entity, &CmpHealth, &EUnitType), Changed<CmpHealth>>,
 ) {
-    for (entity, cmp) in entities_q.iter() {
+    for (entity, cmp, unittype) in entities_q.iter() {
         if cmp.health > 0.0 {
             continue;
         }
 
-        cmd.entity(entity).despawn_recursive();
+        warn!("entity died, despawning {}..", entity);
+        if !unittype.is_building() {
+            // todo: remove buildings from graph on destroy
+            // todo: cmp events (OnAdded, OnRemoved)
+            cmd.entity(entity).despawn_recursive();
+        }
     }
 }
 
+// todo: replace lib to Gizmos
 pub fn draw_health_bar(mut painter: ShapePainter, creatures: Query<(&CmpTransform2D, &CmpHealth)>) {
     painter.hollow = false;
     painter.corner_radii = Vec4::splat(0.2);
@@ -144,7 +152,7 @@ pub fn draw_health_bar(mut painter: ShapePainter, creatures: Query<(&CmpTransfor
         let percent = (health.health / health.max_health) * 100.0;
 
         painter.color = GRAY_300.into();
-        painter.transform.translation = trm.position.as_3d() - Vec3::new(0.0, 36.0, 0.0);
+        painter.transform.translation = trm.position.as_3d_ui() - Vec3::new(0.0, 36.0, 0.0);
         painter.rect(Vec2::new(100.0 * 0.5, 4.0));
 
         painter.color = LIME_800.into();

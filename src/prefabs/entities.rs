@@ -1,22 +1,15 @@
-use {
-    crate::{
-        components::{
-            movement::{CmpMarkerMovementRestrictInPlayableArea, CmpMovement},
-            unit_creature_player::CmpUnitCreaturePlayer,
-        },
-        game::{
-            collisions::CmpCollisionDesiredVolume,
-            teams::{CmpTeam, Team},
-            weapons::CmpWeapon,
-        },
-        plugins::{assets::asset_creatures::AssetCreature, InGame},
-        prefabs::sup::SupPrefabs,
-    },
-    bevy::{
-        prelude::{default, Circle, Handle, Name, SpatialListener, StateScoped},
-        sprite::Sprite,
-    },
-};
+use bevy::prelude::{default, AlphaMode, Circle, Handle, Name, SpatialListener, StateScoped};
+use bevy_sprite3d::{Sprite3dBuilder, Sprite3dBundle};
+
+use crate::components::movement::{CmpMarkerMovementRestrictInPlayableArea, CmpMovement};
+use crate::components::unit::EUnitType;
+use crate::components::unit_creature_player::CmpUnitCreaturePlayer;
+use crate::game::collisions::CmpCollisionDesiredVolume;
+use crate::game::teams::{CmpTeam, Team};
+use crate::game::weapons::CmpWeapon;
+use crate::plugins::assets::asset_creatures::AssetCreature;
+use crate::plugins::InGame;
+use crate::prefabs::sup::SupPrefabs;
 
 impl<'w, 's> SupPrefabs<'w, 's> {
     pub(crate) fn player(
@@ -28,12 +21,9 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         SpatialListener,
         CmpWeapon,
         CmpTeam,
-        (
-            Name,
-            CmpMovement,
-            CmpMarkerMovementRestrictInPlayableArea,
-            Sprite,
-        ),
+        EUnitType,
+        Sprite3dBundle,
+        (Name, CmpMovement, CmpMarkerMovementRestrictInPlayableArea),
     ) {
         let game = self.assets_game.get(&self.assets.game).unwrap();
         let creature_h = self.asset_creature_handle_by_name(game.player.as_str());
@@ -42,10 +32,20 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         (
             StateScoped(InGame),
             CmpUnitCreaturePlayer {},
-            CmpCollisionDesiredVolume::Circle(Circle::new(32.0)),
+            CmpCollisionDesiredVolume::Circle(Circle::new(1.0)),
             SpatialListener::new(100.0),
             CmpWeapon::default(),
             CmpTeam { team: Team::Player },
+            EUnitType::Creature,
+            Sprite3dBuilder {
+                image: creature.agent.sprite.handle.clone(),
+                pixels_per_metre: 24.0,
+                alpha_mode: AlphaMode::Blend,
+                unlit: true,
+                double_sided: true,
+                ..default()
+            }
+            .bundle(&mut self.sprite_params),
             player,
         )
     }
@@ -53,12 +53,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
     fn creature(
         &self,
         creature: &AssetCreature,
-    ) -> (
-        Name,
-        CmpMovement,
-        CmpMarkerMovementRestrictInPlayableArea,
-        Sprite,
-    ) {
+    ) -> (Name, CmpMovement, CmpMarkerMovementRestrictInPlayableArea) {
         (
             Name::from(creature.name.clone()),
             CmpMovement {
@@ -66,7 +61,6 @@ impl<'w, 's> SupPrefabs<'w, 's> {
                 ..default()
             },
             CmpMarkerMovementRestrictInPlayableArea {},
-            Sprite::from_image(creature.agent.sprite.handle.clone()),
         )
     }
 

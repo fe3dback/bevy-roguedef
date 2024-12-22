@@ -2,15 +2,16 @@ use std::time::Duration;
 
 use bevy::asset::AssetServer;
 use bevy::ecs::system::SystemParam;
-use bevy::prelude::{Commands, Name, Rectangle, Res, ResMut, Sprite};
+use bevy::prelude::{AlphaMode, Commands, Name, Rectangle, Res, ResMut};
 use bevy::utils::default;
+use bevy_sprite3d::{Sprite3dBuilder, Sprite3dBundle, Sprite3dParams};
 
 use super::electro::enums::EArchetype;
 use super::electro::res_graph::ResBuildingWorldGraphs;
 use crate::components::lib::V2;
 use crate::components::tiles::{select_n_tiles_around_position, VecExt};
 use crate::components::transform::CmpTransform2D;
-use crate::consts::PIXELS_PER_METER;
+use crate::components::unit::EUnitType;
 use crate::game::buildings::electro::cmp::{CmpBuildingElectricity, CmpBuildingOccupied};
 use crate::game::buildings::electro::cmp_debug::CmpDebugElectricityOutline;
 use crate::game::buildings::electro::dto::ChannelState;
@@ -19,18 +20,21 @@ use crate::game::collisions::CmpCollisionDesiredVolume;
 use crate::game::damage::{CmpHealth, Damage, DamageKind};
 use crate::game::teams::{CmpTeam, Team};
 use crate::game::weapons::{CmpWeapon, Weapon};
+use crate::plugins::assets::asset::GameAssets;
 
 #[derive(SystemParam)]
 pub struct SupBuildingSpawner<'w, 's> {
-    cmd:          Commands<'w, 's>,
-    asset_server: Res<'w, AssetServer>,
-    graph:        ResMut<'w, ResBuildingWorldGraphs>,
+    cmd:           Commands<'w, 's>,
+    assets:        Res<'w, GameAssets>,
+    asset_server:  Res<'w, AssetServer>,
+    graph:         ResMut<'w, ResBuildingWorldGraphs>,
+    sprite_params: Sprite3dParams<'w, 's>,
 }
 
 impl<'w, 's> SupBuildingSpawner<'w, 's> {
     pub fn spawn_pole(&mut self, at: V2) {
         let building = self.create_building(at, "pole", 20, 1);
-        let center = building.1.position;
+        let center = building.2.position;
 
         let id = self
             .cmd
@@ -55,7 +59,7 @@ impl<'w, 's> SupBuildingSpawner<'w, 's> {
 
     pub fn spawn_tower(&mut self, at: V2) {
         let building = self.create_building(at, "tower", 65, 2);
-        let center = building.1.position;
+        let center = building.2.position;
 
         let id = self
             .cmd
@@ -96,7 +100,7 @@ impl<'w, 's> SupBuildingSpawner<'w, 's> {
 
     pub fn spawn_castle(&mut self, at: V2) {
         let building = self.create_building(at, "castle", 500, 6);
-        let center = building.1.position;
+        let center = building.2.position;
 
         let id = self
             .cmd
@@ -122,9 +126,9 @@ impl<'w, 's> SupBuildingSpawner<'w, 's> {
 
     pub fn spawn_source(&mut self, at: V2) {
         let mut building = self.create_building(at, "source", 10000, 8);
-        let center = building.1.position;
+        let center = building.2.position;
 
-        building.2.team = Team::Neutral;
+        building.3.team = Team::Neutral;
         let id = self
             .cmd
             .spawn((
@@ -178,22 +182,25 @@ impl<'w, 's> SupBuildingSpawner<'w, 's> {
         tiles: u8,
     ) -> (
         Name,
+        EUnitType,
         CmpTransform2D,
         CmpTeam,
         CmpHealth,
         CmpBuildingOccupied,
         CmpDebugElectricityOutline,
         CmpCollisionDesiredVolume,
-        Sprite,
+        Sprite3dBundle,
     ) {
         let range = select_n_tiles_around_position(at, tiles as i32, tiles as i32);
         let pos = range.position_center();
 
         (
             Name::from(name),
+            EUnitType::Building,
             CmpTransform2D {
                 position: pos,
-                angle:    0.0,
+                angle: 0.0,
+                ..default()
             },
             CmpTeam { team: Team::Player },
             CmpHealth {
@@ -206,14 +213,21 @@ impl<'w, 's> SupBuildingSpawner<'w, 's> {
                 grid_position: pos.tile(),
             },
             CmpDebugElectricityOutline::default(),
-            CmpCollisionDesiredVolume::Aabb(Rectangle::new(
-                PIXELS_PER_METER * tiles as f32,
-                PIXELS_PER_METER * tiles as f32,
-            )),
-            Sprite::from_image(
-                self.asset_server
-                    .load(format!("sprites/buildings/{}.png", name)),
-            ),
+            CmpCollisionDesiredVolume::Aabb(Rectangle::new(tiles as f32, tiles as f32)),
+            Sprite3dBuilder {
+                image: self
+                    .assets
+                    .sprites
+                    .get(format!("sprites/buildings/{}.png", name).as_str())
+                    .unwrap()
+                    .clone_weak(),
+                pixels_per_metre: 24.0,
+                alpha_mode: AlphaMode::Blend,
+                unlit: true,
+                double_sided: true,
+                ..default()
+            }
+            .bundle(&mut self.sprite_params),
         )
     }
 }

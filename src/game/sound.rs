@@ -1,12 +1,14 @@
-use {
-    crate::{
-        components::{lib::V2, transform::CmpTransform2D},
-        game::common::CmpTimeToLife,
-    },
-    bevy::{audio::Volume, ecs::system::SystemParam, prelude::*},
-    rand_chacha::{rand_core::RngCore, ChaCha8Rng},
-    std::time::Duration,
-};
+use std::time::Duration;
+
+use bevy::audio::Volume;
+use bevy::ecs::system::SystemParam;
+use bevy::prelude::*;
+use rand_chacha::rand_core::RngCore;
+use rand_chacha::ChaCha8Rng;
+
+use crate::components::lib::V2;
+use crate::components::transform::CmpTransform2D;
+use crate::game::common::CmpTimeToLife;
 
 #[derive(Resource)]
 pub struct ResRandomSoundSource {
@@ -56,7 +58,8 @@ impl<'w, 's> SupSounds<'w, 's> {
             Name::from(format!("sounds/{}", sound)),
             CmpTransform2D {
                 position: pos,
-                angle:    0.0,
+                angle: 0.0,
+                ..default()
             },
             CmpTimeToLife {
                 seconds_left: ttl.as_secs_f32(),

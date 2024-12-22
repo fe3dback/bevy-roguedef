@@ -1,8 +1,11 @@
 use bevy::app::{App, Plugin};
 use bevy::prelude::Update;
+use bevy_trait_query::RegisterExt;
 
 use super::sys_tick;
+use crate::game::buildings::electro::cmp::CmpBuildingElectricity;
 use crate::game::buildings::electro::{cmp, cmp_debug, evt, internal, res_graph, sys_debug_draw};
+use crate::game::energy::CmpEnergyContainer;
 
 pub struct Plug {}
 
@@ -15,8 +18,11 @@ impl Plugin for Plug {
             .register_type::<internal::graph::Graph>()
             .register_type::<internal::tree::TreeRoot>()
             .register_type::<internal::tree::TreeLeaf>()
+            //
+            .register_component_as::<dyn CmpEnergyContainer, CmpBuildingElectricity>()
+            //
             .insert_resource(res_graph::ResBuildingWorldGraphs::default())
-            .add_event::<evt::EvtOnBuildingChargeChanged>()
+            .add_event::<evt::EvtOnBuildingChargeTransfered>()
             .add_systems(Update, sys_tick::electricity_tick)
             // debug
             .register_type::<cmp_debug::CmpDebugElectricityOutline>()

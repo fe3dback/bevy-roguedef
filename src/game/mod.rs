@@ -4,6 +4,7 @@ pub mod collisions;
 pub mod common;
 pub mod damage;
 mod enemies;
+pub mod energy;
 pub mod plug;
 pub mod projectiles;
 mod sound;

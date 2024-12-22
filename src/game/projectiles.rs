@@ -34,7 +34,6 @@ use bevy::prelude::{
 
 use crate::components::lib::V2;
 use crate::components::transform::CmpTransform2D;
-use crate::consts::PIXELS_PER_METER;
 use crate::game::collisions::{CmpCollisionCurrentVolume, CmpCollisionDesiredVolume};
 use crate::game::damage::{Damage, DamageCastSource, DamageCastTarget, EvtOnDamageCast};
 use crate::game::teams::{CmpTeam, Team};
@@ -103,12 +102,10 @@ pub fn move_projectiles(
             let ray = Ray2d {
                 origin:    pos_cur.as_2d(),
                 direction: Dir2::new_unchecked(
-                    V2::ZERO
-                        .polar_offset(1.0 / PIXELS_PER_METER, bullet_trx.angle)
-                        .as_2d(),
+                    V2::ZERO.polar_offset(1.0, bullet_trx.angle).as_2d(),
                 ),
             };
-            let ray_cast = RayCast2d::from_ray(ray, distance * PIXELS_PER_METER);
+            let ray_cast = RayCast2d::from_ray(ray, distance);
             let intersect = match obj_vol {
                 CmpCollisionCurrentVolume::Aabb(vol) => ray_cast.aabb_intersection_at(vol),
                 CmpCollisionCurrentVolume::Circle(vol) => ray_cast.circle_intersection_at(vol),

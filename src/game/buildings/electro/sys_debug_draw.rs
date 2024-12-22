@@ -1,12 +1,12 @@
 use bevy::color::palettes::basic::GRAY;
-use bevy::prelude::{Entity, EventReader, Query, ResMut, Vec2};
+use bevy::color::palettes::tailwind::{BLUE_400, GREEN_300, RED_700};
+use bevy::prelude::{Entity, EventReader, Gizmos, Isometry3d, Query, ResMut, Vec2};
 use bevy_vector_shapes::prelude::{RectPainter, ShapePainter};
 
-use crate::consts::PIXELS_PER_METER;
 use crate::game::buildings::electro::cmp::{CmpBuildingElectricity, CmpBuildingOccupied};
 use crate::game::buildings::electro::cmp_debug::CmpDebugElectricityOutline;
 use crate::game::buildings::electro::enums::EChargeDirection;
-use crate::game::buildings::electro::evt::EvtOnBuildingChargeChanged;
+use crate::game::buildings::electro::evt::EvtOnBuildingChargeTransfered;
 use crate::game::buildings::electro::res_graph::ResBuildingWorldGraphs;
 use crate::game::buildings::electro::types::CHANNEL_COLOR;
 use crate::plugins::gameplay::integrate_steps::enums::EventType;
@@ -28,7 +28,7 @@ pub fn debug_outline_reset(
 }
 
 pub fn debug_outline_show(
-    mut events: EventReader<EvtOnBuildingChargeChanged>,
+    mut events: EventReader<EvtOnBuildingChargeTransfered>,
     mut query: Query<&mut CmpDebugElectricityOutline>,
 ) {
     for ev in events.read() {
@@ -44,6 +44,7 @@ pub fn debug_outline_show(
 
 pub fn draw_graph_tree(
     mut gz: ShapePainter,
+    mut giz: Gizmos,
     query: Query<(
         Entity,
         &CmpBuildingOccupied,
@@ -60,7 +61,7 @@ pub fn draw_graph_tree(
         Verbose3,
     }
 
-    let cur_severity = Severity::Primary;
+    let cur_severity = Severity::Verbose3;
 
     for (id, occupied, ecity, outline) in &query {
         let graph_node = graph.find(id);
@@ -71,10 +72,7 @@ pub fn draw_graph_tree(
             gz.transform.translation = occupied.range().position().as_3d();
 
             let size = occupied.range().size();
-            gz.rect(Vec2::new(
-                size.x * PIXELS_PER_METER,
-                size.x * PIXELS_PER_METER,
-            ));
+            gz.rect(Vec2::new(size.x, size.x));
         }
         //
         // let text_top =
@@ -118,22 +116,36 @@ pub fn draw_graph_tree(
         //     }
         // }
         //
-        // if cur_severity >= Severity::Verbose3 {
-        //     for neighbour_id in graph_node.neighbours {
-        //         if id >= neighbour_id {
-        //             continue;
-        //         }
-        //
-        //         let (_, neighbour_props, _, _) = query
-        //             .get(neighbour_id)
-        //             .expect(&format!("not exist entity {:?}", neighbour_id));
-        //
-        //         gz.line(
-        //             Point::with_color(props.center(), Color::GRAY),
-        //             Point::with_color(neighbour_props.center(), Color::GRAY),
-        //         );
-        //     }
-        // }
+        if cur_severity >= Severity::Verbose3 {
+            for neighbour_id in graph_node.neighbours {
+                if id >= neighbour_id {
+                    continue;
+                }
+
+                // todo: dirtyfix (need remove deleted entities from graph)
+                let neighbour_props = match query.get(neighbour_id) {
+                    Ok((_, x, _, _)) => x,
+                    Err(_) => continue,
+                };
+
+                let mut iden = Isometry3d::IDENTITY;
+                iden.translation = occupied.range().position_center().as_3d().into();
+
+                // todo: wtf
+                giz.rect(
+                    iden,
+                    occupied.range().size().as_2d() + Vec2::splat(3.0),
+                    BLUE_400,
+                );
+
+                giz.ray_gradient(
+                    occupied.center().as_3d(),
+                    neighbour_props.center().as_3d(),
+                    RED_700,
+                    GREEN_300,
+                );
+            }
+        }
         //
         // if cur_severity >= Severity::Primary {
         //     for tree in &graph_node.trees {

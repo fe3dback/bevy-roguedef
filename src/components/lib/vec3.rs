@@ -1,7 +1,6 @@
-use {
-    bevy::prelude::{Reflect, Vec3},
-    std::ops::{AddAssign, *},
-};
+use std::ops::{AddAssign, *};
+
+use bevy::prelude::{Reflect, Vec3};
 
 // Internal game vector3D struct with inverted Y axis
 // and some helper functions to transform game-space vectors
@@ -41,7 +40,7 @@ impl V3 {
     pub fn from_3d(vec: Vec3) -> Self {
         Self {
             x: vec.x,
-            y: vec.y,
+            y: -vec.y,
             z: vec.z,
         }
     }
@@ -50,7 +49,7 @@ impl V3 {
     pub fn as_3d(&self) -> Vec3 {
         Vec3 {
             x: self.x,
-            y: self.y,
+            y: -self.y,
             z: self.z,
         }
     }

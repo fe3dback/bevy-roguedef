@@ -5,7 +5,6 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 use bevy::prelude::{Reflect, Vec2, Vec3};
 
 use crate::components::lib::vec3::V3;
-use crate::consts::PIXELS_PER_METER;
 
 // Internal game vector2D struct with inverted Y axis
 // and some helper functions to transform game-space vectors
@@ -62,8 +61,8 @@ impl V2 {
     #[inline(always)]
     pub fn from_2d(vec: Vec2) -> Self {
         Self {
-            x: vec.x / PIXELS_PER_METER,
-            y: -vec.y / PIXELS_PER_METER,
+            x: vec.x,
+            y: -vec.y,
         }
     }
 
@@ -71,23 +70,33 @@ impl V2 {
     pub fn from_3d(vec: Vec3) -> Self {
         let vec = V3::from_3d(vec);
 
-        Self {
-            x: vec.x / PIXELS_PER_METER,
-            y: -vec.y / PIXELS_PER_METER,
-        }
+        Self { x: vec.x, y: vec.y }
     }
 
     #[inline(always)]
     pub fn as_2d(&self) -> Vec2 {
         Vec2 {
-            x: self.x * PIXELS_PER_METER,
-            y: -self.y * PIXELS_PER_METER,
+            x: self.x,
+            y: -self.y,
+        }
+    }
+
+    #[inline(always)]
+    pub fn as_2d_ui(&self) -> Vec2 {
+        Vec2 {
+            x: self.x,
+            y: self.y,
         }
     }
 
     #[inline(always)]
     pub fn as_3d(&self) -> Vec3 {
-        V3::new(self.x * PIXELS_PER_METER, -self.y * PIXELS_PER_METER, 0.0).as_3d()
+        V3::new(self.x, self.y, 0.0).as_3d()
+    }
+
+    #[inline(always)]
+    pub fn as_3d_ui(&self) -> Vec3 {
+        V3::new(self.x, -self.y, 0.0).as_3d()
     }
 
     // --- simple math

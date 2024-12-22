@@ -6,6 +6,7 @@ use crate::components::tiles::{Range, Tile};
 use crate::components::unit_creature::CmpUnitBuilding;
 use crate::game::buildings::electro::dto::ChannelState;
 use crate::game::buildings::electro::types::MAX_CHANNELS;
+use crate::game::energy::CmpEnergyContainer;
 
 #[derive(Component, Reflect, InspectorOptions, Debug, Default, Clone)]
 #[require(CmpUnitBuilding)]
@@ -19,6 +20,26 @@ pub struct CmpBuildingElectricity {
     pub throughput_max_in:          f32,
     pub throughput_max_out:         f32,
     pub connection_radius_in_tiles: f32,
+}
+
+impl CmpEnergyContainer for CmpBuildingElectricity {
+    fn try_spend(&mut self, amount: f32) -> bool {
+        let mut dirty = self.channels;
+
+        let mut reminder = amount;
+        for chan in &mut dirty {
+            let spend = f32::min(reminder, chan.charge);
+            chan.charge -= spend;
+            reminder -= spend;
+        }
+
+        if reminder > 0.0 {
+            return false;
+        }
+
+        self.channels = dirty;
+        true
+    }
 }
 
 #[derive(Component, Reflect, InspectorOptions, Default)]

@@ -3,6 +3,7 @@ use std::time::Duration;
 use bevy::prelude::{
     default,
     info,
+    AlphaMode,
     AssetServer,
     Circle,
     Commands,
@@ -18,12 +19,14 @@ use bevy::prelude::{
     With,
     Without,
 };
+use bevy_sprite3d::{Sprite3dBuilder, Sprite3dParams};
 use rand_chacha::rand_core::RngCore;
 
 use crate::components::ai::{CmpEnemyMarkerAttackWhenNear, CmpEnemyMarkerMoveToCastleAI};
 use crate::components::lib::V2;
 use crate::components::movement::CmpMovement;
 use crate::components::transform::CmpTransform2D;
+use crate::components::unit::EUnitType;
 use crate::components::unit_creature::CmpUnitCreature;
 use crate::components::unit_creature_player::CmpUnitCreaturePlayer;
 use crate::game::collisions::CmpCollisionDesiredVolume;
@@ -31,6 +34,7 @@ use crate::game::common::ResRandomSource;
 use crate::game::damage::{CmpHealth, Damage, DamageKind};
 use crate::game::teams::{CmpTeam, Team};
 use crate::game::weapons::{CmpWeapon, Weapon};
+use crate::plugins::assets::asset::GameAssets;
 
 #[derive(Resource, Default, Debug, Reflect)]
 #[reflect(Resource)]
@@ -43,7 +47,8 @@ pub fn spawn_enemies(
     mut rules: ResMut<ResEnemiesSpawnRules>,
     time: Res<Time>,
     mut rand: ResMut<ResRandomSource>,
-    asset_server: Res<AssetServer>,
+    mut sprite_params: Sprite3dParams,
+    assets: Res<GameAssets>,
 ) {
     if rules.time_to_next_spawn > 0.0 {
         rules.time_to_next_spawn -= time.delta().as_secs_f32();
@@ -67,11 +72,13 @@ pub fn spawn_enemies(
             CmpTeam {
                 team: Team::Enemies,
             },
+            EUnitType::Creature,
             CmpEnemyMarkerMoveToCastleAI {},
             CmpEnemyMarkerAttackWhenNear {},
             CmpTransform2D {
                 position: pos_spawn,
-                angle:    pos_spawn.angle_to(V2::ZERO),
+                angle: pos_spawn.angle_to(V2::ZERO),
+                ..default()
             },
             CmpHealth {
                 health:     80.0,
@@ -91,9 +98,21 @@ pub fn spawn_enemies(
                 },
                 ..default()
             },
-            CmpCollisionDesiredVolume::Circle(Circle::new(24.0)),
+            CmpCollisionDesiredVolume::Circle(Circle::new(1.0)),
             CmpUnitCreature::default(),
-            Sprite::from_image(asset_server.load("sprites/creatures/ghost.png")),
+            Sprite3dBuilder {
+                image: assets
+                    .sprites
+                    .get("sprites/creatures/ghost.png")
+                    .unwrap()
+                    .clone_weak(),
+                pixels_per_metre: 24.0,
+                alpha_mode: AlphaMode::Blend,
+                unlit: true,
+                double_sided: true,
+                ..default()
+            }
+            .bundle(&mut sprite_params),
         ));
     }
 }

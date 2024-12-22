@@ -4,12 +4,27 @@ mod game;
 mod plugins;
 mod prefabs;
 
+use std::time::Duration;
+
 use bevy::app::*;
-use bevy::audio::{AudioPlugin, SpatialScale};
-use bevy::prelude::{Camera2d, Commands, Window, WindowPlugin};
+use bevy::audio::{AudioPlugin, SpatialScale, Volume};
+use bevy::prelude::{
+    Camera3d,
+    Commands,
+    GlobalVolume,
+    OrthographicProjection,
+    Projection,
+    Transform,
+    Vec2,
+    Vec3,
+    Window,
+    WindowPlugin,
+};
+use bevy::render::camera::ScalingMode;
 use bevy::utils::default;
 use bevy::window::PresentMode;
 use bevy::DefaultPlugins;
+use bevy_sprite3d::Sprite3dPlugin;
 use bevy_vector_shapes::Shape2dPlugin;
 
 use crate::game::common::CmpMainCamera;
@@ -38,8 +53,16 @@ fn main() {
                     ..default()
                 }),
         )
+        .insert_resource(GlobalVolume {
+            volume: Volume::new(0.01), // todo: set volume
+        })
         // 3-rd plugins
+        .add_plugins(bevy_framepace::FramepacePlugin)
+        .insert_resource(bevy_framepace::FramepaceSettings {
+            limiter: bevy_framepace::Limiter::Manual(Duration::from_secs_f32(1.0 / 120.0)),
+        })
         .add_plugins(Shape2dPlugin::default())
+        .add_plugins(Sprite3dPlugin {})
         // game plugins
         .add_systems(Startup, setup)
         .add_plugins(game::plug::Plug {})
@@ -49,5 +72,26 @@ fn main() {
 }
 
 fn setup(mut commands: Commands) {
-    commands.spawn((Camera2d, CmpMainCamera {}));
+    const PIXELS_PER_METER: f32 = 24.0;
+    commands.spawn((
+        Camera3d::default(),
+        Projection::from(Projection::Orthographic(OrthographicProjection {
+            near:            0.01,
+            far:             1000.0,
+            viewport_origin: Vec2::new(0.5, 0.5),
+            scaling_mode:    ScalingMode::WindowSize,
+            scale:           1.0 / PIXELS_PER_METER,
+            area:            Default::default(),
+        })),
+        CmpMainCamera {},
+        Transform {
+            translation: Vec3::new(0.0, 0.0, 50.0),
+            ..default()
+        },
+        // CmpTransform2D {
+        //     position: V2::splat(0.0),
+        //     height: 10.0,
+        //     ..default()
+        // },
+    ));
 }

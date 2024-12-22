@@ -1,11 +1,12 @@
 use bevy::app::{App, Plugin};
-use bevy::prelude::Update;
+use bevy::prelude::{in_state, IntoSystemConfigs, Update};
 use rand_chacha::rand_core::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 
 use crate::game::ai::ai_auto_attack_nearest_enemies;
 use crate::game::buildings;
 use crate::game::collisions::{
+    collision_volumes_draw,
     update_collision_volumes,
     CmpCollisionCurrentVolume,
     CmpCollisionDesiredVolume,
@@ -29,6 +30,7 @@ use crate::game::projectiles::{move_projectiles, CmpProjectile};
 use crate::game::sound::ResRandomSoundSource;
 use crate::game::teams::CmpTeam;
 use crate::game::weapons::{auto_reset_weapon_trigger, player_trigger_shot, shooting, CmpWeapon};
+use crate::plugins::InGame;
 
 pub struct Plug {}
 
@@ -64,10 +66,10 @@ impl Plugin for Plug {
             .add_systems(Update, auto_reset_weapon_trigger)
             .add_systems(Update, ai_auto_attack_nearest_enemies)
             .add_systems(Update, (update_mouse_pos_resource, remove_expired_ttl_entities))
-            .add_systems(Update, (update_collision_volumes))
+            .add_systems(Update, (collision_volumes_draw, update_collision_volumes))
             .add_systems(Update, (move_projectiles, draw_health_bar, damage_event_listener, death_by_health))
             .add_systems(Update, (player_trigger_shot, shooting))
-            .add_systems(Update, (spawn_enemies, move_enemies_to_castle))
+            .add_systems(Update, (spawn_enemies.run_if(in_state(InGame)), move_enemies_to_castle))
 
         //-
         ;

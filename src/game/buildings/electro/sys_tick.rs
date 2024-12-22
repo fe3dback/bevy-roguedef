@@ -3,7 +3,7 @@ use bevy::prelude::{EventReader, EventWriter, Query, Res};
 use super::cmp::CmpBuildingElectricity;
 use super::dto::ChannelState;
 use super::enums::EChargeDirection;
-use super::evt::EvtOnBuildingChargeChanged;
+use super::evt::EvtOnBuildingChargeTransfered;
 use super::internal::graph::{FoundInDepth, FoundTree};
 use super::res_graph::ResBuildingWorldGraphs;
 use super::types::{Channel, ChannelBitSize, ID};
@@ -12,7 +12,7 @@ use crate::plugins::gameplay::integrate_steps::evt::EvtOnIntegration;
 
 pub fn electricity_tick(
     mut integration_events: EventReader<EvtOnIntegration>,
-    mut charge_events: EventWriter<EvtOnBuildingChargeChanged>,
+    mut charge_events: EventWriter<EvtOnBuildingChargeTransfered>,
     mut query: Query<&mut CmpBuildingElectricity>,
     graph: Res<ResBuildingWorldGraphs>,
 ) {
@@ -62,7 +62,7 @@ pub fn electricity_tick(
 
                 // notify
                 charge_events.send_batch([
-                    EvtOnBuildingChargeChanged {
+                    EvtOnBuildingChargeTransfered {
                         id: node.id,
                         pair_id: *dst_id,
                         direction: EChargeDirection::Out,
@@ -70,7 +70,7 @@ pub fn electricity_tick(
                         charge_before: before_src,
                         charge_after: after_src,
                     },
-                    EvtOnBuildingChargeChanged {
+                    EvtOnBuildingChargeTransfered {
                         id: *dst_id,
                         pair_id: node.id,
                         direction: EChargeDirection::In,
@@ -261,14 +261,14 @@ fn calculate_max_transfer_amount(
     };
 
     let amount = f32::min(max_out, max_in);
-    return f32::clamp(amount, 0.0, amount);
+    return f32::max(amount, 0.0);
 }
 
 fn calculate_max_out_amount(src: &ChannelState) -> f32 {
     let free_throughput = src.throughput_max_out - src.throughput_out;
 
     let amount = f32::min(src.charge, free_throughput);
-    return f32::clamp(amount, 0.0, amount);
+    return f32::max(amount, 0.0);
 }
 
 fn calculate_max_in_amount(dst: &ChannelState) -> f32 {
@@ -276,5 +276,5 @@ fn calculate_max_in_amount(dst: &ChannelState) -> f32 {
     let free_throughput = dst.throughput_max_in - dst.throughput_in;
 
     let amount = f32::min(deficient_charge, free_throughput);
-    return f32::clamp(amount, 0.0, amount);
+    return f32::max(amount, 0.0);
 }

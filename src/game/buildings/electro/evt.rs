@@ -4,7 +4,7 @@ use crate::game::buildings::electro::enums::EChargeDirection;
 use crate::game::buildings::electro::types::{Channel, ID};
 
 #[derive(Event)]
-pub struct EvtOnBuildingChargeChanged {
+pub struct EvtOnBuildingChargeTransfered {
     // id здания у которого меняется charge
     pub id:            ID,
     // от кого получили, или кому мы передали заряд (зависит от direction)

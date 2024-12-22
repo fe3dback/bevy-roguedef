@@ -10,13 +10,17 @@ edition = "2021"
 
 #[toolchain] # todo: is needed?
 #channel = "nightly"
+# djieqwjeiqw вшыфвофыовофы
 
 [dependencies]
 # bevy staff
 bevy = { version = "0.15.0", features = ["dynamic_linking", "wav"] }
+bevy_framepace = {version = "0.18.0"}
 bevy-inspector-egui = { version = "0.28.0" }
 bevy_asset_loader = { version = "0.22.0" }
+bevy-trait-query = {version = "0.7.0"}
 bevy_vector_shapes = { version = "0.9.3" }
+bevy_sprite3d = {version = "4.0.0"}
 ron_asset_manager = { version = "0.5.2" }
 iyes_perf_ui = { git="https://github.com/IyesGames/iyes_perf_ui.git", branch = "main" }
 # rust libs
