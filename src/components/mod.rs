@@ -1,4 +1,5 @@
 pub mod ai;
+pub mod gizmosx;
 pub mod lib;
 pub mod movement;
 pub mod plug;

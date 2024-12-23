@@ -32,6 +32,7 @@ use bevy::prelude::{
     Without,
 };
 
+use crate::components::gizmosx::sup::GizmosX;
 use crate::components::lib::V2;
 use crate::components::transform::CmpTransform2D;
 use crate::game::collisions::{CmpCollisionCurrentVolume, CmpCollisionDesiredVolume};
@@ -156,10 +157,10 @@ pub fn move_projectiles(
 }
 
 pub fn draw_projectiles(
-    mut gizmos: Gizmos,
+    mut gizmos: GizmosX,
     query_projectiles: Query<&CmpTransform2D, With<CmpProjectile>>,
 ) {
     for trx in &query_projectiles {
-        gizmos.circle_2d(trx.position.as_2d(), 10.0, tailwind::LIME_800);
+        gizmos.circle(trx.position, 10.0, tailwind::LIME_800);
     }
 }

@@ -9,7 +9,7 @@ use bevy_sprite3d::{Sprite3dBuilder, Sprite3dBundle, Sprite3dParams};
 use super::electro::enums::EArchetype;
 use super::electro::res_graph::ResBuildingWorldGraphs;
 use crate::components::lib::V2;
-use crate::components::tiles::{select_n_tiles_around_position, VecExt};
+use crate::components::tiles::{select_n_tiles_around_position, Tile};
 use crate::components::transform::CmpTransform2D;
 use crate::components::unit::EUnitType;
 use crate::game::buildings::electro::cmp::{CmpBuildingElectricity, CmpBuildingOccupied};
@@ -210,7 +210,7 @@ impl<'w, 's> SupBuildingSpawner<'w, 's> {
             CmpBuildingOccupied {
                 grid_width:    tiles,
                 grid_height:   tiles,
-                grid_position: pos.tile(),
+                grid_position: Tile::at(range.min_x, range.min_y),
             },
             CmpDebugElectricityOutline::default(),
             CmpCollisionDesiredVolume::Aabb(Rectangle::new(tiles as f32, tiles as f32)),

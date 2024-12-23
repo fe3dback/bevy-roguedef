@@ -18,6 +18,8 @@ use bevy::prelude::{
 };
 use bevy_inspector_egui::egui::Shape;
 
+use crate::components::gizmosx::sup::GizmosX;
+use crate::components::lib::V2;
 use crate::components::transform::CmpTransform2D;
 
 #[derive(Component, Reflect, Debug)]
@@ -65,14 +67,22 @@ pub fn update_collision_volumes(
     }
 }
 
-pub fn collision_volumes_draw(mut gizmos: Gizmos, query: Query<(&CmpCollisionCurrentVolume)>) {
+pub fn collision_volumes_draw(mut gizmos: GizmosX, query: Query<(&CmpCollisionCurrentVolume)>) {
+    gizmos.rect(V2::new(0.0, 0.0), V2::new(1.0, 1.0), tailwind::BLUE_700);
+    gizmos.arrow(V2::ZERO, V2::new(10.0, 0.0), tailwind::RED_700);
+    gizmos.arrow(V2::ZERO, V2::new(0.0, 10.0), tailwind::GREEN_700);
+
     for (volume) in query.iter() {
         match volume {
             CmpCollisionCurrentVolume::Aabb(vol) => {
-                gizmos.rect_2d(vol.center(), vol.half_size() * 2., tailwind::GRAY_400);
+                let (hw, hh) = (vol.half_size().x, vol.half_size().y);
+                let half_size = V2::new(hw, hh);
+                let tl = V2::from_2d(vol.center()) - half_size;
+
+                gizmos.rect(tl, half_size * 2.0, tailwind::GRAY_400);
             }
             CmpCollisionCurrentVolume::Circle(vol) => {
-                gizmos.circle_2d(vol.center(), vol.radius(), tailwind::GRAY_400);
+                gizmos.circle(V2::from_2d(vol.center()), vol.radius(), tailwind::GRAY_400);
             }
         }
     }

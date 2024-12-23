@@ -1,8 +1,9 @@
 use bevy::color::palettes::basic::GRAY;
-use bevy::color::palettes::tailwind::{BLUE_400, GREEN_300, RED_700};
-use bevy::prelude::{Entity, EventReader, Gizmos, Isometry3d, Query, ResMut, Vec2};
-use bevy_vector_shapes::prelude::{RectPainter, ShapePainter};
+use bevy::color::palettes::tailwind::{BLUE_700, GRAY_600, RED_700};
+use bevy::prelude::{Alpha, Entity, EventReader, Query, ResMut};
 
+use crate::components::gizmosx::sup::GizmosX;
+use crate::components::lib::V2;
 use crate::game::buildings::electro::cmp::{CmpBuildingElectricity, CmpBuildingOccupied};
 use crate::game::buildings::electro::cmp_debug::CmpDebugElectricityOutline;
 use crate::game::buildings::electro::enums::EChargeDirection;
@@ -43,8 +44,7 @@ pub fn debug_outline_show(
 }
 
 pub fn draw_graph_tree(
-    mut gz: ShapePainter,
-    mut giz: Gizmos,
+    mut gz: GizmosX,
     query: Query<(
         Entity,
         &CmpBuildingOccupied,
@@ -66,14 +66,14 @@ pub fn draw_graph_tree(
     for (id, occupied, ecity, outline) in &query {
         let graph_node = graph.find(id);
 
-        if outline.on && cur_severity >= Severity::Primary {
-            gz.color = outline.color;
-            gz.hollow = true;
-            gz.transform.translation = occupied.range().position().as_3d();
-
-            let size = occupied.range().size();
-            gz.rect(Vec2::new(size.x, size.x));
-        }
+        // if outline.on && cur_severity >= Severity::Primary {
+        //     gz.color = outline.color;
+        //     gz.hollow = true;
+        //     gz.transform.translation = occupied.range().position().as_3d();
+        //
+        //     let size = occupied.range().size();
+        //     gz.rect(Vec2::new(size.x, size.x));
+        // }
         //
         // let text_top =
         //     props.grid_position.position() - V2::new(0.0, ecity.count_channels as f32 * 20.0);
@@ -116,54 +116,62 @@ pub fn draw_graph_tree(
         //     }
         // }
         //
-        if cur_severity >= Severity::Verbose3 {
-            for neighbour_id in graph_node.neighbours {
-                if id >= neighbour_id {
-                    continue;
-                }
+        if cur_severity >= Severity::Verbose1 {
+            let size = occupied.range().size();
+            let (w, h) = (size.x, size.y);
+            let tl = occupied.grid_position.position();
+            let bar_tl = tl - V2::new(0.0, 0.5);
+            let bar_size = V2::new(w, 0.3);
+            let total_capacity = ecity.channels.iter().fold(0.0, |x, chan| x + chan.capacity);
+            let total_charge = ecity.channels.iter().fold(0.0, |x, chan| x + chan.charge);
+            let bar_percent = total_charge / total_capacity;
+            let padding = V2::new(0.05, 0.05);
 
+            gz.rect(bar_tl, bar_size, GRAY_600);
+            gz.rect(
+                bar_tl + padding,
+                (bar_size - padding) * V2::new(bar_percent, 1.0),
+                BLUE_700,
+            );
+        }
+
+        if cur_severity >= Severity::Verbose2 {
+            for neighbour_id in graph_node.neighbours {
                 // todo: dirtyfix (need remove deleted entities from graph)
-                let neighbour_props = match query.get(neighbour_id) {
+                let neighbour_occupied = match query.get(neighbour_id) {
                     Ok((_, x, _, _)) => x,
                     Err(_) => continue,
                 };
 
-                let mut iden = Isometry3d::IDENTITY;
-                iden.translation = occupied.range().position_center().as_3d().into();
-
-                // todo: wtf
-                giz.rect(
-                    iden,
-                    occupied.range().size().as_2d() + Vec2::splat(3.0),
-                    BLUE_400,
-                );
-
-                giz.ray_gradient(
-                    occupied.center().as_3d(),
-                    neighbour_props.center().as_3d(),
-                    RED_700,
-                    GREEN_300,
+                gz.line_gradient(
+                    occupied.center() + V2::new(0.05, 0.05),
+                    neighbour_occupied.center() + V2::new(0.05, 0.05),
+                    GRAY_600.with_alpha(0.05),
+                    GRAY_600.with_alpha(0.05),
                 );
             }
         }
-        //
-        // if cur_severity >= Severity::Primary {
-        //     for tree in &graph_node.trees {
-        //         if let Some(selected) = selection.selected {
-        //             if selected == tree.root_id {
-        //                 for child_id in &tree.child {
-        //                     let (_, child_props, _, _) = query
-        //                         .get(*child_id)
-        //                         .expect(&format!("not exist entity {:?}", child_id));
-        //
-        //                     gz.line(
-        //                         Point::with_color(props.center(), Color::RED),
-        //                         Point::with_color(child_props.center(), Color::GREEN),
-        //                     );
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+
+        if cur_severity == Severity::Verbose3 {
+            for tree in &graph_node.trees {
+                //if let Some(selected) = selection.selected {
+                //if selected == tree.root_id {
+                for child_id in &tree.child {
+                    let child_occupied = match query.get(*child_id) {
+                        Ok((_, x, _, _)) => x,
+                        Err(_) => continue,
+                    };
+
+                    gz.line_gradient(
+                        occupied.center(),
+                        child_occupied.center(),
+                        RED_700,
+                        BLUE_700.with_alpha(0.0),
+                    );
+                }
+                //}
+                //}
+            }
+        }
     }
 }
