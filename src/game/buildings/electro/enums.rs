@@ -14,3 +14,14 @@ pub enum EArchetype {
     Castle,
     Source,
 }
+
+impl EArchetype {
+    pub fn graph_priority(self) -> u32 {
+        match self {
+            EArchetype::Source => 100,
+            EArchetype::Castle => 50,
+            EArchetype::Pole => 10,
+            EArchetype::Tower => 1,
+        }
+    }
+}

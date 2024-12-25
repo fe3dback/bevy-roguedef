@@ -3,6 +3,7 @@ use std::collections::{HashMap, VecDeque};
 use std::ops::Deref;
 
 use bevy::prelude::Reflect;
+use priority_queue::PriorityQueue;
 
 use crate::components::lib::V2;
 use crate::game::buildings::electro::enums::EArchetype;
@@ -162,30 +163,46 @@ impl Graph {
             ));
 
             // create tmp search queue (parent, child)
-            let mut deq: VecDeque<(ID, ID)> = VecDeque::with_capacity(64);
+            let mut pq: PriorityQueue<(ID, ID), u32> = PriorityQueue::with_capacity(64);
+            let mut nextq: Vec<(ID, ID)> = Vec::with_capacity(64);
 
             // add first level childs
-            for neighbour_id in &self.nodes.get(&source_id).unwrap().neighbours {
-                deq.push_back((source_id, *neighbour_id));
+            let root_node = self.nodes.get(&source_id).unwrap();
+            for neighbour_id in &root_node.neighbours {
+                nextq.push((source_id, *neighbour_id));
             }
 
             loop {
-                let next = deq.pop_front();
+                let next = pq.pop();
                 if next.is_none() {
                     // all nodes from this source is found
-                    break;
+                    if nextq.is_empty() {
+                        break;
+                    }
+
+                    // queue next chunk
+                    for (parent, child) in &nextq {
+                        let child_node = self.nodes.get(&child).unwrap();
+                        pq.push((*parent, *child), child_node.archetype.graph_priority());
+                    }
+
+                    nextq.clear();
+                    continue;
                 }
 
-                let (parent_id, child_id) = next.unwrap();
+                let ((parent_id, child_id), _) = next.unwrap();
                 root.insert_into(parent_id, child_id);
 
-                for neighbour_id in &self.nodes.get(&child_id).unwrap().neighbours {
+                let child_node = self.nodes.get(&child_id).unwrap();
+                for neighbour_id in &child_node.neighbours {
                     if root.has(*neighbour_id) {
                         // this node has <= level then current (already processed)
                         continue;
                     }
 
-                    deq.push_back((child_id, *neighbour_id));
+                    if child_node.can_produce {
+                        nextq.push((child_id, *neighbour_id));
+                    }
                 }
             }
         }

@@ -232,7 +232,7 @@ pub fn shooting(
         }
 
         for _ in 0..ammo_need_fire {
-            if utype.is_building() && !energy.try_spend(0.25) {
+            if utype.is_building() && !energy.try_spend(0.05) {
                 continue;
             }
 
