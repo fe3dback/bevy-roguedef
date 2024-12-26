@@ -1,8 +1,8 @@
 use bevy::color::palettes::tailwind;
 use bevy::math::Isometry2d;
 use bevy::prelude::{Alpha, Gizmos, UVec2};
+use brg_core::prelude::V2;
 
-use crate::components::lib::V2;
 use crate::consts::PLAYABLE_AREA_SIZE;
 
 pub fn draw_grid(mut gz: Gizmos) {

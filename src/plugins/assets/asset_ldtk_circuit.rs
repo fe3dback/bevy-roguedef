@@ -3,9 +3,8 @@ use bevy::asset::io::Reader;
 use bevy::asset::{Asset, AssetLoader, AsyncReadExt, LoadContext};
 use bevy::prelude::{info, TypePath};
 use bevy::utils::ConditionalSendFuture;
+use brg_core::prelude::Tile;
 use serde::{Deserialize, Serialize};
-
-use crate::components::tiles::Tile;
 
 #[derive(Asset, Debug, TypePath)]
 pub struct AssetLdtkCircuit {

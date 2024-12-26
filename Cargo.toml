@@ -12,7 +12,15 @@ edition = "2021"
 #channel = "nightly"
 # djieqwjeiqw вшыфвофыовофы
 
+[workspace]
+resolver = "2"
+members = [
+    "crates/*",
+]
+
 [dependencies]
+# parts
+brg_core = { path = "crates/brg_core" }
 # bevy staff
 bevy = { version = "0.15.0", features = ["dynamic_linking", "wav"] }
 bevy_framepace = {version = "0.18.0"}
@@ -27,7 +35,6 @@ iyes_perf_ui = { git="https://github.com/IyesGames/iyes_perf_ui.git", branch = "
 serde = { version = "1.0.215", features = ["derive"] }
 strum = { version = "0.26.3", features = ["derive"] }
 lazy_static = "1.5.0"
-auto-impl-ops = { version = "0.2.1" }
 rand_chacha = "0.3.1"
 uuid = "1.11.0"
 anyhow = "1.0.94"

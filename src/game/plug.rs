@@ -25,7 +25,12 @@ use crate::game::damage::{
     CmpHealth,
     EvtOnDamageCast,
 };
-use crate::game::enemies::{move_enemies_to_castle, spawn_enemies, ResEnemiesSpawnRules};
+use crate::game::enemies::{
+    editor_enemies_window_update,
+    move_enemies_to_castle,
+    spawn_enemies,
+    ResEnemiesSpawnRules,
+};
 use crate::game::projectiles::{move_projectiles, CmpProjectile};
 use crate::game::sound::ResRandomSoundSource;
 use crate::game::teams::CmpTeam;
@@ -62,14 +67,14 @@ impl Plugin for Plug {
             .register_type::<CmpWeapon>()
             .register_type::<ResEnemiesSpawnRules>()
             .register_type::<ResMouse>()
-            // systems 
+            // systems  
             .add_systems(Update, auto_reset_weapon_trigger)
             .add_systems(Update, ai_auto_attack_nearest_enemies)
             .add_systems(Update, (update_mouse_pos_resource, remove_expired_ttl_entities))
             .add_systems(Update, (collision_volumes_draw, update_collision_volumes))
             .add_systems(Update, (move_projectiles, draw_health_bar, damage_event_listener, death_by_health))
             .add_systems(Update, (player_trigger_shot, shooting))
-            .add_systems(Update, (spawn_enemies.run_if(in_state(InGame)), move_enemies_to_castle))
+            .add_systems(Update, (editor_enemies_window_update.run_if(in_state(InGame)), spawn_enemies.run_if(in_state(InGame)), move_enemies_to_castle))
 
         //-
         ;

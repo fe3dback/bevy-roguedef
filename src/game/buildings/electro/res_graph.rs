@@ -1,7 +1,7 @@
 use bevy::ecs::reflect::ReflectResource;
 use bevy::prelude::{Reflect, Resource};
+use brg_core::prelude::V2;
 
-use crate::components::lib::V2;
 use crate::game::buildings::electro::enums::EArchetype;
 use crate::game::buildings::electro::internal;
 use crate::game::buildings::electro::internal::graph::{Found, FoundInDepth, FoundTree, Graph};

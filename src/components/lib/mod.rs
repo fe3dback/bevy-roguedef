@@ -1,4 +1,0 @@
-mod vec2;
-mod vec3;
-
-pub use vec2::V2;

@@ -1,12 +1,9 @@
-use {
-    crate::components::tiles::{
-        area::Area,
-        consts::{CHUNKS_PER_AREA, CHUNKS_PER_AREA_HALF, TILES_AROUND_CENTER, TILES_PER_CHUNK},
-        range::Range,
-        tile::Tile,
-    },
-    std::ops::{AddAssign, SubAssign, *},
-};
+use std::ops::{AddAssign, SubAssign, *};
+
+use super::area::Area;
+use super::consts::{CHUNKS_PER_AREA, CHUNKS_PER_AREA_HALF, TILES_AROUND_CENTER, TILES_PER_CHUNK};
+use super::range::Range;
+use super::tile::Tile;
 
 // Chunk is 2D array of tiles
 // Chunk contain exactly 15x15 tiles (225 total)

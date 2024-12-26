@@ -3,9 +3,9 @@ use std::collections::{HashMap, VecDeque};
 use std::ops::Deref;
 
 use bevy::prelude::Reflect;
+use brg_core::prelude::V2;
 use priority_queue::PriorityQueue;
 
-use crate::components::lib::V2;
 use crate::game::buildings::electro::enums::EArchetype;
 use crate::game::buildings::electro::internal::tree::TreeRoot;
 use crate::game::buildings::electro::types::{

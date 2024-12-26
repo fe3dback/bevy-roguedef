@@ -2,14 +2,16 @@ use std::ops::{AddAssign, *};
 
 use bevy::prelude::{Reflect, Vec3};
 
+use super::units::Meter;
+
 // Internal game vector3D struct with inverted Y axis
 // and some helper functions to transform game-space vectors
 // into engine-space.
 #[derive(PartialEq, PartialOrd, Debug, Copy, Clone, Reflect)]
 pub struct V3 {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
+    pub x: Meter,
+    pub y: Meter,
+    pub z: Meter,
 }
 
 #[allow(dead_code)]
@@ -20,19 +22,19 @@ impl V3 {
     // --- basic
 
     #[inline(always)]
-    pub const fn new(x: f32, y: f32, z: f32) -> V3 {
+    pub const fn new(x: Meter, y: Meter, z: Meter) -> V3 {
         V3 { x, y, z }
     }
 
     #[inline(always)]
-    pub const fn splat(f: f32) -> V3 {
+    pub const fn splat(f: Meter) -> V3 {
         V3 { x: f, y: f, z: f }
     }
 
     // --- from/to engine vectors
 
     #[inline(always)]
-    pub const fn new_3d(x: f32, y: f32, z: f32) -> Vec3 {
+    pub const fn new_3d(x: Meter, y: Meter, z: Meter) -> Vec3 {
         Vec3 { x, y, z }
     }
 

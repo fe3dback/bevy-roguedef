@@ -1,7 +1,6 @@
 use bevy::prelude::{
     AssetServer,
-    Assets
-    ,
+    Assets,
     ButtonInput,
     Handle,
     KeyCode,
@@ -11,8 +10,8 @@ use bevy::prelude::{
     ResMut,
     Resource,
 };
+use brg_core::prelude::Tile;
 
-use crate::components::tiles::Tile;
 use crate::game::buildings::electro::enums::EArchetype;
 use crate::game::buildings::sup::SupBuildingSpawner;
 use crate::game::common::ResMouse;

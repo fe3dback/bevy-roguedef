@@ -425,7 +425,6 @@ name = "bevy-roguedef"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "auto-impl-ops",
  "bevy",
  "bevy-inspector-egui",
  "bevy-trait-query",
@@ -433,6 +432,7 @@ dependencies = [
  "bevy_framepace",
  "bevy_sprite3d",
  "bevy_vector_shapes",
+ "brg_core",
  "iyes_perf_ui",
  "lazy_static",
  "priority-queue",
@@ -1614,6 +1614,14 @@ dependencies = [
  "futures-io",
  "futures-lite",
  "piper",
+]
+
+[[package]]
+name = "brg_core"
+version = "0.1.0"
+dependencies = [
+ "auto-impl-ops",
+ "bevy",
 ]
 
 [[package]]

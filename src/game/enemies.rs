@@ -8,6 +8,7 @@ use bevy::prelude::{
     Circle,
     Commands,
     Component,
+    Mut,
     Query,
     Reflect,
     ReflectResource,
@@ -18,12 +19,16 @@ use bevy::prelude::{
     Time,
     With,
     Without,
+    World,
 };
+use bevy::window::PrimaryWindow;
+use bevy_inspector_egui::bevy_egui::EguiContext;
+use bevy_inspector_egui::egui;
 use bevy_sprite3d::{Sprite3dBuilder, Sprite3dParams};
+use brg_core::prelude::V2;
 use rand_chacha::rand_core::RngCore;
 
 use crate::components::ai::{CmpEnemyMarkerAttackWhenNear, CmpEnemyMarkerMoveToCastleAI};
-use crate::components::lib::V2;
 use crate::components::movement::CmpMovement;
 use crate::components::transform::CmpTransform2D;
 use crate::components::unit::EUnitType;
@@ -35,32 +40,69 @@ use crate::game::damage::{CmpHealth, Damage, DamageKind};
 use crate::game::teams::{CmpTeam, Team};
 use crate::game::weapons::{CmpWeapon, Weapon};
 use crate::plugins::assets::asset::GameAssets;
+use crate::plugins::gameplay::integrate_steps::enums::EventType;
 
-#[derive(Resource, Default, Debug, Reflect)]
+#[derive(Resource, Debug, Reflect)]
 #[reflect(Resource)]
 pub struct ResEnemiesSpawnRules {
     pub time_to_next_spawn: f32,
+    pub dice_sides:         i32,
+    pub dice_count:         i32,
+    pub spawn_clicked:      bool,
+}
+
+impl Default for ResEnemiesSpawnRules {
+    fn default() -> Self {
+        Self {
+            time_to_next_spawn: 1.0,
+            dice_sides:         4,
+            dice_count:         3,
+            spawn_clicked:      false,
+        }
+    }
+}
+
+pub fn editor_enemies_window_update(world: &mut World) {
+    world.resource_scope(|world, mut rules: Mut<ResEnemiesSpawnRules>| {
+        let Ok(egui_context) = world
+            .query_filtered::<&mut EguiContext, With<PrimaryWindow>>()
+            .get_single(world)
+        else {
+            return;
+        };
+
+        let mut ctx = egui_context.clone();
+
+        egui::Window::new("Enemies").show(ctx.get_mut(), |ui| {
+            ui.horizontal(|row| {
+                row.label("Dice sides/count");
+                row.add(egui::widgets::DragValue::new(&mut rules.dice_sides));
+                row.add(egui::widgets::DragValue::new(&mut rules.dice_count));
+            });
+            ui.horizontal(|row| {
+                if row.button("spawn").clicked() {
+                    rules.spawn_clicked = true;
+                }
+            });
+        });
+    });
 }
 
 pub fn spawn_enemies(
     mut cmd: Commands,
     mut rules: ResMut<ResEnemiesSpawnRules>,
-    time: Res<Time>,
     mut rand: ResMut<ResRandomSource>,
     mut sprite_params: Sprite3dParams,
     assets: Res<GameAssets>,
 ) {
-    if rules.time_to_next_spawn > 0.0 {
-        rules.time_to_next_spawn -= time.delta().as_secs_f32();
+    if !rules.spawn_clicked {
         return;
     }
 
-    // 3000ms to 6000ms
-    let rnd_ms = 3000 + (rand.rnd.next_u64() % 3000);
-    rules.time_to_next_spawn = (rnd_ms as f32) / 1000.0;
+    rules.spawn_clicked = false;
 
     // 1 to 4
-    let rnd_cnt = 1 + (rand.rnd.next_u64() % 3);
+    let rnd_cnt = 1 + (rand.rnd.next_u64() % (rules.dice_sides * rules.dice_count) as u64);
 
     for _ in 0..rnd_cnt {
         let rnd_angle = f32::to_radians((rand.rnd.next_u64() % 360) as f32);

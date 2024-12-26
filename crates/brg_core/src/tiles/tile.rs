@@ -2,9 +2,9 @@ use std::ops::{AddAssign, *};
 
 use bevy::prelude::Reflect;
 
-use crate::components::lib::V2;
-use crate::components::tiles::consts::{TILES_PER_CHUNK, TILES_PER_CHUNK_HALF};
-use crate::components::tiles::Chunk;
+use super::chunk::Chunk;
+use super::consts::{TILES_PER_CHUNK, TILES_PER_CHUNK_HALF};
+use crate::prelude::V2;
 
 /// Tile is 2D tile (minimum logical unit in grid)
 #[derive(Copy, Clone, Hash, Eq, PartialEq, Debug, Default, Reflect)]

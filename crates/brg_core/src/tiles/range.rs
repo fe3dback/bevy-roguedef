@@ -1,10 +1,8 @@
-use {
-    crate::components::{
-        lib::V2,
-        tiles::{chunk::Chunk, tile::Tile},
-    },
-    std::collections::HashSet,
-};
+use std::collections::HashSet;
+
+use super::chunk::Chunk;
+use super::tile::Tile;
+use crate::vectors::prelude::V2;
 
 // Range is box tiles selection with
 // any size, that points on specified tiles

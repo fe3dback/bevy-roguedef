@@ -17,9 +17,9 @@ use bevy::prelude::{
     Transform,
 };
 use bevy_inspector_egui::egui::Shape;
+use brg_core::prelude::V2;
 
 use crate::components::gizmosx::sup::GizmosX;
-use crate::components::lib::V2;
 use crate::components::transform::CmpTransform2D;
 
 #[derive(Component, Reflect, Debug)]

@@ -1,11 +1,10 @@
-use {
-    crate::components::tiles::{Range, Tile},
-    core::ops::{Add, Sub},
-    std::{
-        collections::{hash_set::Iter, HashSet},
-        ops::{AddAssign, SubAssign},
-    },
-};
+use core::ops::{Add, Sub};
+use std::collections::hash_set::Iter;
+use std::collections::HashSet;
+use std::ops::{AddAssign, SubAssign};
+
+use super::range::Range;
+use super::tile::Tile;
 
 #[derive(Clone, Default)]
 pub struct Selection {

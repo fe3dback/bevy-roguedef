@@ -1,7 +1,8 @@
-use crate::components::{
-    lib::V2,
-    tiles::{range::Range, Selection, Tile, VecExt},
-};
+use super::prelude::Tile;
+use super::range::Range;
+use super::selection::Selection;
+use super::tile::VecExt;
+use crate::vectors::prelude::V2;
 
 pub fn tiles_on_world(pos_tl: V2, pos_br: V2) -> Range {
     Range::new(

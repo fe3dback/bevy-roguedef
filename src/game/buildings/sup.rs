@@ -5,11 +5,10 @@ use bevy::ecs::system::SystemParam;
 use bevy::prelude::{AlphaMode, Commands, Name, Rectangle, Res, ResMut};
 use bevy::utils::default;
 use bevy_sprite3d::{Sprite3dBuilder, Sprite3dBundle, Sprite3dParams};
+use brg_core::prelude::{select_n_tiles_around_position, Tile, V2};
 
 use super::electro::enums::EArchetype;
 use super::electro::res_graph::ResBuildingWorldGraphs;
-use crate::components::lib::V2;
-use crate::components::tiles::{select_n_tiles_around_position, Tile};
 use crate::components::transform::CmpTransform2D;
 use crate::components::unit::EUnitType;
 use crate::game::buildings::electro::cmp::{CmpBuildingElectricity, CmpBuildingOccupied};
@@ -49,7 +48,7 @@ impl<'w, 's> SupBuildingSpawner<'w, 's> {
                     channels:                   self.create_channels(0.0, 2.5, 2.5, 2.5),
                     throughput_max_in:          2.5,
                     throughput_max_out:         2.5,
-                    connection_radius_in_tiles: 8.0,
+                    connection_radius_in_tiles: 6.0,
                 },
             ))
             .id();
@@ -74,7 +73,7 @@ impl<'w, 's> SupBuildingSpawner<'w, 's> {
                     channels:                   self.create_channels(0.0, 10.0, 5.0, 0.0),
                     throughput_max_in:          5.0,
                     throughput_max_out:         0.0,
-                    connection_radius_in_tiles: 5.0,
+                    connection_radius_in_tiles: 3.0,
                 },
                 CmpWeapon {
                     current: Weapon {
@@ -115,7 +114,7 @@ impl<'w, 's> SupBuildingSpawner<'w, 's> {
                     channels:                   self.create_channels(50.0, 100.0, 50.0, 50.0),
                     throughput_max_in:          50.0,
                     throughput_max_out:         50.0,
-                    connection_radius_in_tiles: 5.0,
+                    connection_radius_in_tiles: 3.0,
                 },
             ))
             .id();
@@ -142,7 +141,7 @@ impl<'w, 's> SupBuildingSpawner<'w, 's> {
                     channels:                   self.create_channels(1000.0, 1000.0, 0.0, 100.0),
                     throughput_max_in:          0.0,
                     throughput_max_out:         100.0,
-                    connection_radius_in_tiles: 8.0,
+                    connection_radius_in_tiles: 2.0,
                 },
             ))
             .id();

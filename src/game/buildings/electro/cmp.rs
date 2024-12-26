@@ -1,8 +1,7 @@
 use bevy::prelude::{Component, Reflect};
 use bevy_inspector_egui::InspectorOptions;
+use brg_core::prelude::{Range, Tile, V2};
 
-use crate::components::lib::V2;
-use crate::components::tiles::{Range, Tile};
 use crate::components::unit_creature::CmpUnitBuilding;
 use crate::game::buildings::electro::dto::ChannelState;
 use crate::game::buildings::electro::types::MAX_CHANNELS;

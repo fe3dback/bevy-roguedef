@@ -1,9 +1,7 @@
 pub mod ai;
 pub mod gizmosx;
-pub mod lib;
 pub mod movement;
 pub mod plug;
-pub mod tiles;
 pub mod transform;
 pub mod unit;
 pub mod unit_creature;

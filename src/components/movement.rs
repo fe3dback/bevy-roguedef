@@ -1,6 +1,6 @@
 use bevy::prelude::{Component, Reflect, Vec2};
+use brg_core::prelude::V2;
 
-use crate::components::lib::V2;
 use crate::components::transform::CmpTransform2D;
 
 #[derive(Component, Reflect)]

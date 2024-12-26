@@ -4,15 +4,16 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 use bevy::prelude::{Reflect, Vec2, Vec3};
 
-use crate::components::lib::vec3::V3;
+use super::units::{Angle, Meter};
+use super::vec3::V3;
 
 // Internal game vector2D struct with inverted Y axis
 // and some helper functions to transform game-space vectors
 // into engine-space.
 #[derive(PartialEq, PartialOrd, Debug, Copy, Clone, Reflect)]
 pub struct V2 {
-    pub x: f32,
-    pub y: f32,
+    pub x: Meter,
+    pub y: Meter,
 }
 
 #[allow(dead_code)]
@@ -28,17 +29,17 @@ impl V2 {
     // --- basic
 
     #[inline(always)]
-    pub const fn new(x: f32, y: f32) -> Self {
+    pub const fn new(x: Meter, y: Meter) -> Self {
         Self { x, y }
     }
 
     #[inline(always)]
-    pub const fn splat(f: f32) -> Self {
+    pub const fn splat(f: Meter) -> Self {
         Self { x: f, y: f }
     }
 
     #[inline]
-    pub fn with_height(&self, height: f32) -> V3 {
+    pub fn with_height(&self, height: Meter) -> V3 {
         V3 {
             x: self.x,
             y: self.y,
@@ -49,12 +50,12 @@ impl V2 {
     // --- from/to engine vectors
 
     #[inline(always)]
-    pub const fn new_2d(x: f32, y: f32) -> Vec2 {
+    pub const fn new_2d(x: Meter, y: Meter) -> Vec2 {
         Vec2 { x, y }
     }
 
     #[inline(always)]
-    pub const fn new_3d(x: f32, y: f32) -> Vec3 {
+    pub const fn new_3d(x: Meter, y: Meter) -> Vec3 {
         Vec3 { x, y, z: 0.0 }
     }
 
@@ -200,31 +201,31 @@ impl V2 {
     }
 
     #[inline]
-    pub fn distance(self, to: Self) -> f32 {
+    pub fn distance(self, to: Self) -> Meter {
         f32::sqrt((self.x - to.x) * (self.x - to.x) + (self.y - to.y) * (self.y - to.y))
     }
 
     #[inline]
-    pub fn direction(self) -> f32 {
+    pub fn direction(self) -> Angle {
         f32::atan2(-self.y, self.x)
     }
 
     #[inline]
-    pub fn angle_to(self, to: Self) -> f32 {
+    pub fn angle_to(self, to: Self) -> Angle {
         f32::atan2(to.y - self.y, self.x - to.x) + PI
     }
 
     #[inline]
-    pub fn angle_between(self, to: Self) -> f32 {
+    pub fn angle_between(self, to: Self) -> Angle {
         f32::atan2(self.cross(to), self.dot(to))
     }
 
     #[inline]
-    pub fn rotate(self, angle: f32) -> V2 {
+    pub fn rotate(self, angle: Angle) -> V2 {
         let sin = f32::sin(angle);
         let cos = f32::cos(angle);
 
-        return V2::new(self.x * cos - self.y * sin, -(self.x * sin + self.y * cos));
+        V2::new(self.x * cos - self.y * sin, -(self.x * sin + self.y * cos))
     }
 
     // --- algebra
@@ -232,7 +233,7 @@ impl V2 {
     /// Computes the cross between `self` and `rhs`.
     #[inline]
     pub fn cross(self, to: Self) -> f32 {
-        return self.x * to.y - self.y * to.x;
+        self.x * to.y - self.y * to.x
     }
 
     /// Computes the dot product of `self` and `rhs`.
@@ -262,12 +263,12 @@ impl V2 {
     // --- trigonometry
 
     #[inline]
-    pub fn angle_between_vectors(a: Self, b: Self) -> f32 {
+    pub fn angle_between_vectors(a: Self, b: Self) -> Angle {
         (a.y - b.y).atan2(b.x - a.x)
     }
 
     #[inline]
-    pub fn polar_offset(self, distance: f32, angle: f32) -> V2 {
+    pub fn polar_offset(self, distance: Meter, angle: Angle) -> V2 {
         V2::new(
             self.x + distance * f32::cos(angle),
             self.y - distance * f32::sin(angle),
