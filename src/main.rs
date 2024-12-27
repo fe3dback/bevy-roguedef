@@ -1,5 +1,4 @@
 mod components;
-mod consts;
 mod game;
 mod plugins;
 mod prefabs;
@@ -65,6 +64,8 @@ fn main() {
         .add_plugins(Sprite3dPlugin {})
         // game plugins
         .add_systems(Startup, setup)
+        .add_plugins(brg_core::BrgCorePlugin)
+        .add_plugins(brg_editor::BrgEditorPlugin)
         .add_plugins(game::plug::Plug {})
         .add_plugins(components::plug::Plug {})
         .add_plugins(plugins::plug::Plug {})

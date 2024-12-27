@@ -31,10 +31,8 @@ use bevy::prelude::{
     With,
     Without,
 };
-use brg_core::prelude::V2;
+use brg_core::prelude::{CmpTransform2D, GizmosX, V2};
 
-use crate::components::gizmosx::sup::GizmosX;
-use crate::components::transform::CmpTransform2D;
 use crate::game::collisions::{CmpCollisionCurrentVolume, CmpCollisionDesiredVolume};
 use crate::game::damage::{Damage, DamageCastSource, DamageCastTarget, EvtOnDamageCast};
 use crate::game::teams::{CmpTeam, Team};

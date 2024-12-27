@@ -1,9 +1,8 @@
-use {
-    bevy::{app::App, prelude::Plugin},
-    bevy_inspector_egui::quick::WorldInspectorPlugin,
-};
+use bevy::app::App;
+use bevy::prelude::Plugin;
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
-pub struct Plug {}
+pub struct Plug;
 
 impl Plugin for Plug {
     fn build(&self, app: &mut App) {

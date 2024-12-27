@@ -1,7 +1,6 @@
-use {
-    crate::plugins::editor::stats::enums::EProfUIState,
-    bevy::prelude::{Entity, Resource},
-};
+use bevy::prelude::{Entity, Resource};
+
+use super::enums::EProfUIState;
 
 #[derive(Resource, Default)]
 pub struct ResEditorStats {

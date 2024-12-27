@@ -1,8 +1,8 @@
-use {
-    crate::plugins::editor::stats::{enums::EProfUIState, res::ResEditorStats},
-    bevy::prelude::{default, ButtonInput, Commands, DespawnRecursiveExt, KeyCode, Res, ResMut},
-    iyes_perf_ui::prelude::{PerfUiAllEntries, PerfUiEntryFPS, PerfUiEntryFPSWorst, PerfUiRoot},
-};
+use bevy::prelude::{default, ButtonInput, Commands, DespawnRecursiveExt, KeyCode, Res, ResMut};
+use iyes_perf_ui::prelude::{PerfUiAllEntries, PerfUiEntryFPS, PerfUiEntryFPSWorst, PerfUiRoot};
+
+use super::enums::EProfUIState;
+use super::res::ResEditorStats;
 
 pub fn switch_ui_on_keyboard(kbr: Res<ButtonInput<KeyCode>>, mut state: ResMut<ResEditorStats>) {
     if kbr.just_pressed(KeyCode::F12) {

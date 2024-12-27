@@ -1,6 +1,6 @@
 use bevy::prelude::{Query, Without};
+use brg_core::prelude::CmpTransform2D;
 
-use crate::components::transform::CmpTransform2D;
 use crate::components::unit_creature_player::CmpUnitCreaturePlayer;
 use crate::game::damage::DamageKind;
 use crate::game::teams::CmpTeam;

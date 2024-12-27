@@ -1,8 +1,8 @@
 use std::f32::consts::TAU;
 
 use super::math::lerp;
-use super::units::Angle;
 use super::vec2::V2;
+use crate::prelude::types::Angle;
 
 pub const ANGLE0: Angle = 0.0000000000000000000000000000000000000000000000000000000000000000_f32;
 pub const ANGLE1: Angle = 0.0174532925199432954743716805978692718781530857086181640625000000_f32;

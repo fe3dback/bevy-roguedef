@@ -4,8 +4,8 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 use bevy::prelude::{Reflect, Vec2, Vec3};
 
-use super::units::{Angle, Meter};
 use super::vec3::V3;
+use crate::prelude::types::{Angle, Meter};
 
 // Internal game vector2D struct with inverted Y axis
 // and some helper functions to transform game-space vectors

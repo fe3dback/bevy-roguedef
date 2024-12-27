@@ -1,9 +1,8 @@
 use std::collections::HashMap;
 
 use bevy::prelude::{Color, Entity};
+use brg_core::prelude::consts::TEAM_COLORS;
 use lazy_static::lazy_static;
-
-use crate::consts::TEAM_COLORS;
 
 pub type ID = Entity;
 

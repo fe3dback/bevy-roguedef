@@ -1,17 +1,12 @@
-use {
-    crate::plugins::editor::stats::{
-        enums::EProfUIState,
-        res::ResEditorStats,
-        sys::{despawn_ui_on_state_changed, spawn_ui_if_required, switch_ui_on_keyboard},
-    },
-    bevy::{
-        app::App,
-        prelude::{apply_deferred, IntoSystemConfigs, Plugin, Update},
-    },
-    iyes_perf_ui::{PerfUiPlugin, PerfUiSet},
-};
+use bevy::app::App;
+use bevy::prelude::{apply_deferred, IntoSystemConfigs, Plugin, Update};
+use iyes_perf_ui::{PerfUiPlugin, PerfUiSet};
 
-pub struct Plug {}
+use super::enums::EProfUIState;
+use super::res::ResEditorStats;
+use super::sys::{despawn_ui_on_state_changed, spawn_ui_if_required, switch_ui_on_keyboard};
+
+pub struct Plug;
 
 impl Plugin for Plug {
     fn build(&self, app: &mut App) {

@@ -3,11 +3,10 @@ use std::time::Duration;
 use bevy::audio::Volume;
 use bevy::ecs::system::SystemParam;
 use bevy::prelude::*;
-use brg_core::prelude::V2;
+use brg_core::prelude::{CmpTransform2D, V2};
 use rand_chacha::rand_core::RngCore;
 use rand_chacha::ChaCha8Rng;
 
-use crate::components::transform::CmpTransform2D;
 use crate::game::common::CmpTimeToLife;
 
 #[derive(Resource)]

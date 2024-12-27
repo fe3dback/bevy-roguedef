@@ -2,7 +2,7 @@ use std::ops::{AddAssign, *};
 
 use bevy::prelude::{Reflect, Vec3};
 
-use super::units::Meter;
+use crate::prelude::types::Meter;
 
 // Internal game vector3D struct with inverted Y axis
 // and some helper functions to transform game-space vectors

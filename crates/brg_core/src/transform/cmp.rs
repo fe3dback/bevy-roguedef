@@ -1,5 +1,7 @@
 use bevy::prelude::{Component, Reflect, Transform};
-use brg_core::prelude::{Angle, Meter, V2};
+
+use crate::prelude::types::{Angle, Meter};
+use crate::prelude::V2;
 
 #[derive(Component, Reflect, Default)]
 #[require(Transform)]

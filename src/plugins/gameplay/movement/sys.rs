@@ -1,9 +1,8 @@
 use bevy::prelude::{Query, Res, Time, With};
-use brg_core::prelude::V2;
+use brg_core::prelude::consts::PLAYABLE_AREA_SIZE;
+use brg_core::prelude::{CmpTransform2D, V2};
 
 use crate::components::movement::{CmpMarkerMovementRestrictInPlayableArea, CmpMovement};
-use crate::components::transform::CmpTransform2D;
-use crate::consts::PLAYABLE_AREA_SIZE;
 
 pub fn apply_movement(mut query: Query<(&mut CmpTransform2D, &CmpMovement)>, time: Res<Time>) {
     for (mut transform, movement) in &mut query {

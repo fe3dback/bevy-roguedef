@@ -1,9 +1,8 @@
 use bevy::color::palettes::basic::GRAY;
 use bevy::color::palettes::tailwind::{BLUE_700, GRAY_600, RED_700};
 use bevy::prelude::{Alpha, Entity, EventReader, Query, ResMut};
-use brg_core::prelude::V2;
+use brg_core::prelude::{GizmosX, V2};
 
-use crate::components::gizmosx::sup::GizmosX;
 use crate::game::buildings::electro::cmp::{CmpBuildingElectricity, CmpBuildingOccupied};
 use crate::game::buildings::electro::cmp_debug::CmpDebugElectricityOutline;
 use crate::game::buildings::electro::enums::EChargeDirection;

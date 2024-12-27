@@ -17,10 +17,7 @@ use bevy::prelude::{
     Transform,
 };
 use bevy_inspector_egui::egui::Shape;
-use brg_core::prelude::V2;
-
-use crate::components::gizmosx::sup::GizmosX;
-use crate::components::transform::CmpTransform2D;
+use brg_core::prelude::{CmpTransform2D, GizmosX, V2};
 
 #[derive(Component, Reflect, Debug)]
 pub enum CmpCollisionDesiredVolume {

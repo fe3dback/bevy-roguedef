@@ -25,12 +25,11 @@ use bevy::window::PrimaryWindow;
 use bevy_inspector_egui::bevy_egui::EguiContext;
 use bevy_inspector_egui::egui;
 use bevy_sprite3d::{Sprite3dBuilder, Sprite3dParams};
-use brg_core::prelude::V2;
+use brg_core::prelude::{CmpTransform2D, V2};
 use rand_chacha::rand_core::RngCore;
 
 use crate::components::ai::{CmpEnemyMarkerAttackWhenNear, CmpEnemyMarkerMoveToCastleAI};
 use crate::components::movement::CmpMovement;
-use crate::components::transform::CmpTransform2D;
 use crate::components::unit::EUnitType;
 use crate::components::unit_creature::CmpUnitCreature;
 use crate::components::unit_creature_player::CmpUnitCreaturePlayer;

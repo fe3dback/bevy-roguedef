@@ -5,11 +5,10 @@ use bevy::ecs::system::SystemParam;
 use bevy::prelude::{AlphaMode, Commands, Name, Rectangle, Res, ResMut};
 use bevy::utils::default;
 use bevy_sprite3d::{Sprite3dBuilder, Sprite3dBundle, Sprite3dParams};
-use brg_core::prelude::{select_n_tiles_around_position, Tile, V2};
+use brg_core::prelude::{select_n_tiles_around_position, CmpTransform2D, Tile, V2};
 
 use super::electro::enums::EArchetype;
 use super::electro::res_graph::ResBuildingWorldGraphs;
-use crate::components::transform::CmpTransform2D;
 use crate::components::unit::EUnitType;
 use crate::game::buildings::electro::cmp::{CmpBuildingElectricity, CmpBuildingOccupied};
 use crate::game::buildings::electro::cmp_debug::CmpDebugElectricityOutline;

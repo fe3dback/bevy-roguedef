@@ -1,6 +1,7 @@
-use bevy::prelude::{Quat, Query, Transform};
+use bevy::math::Quat;
+use bevy::prelude::{Query, Transform};
 
-use crate::components::transform::CmpTransform2D;
+use super::cmp::CmpTransform2D;
 
 pub fn transform_apply(mut query: Query<(&CmpTransform2D, &mut Transform)>) {
     for (trm2d, mut trm3d) in query.iter_mut() {

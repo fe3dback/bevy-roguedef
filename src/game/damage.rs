@@ -20,10 +20,9 @@ use bevy::prelude::{
     Vec4,
 };
 use bevy_vector_shapes::prelude::{Alignment, RectPainter, ShapePainter};
-use brg_core::prelude::V2;
+use brg_core::prelude::{CmpTransform2D, V2};
 use rand_chacha::rand_core::RngCore;
 
-use crate::components::transform::CmpTransform2D;
 use crate::components::unit::EUnitType;
 use crate::game::common::ResRandomSource;
 use crate::game::sound::SupSounds;
