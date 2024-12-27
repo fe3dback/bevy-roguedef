@@ -1,9 +1,9 @@
 use bevy::app::App;
 use bevy::prelude::{AppExtStates, Plugin};
 
-use crate::old_plugins::core::state::enums::{GameState, InGame};
+use crate::prelude::{GameState, InGame};
 
-pub struct Plug {}
+pub struct Plug;
 
 impl Plugin for Plug {
     fn build(&self, app: &mut App) {

@@ -1,0 +1,30 @@
+use bevy::ecs::schedule::{ScheduleLabel, SystemSetConfigs};
+use bevy::prelude::{in_state, App, IntoSystemSetConfigs};
+use strum::IntoEnumIterator;
+
+use super::enums::{GameSystemSet, MAGIC_PREFIX_CONDITION_IN_STATE_IN_GAME};
+use crate::prelude::InGame;
+
+pub fn init_system_sets_for(app: &mut App, schedule: impl ScheduleLabel + Clone) {
+    let mut prev: Option<GameSystemSet> = None;
+
+    for set in GameSystemSet::iter() {
+        let mut stated_set: SystemSetConfigs = set.run_if(|| true);
+
+        // add custom conditions by magic prefix
+        if set
+            .to_string()
+            .starts_with(MAGIC_PREFIX_CONDITION_IN_STATE_IN_GAME)
+        {
+            stated_set = stated_set.run_if(in_state(InGame));
+        }
+
+        // add order of execution
+        match prev {
+            None => app.configure_sets(schedule.clone(), stated_set),
+            Some(prev_set) => app.configure_sets(schedule.clone(), stated_set.after(prev_set)),
+        };
+
+        prev = Some(set);
+    }
+}

@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/crates/brg_core/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/brg_editor/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/brg_scene/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

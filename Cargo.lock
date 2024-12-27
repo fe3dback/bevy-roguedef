@@ -434,6 +434,7 @@ dependencies = [
  "bevy_vector_shapes",
  "brg_core",
  "brg_editor",
+ "brg_scene",
  "lazy_static",
  "priority-queue",
  "rand_chacha",
@@ -1631,6 +1632,14 @@ dependencies = [
  "bevy",
  "bevy-inspector-egui",
  "iyes_perf_ui",
+]
+
+[[package]]
+name = "brg_scene"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "strum 0.26.3",
 ]
 
 [[package]]

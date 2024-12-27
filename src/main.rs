@@ -1,3 +1,6 @@
+mod game;
+mod world;
+
 use std::time::Duration;
 
 use bevy::app::*;
@@ -50,6 +53,8 @@ fn main() {
         .add_systems(Startup, setup)
         .add_plugins(brg_core::BrgCorePlugin)
         .add_plugins(brg_editor::BrgEditorPlugin)
+        .add_plugins(brg_scene::BrgScenePlugin)
+        .add_plugins(game::GamePlugin)
         .run();
 }
 

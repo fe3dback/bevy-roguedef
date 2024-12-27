@@ -22,6 +22,7 @@ members = [
 # parts
 brg_core = { path = "crates/brg_core" }
 brg_editor = { path = "crates/brg_editor" }
+brg_scene = { path = "crates/brg_scene" }
 # bevy staff
 bevy = { version = "0.15.0", features = ["dynamic_linking", "wav"] }
 bevy_framepace = {version = "0.18.0"}

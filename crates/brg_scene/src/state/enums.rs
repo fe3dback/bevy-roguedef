@@ -1,12 +1,15 @@
 use bevy::prelude::{ComputedStates, States};
 
-#[derive(States, Clone, Debug, Eq, PartialEq, Hash, Default)]
+#[derive(States, Clone, Debug, Eq, PartialEq, Hash)]
 pub enum GameState {
-    #[default]
     Loading, // assets loading
-    InGame {
-        paused: bool,
-    },
+    InGame { paused: bool },
+}
+
+impl Default for GameState {
+    fn default() -> Self {
+        Self::InGame { paused: false }
+    }
 }
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
