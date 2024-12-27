@@ -3,11 +3,11 @@ use bevy::prelude::{AssetApp, Plugin};
 use bevy_asset_loader::prelude::*;
 use ron_asset_manager::RonAssetPlugin;
 
-use crate::plugins::assets::asset::GameAssets;
-use crate::plugins::assets::asset_creatures::AssetCreature;
-use crate::plugins::assets::asset_game::AssetGame;
-use crate::plugins::assets::asset_ldtk_circuit::{AssetLdtkCircuit, AssetLdtkCircuitLoader};
-use crate::plugins::core::state::enums::GameState;
+use crate::old_plugins::assets::asset::GameAssets;
+use crate::old_plugins::assets::asset_creatures::AssetCreature;
+use crate::old_plugins::assets::asset_game::AssetGame;
+use crate::old_plugins::assets::asset_ldtk_circuit::{AssetLdtkCircuit, AssetLdtkCircuitLoader};
+use crate::old_plugins::core::state::enums::GameState;
 
 pub struct Plug {}
 

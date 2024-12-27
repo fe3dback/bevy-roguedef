@@ -1,7 +1,7 @@
 use bevy::app::App;
 use bevy::prelude::Plugin;
 
-use crate::plugins::gameplay::{integrate_steps, movement, player};
+use crate::old_plugins::gameplay::{integrate_steps, movement, player};
 
 pub struct Plug {}
 

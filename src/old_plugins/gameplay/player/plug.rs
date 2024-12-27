@@ -1,13 +1,8 @@
-use {
-    crate::plugins::{
-        core::state::enums::InGame,
-        gameplay::player::sys::{spawn_player, wasd_movement},
-    },
-    bevy::{
-        app::App,
-        prelude::{in_state, IntoSystemConfigs, OnEnter, Plugin, Update},
-    },
-};
+use bevy::app::App;
+use bevy::prelude::{in_state, IntoSystemConfigs, OnEnter, Plugin, Update};
+
+use crate::old_plugins::core::state::enums::InGame;
+use crate::old_plugins::gameplay::player::sys::{spawn_player, wasd_movement};
 
 pub struct Plug {}
 

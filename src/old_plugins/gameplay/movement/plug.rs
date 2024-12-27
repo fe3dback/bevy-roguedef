@@ -1,13 +1,11 @@
-use {
-    crate::plugins::{
-        gameplay::movement::sys::{apply_movement, restrict_movement_in_playable_area},
-        InGame,
-    },
-    bevy::{
-        app::App,
-        prelude::{in_state, IntoSystemConfigs, Plugin, Update},
-    },
+use bevy::app::App;
+use bevy::prelude::{in_state, IntoSystemConfigs, Plugin, Update};
+
+use crate::old_plugins::gameplay::movement::sys::{
+    apply_movement,
+    restrict_movement_in_playable_area,
 };
+use crate::old_plugins::InGame;
 
 pub struct Plug {}
 

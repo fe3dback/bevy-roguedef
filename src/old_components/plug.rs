@@ -2,10 +2,10 @@ use bevy::app::App;
 use bevy::prelude::Plugin;
 use bevy_trait_query::RegisterExt;
 
-use crate::components::movement::CmpMovement;
-use crate::components::unit::CmpUnit;
-use crate::components::unit_creature::{CmpUnitBuilding, CmpUnitCreature};
-use crate::components::unit_creature_player::CmpUnitCreaturePlayer;
+use crate::components_old::movement::CmpMovement;
+use crate::components_old::unit::CmpUnit;
+use crate::components_old::unit_creature::{CmpUnitBuilding, CmpUnitCreature};
+use crate::components_old::unit_creature_player::CmpUnitCreaturePlayer;
 use crate::game::energy::CmpEnergyContainer;
 
 pub struct Plug {}

@@ -1,7 +1,7 @@
 use bevy::prelude::{Component, Reflect};
 
-use crate::components::movement::CmpMovement;
-use crate::components::unit::CmpUnit;
+use crate::components_old::movement::CmpMovement;
+use crate::components_old::unit::CmpUnit;
 use crate::game::damage::CmpHealth;
 use crate::game::energy::CmpEnergyContainer;
 

@@ -1,6 +1,6 @@
 use bevy::prelude::Event;
 
-use crate::plugins::gameplay::integrate_steps::enums::EventType;
+use crate::old_plugins::gameplay::integrate_steps::enums::EventType;
 
 #[derive(Event)]
 pub struct EvtOnIntegration {

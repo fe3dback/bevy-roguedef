@@ -7,9 +7,9 @@ use bevy_inspector_egui::bevy_egui::EguiContext;
 use bevy_inspector_egui::egui;
 use strum::IntoEnumIterator;
 
-use crate::plugins::gameplay::integrate_steps::dto_state::State;
-use crate::plugins::gameplay::integrate_steps::enums::EventType;
-use crate::plugins::gameplay::integrate_steps::evt::EvtOnIntegration;
+use crate::old_plugins::gameplay::integrate_steps::dto_state::State;
+use crate::old_plugins::gameplay::integrate_steps::enums::EventType;
+use crate::old_plugins::gameplay::integrate_steps::evt::EvtOnIntegration;
 
 #[derive(Resource)]
 pub struct ResLocalIntegrationTimings {

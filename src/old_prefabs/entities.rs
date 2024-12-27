@@ -1,15 +1,15 @@
 use bevy::prelude::{default, AlphaMode, Circle, Handle, Name, SpatialListener, StateScoped};
 use bevy_sprite3d::{Sprite3dBuilder, Sprite3dBundle};
 
-use crate::components::movement::{CmpMarkerMovementRestrictInPlayableArea, CmpMovement};
-use crate::components::unit::EUnitType;
-use crate::components::unit_creature_player::CmpUnitCreaturePlayer;
+use crate::components_old::movement::{CmpMarkerMovementRestrictInPlayableArea, CmpMovement};
+use crate::components_old::unit::EUnitType;
+use crate::components_old::unit_creature_player::CmpUnitCreaturePlayer;
 use crate::game::collisions::CmpCollisionDesiredVolume;
 use crate::game::teams::{CmpTeam, Team};
 use crate::game::weapons::CmpWeapon;
-use crate::plugins::assets::asset_creatures::AssetCreature;
-use crate::plugins::InGame;
-use crate::prefabs::sup::SupPrefabs;
+use crate::old_plugins::assets::asset_creatures::AssetCreature;
+use crate::old_plugins::InGame;
+use crate::old_prefabs::sup::SupPrefabs;
 
 impl<'w, 's> SupPrefabs<'w, 's> {
     pub(crate) fn player(

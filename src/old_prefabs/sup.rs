@@ -2,9 +2,9 @@ use bevy::ecs::system::SystemParam;
 use bevy::prelude::{Assets, Commands, Res};
 use bevy_sprite3d::Sprite3dParams;
 
-use crate::plugins::assets::asset::GameAssets;
-use crate::plugins::assets::asset_creatures::AssetCreature;
-use crate::plugins::assets::asset_game::AssetGame;
+use crate::old_plugins::assets::asset::GameAssets;
+use crate::old_plugins::assets::asset_creatures::AssetCreature;
+use crate::old_plugins::assets::asset_game::AssetGame;
 
 #[derive(SystemParam)]
 pub struct SupPrefabs<'w, 's> {

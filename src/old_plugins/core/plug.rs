@@ -1,7 +1,7 @@
 use bevy::app::App;
 use bevy::prelude::Plugin;
 
-use crate::plugins::core::state;
+use crate::old_plugins::core::state;
 
 pub struct Plug {}
 

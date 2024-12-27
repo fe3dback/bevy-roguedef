@@ -1,10 +1,7 @@
-use {
-    crate::plugins::core::state::enums::{GameState, InGame},
-    bevy::{
-        app::App,
-        prelude::{AppExtStates, Plugin},
-    },
-};
+use bevy::app::App;
+use bevy::prelude::{AppExtStates, Plugin};
+
+use crate::old_plugins::core::state::enums::{GameState, InGame};
 
 pub struct Plug {}
 

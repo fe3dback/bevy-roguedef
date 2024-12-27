@@ -1,8 +1,3 @@
-mod components;
-mod game;
-mod plugins;
-mod prefabs;
-
 use std::time::Duration;
 
 use bevy::app::*;
@@ -23,20 +18,11 @@ use bevy::render::camera::ScalingMode;
 use bevy::utils::default;
 use bevy::window::PresentMode;
 use bevy::DefaultPlugins;
-use bevy_sprite3d::Sprite3dPlugin;
-use bevy_vector_shapes::Shape2dPlugin;
-
-use crate::game::common::CmpMainCamera;
-
-/// Spatial audio uses the distance to attenuate the sound volume. In 2D with the default camera,
-/// 1 pixel is 1 unit of distance, so we use a scale
-/// 1m = 200px
-const AUDIO_SCALE: f32 = 1. / 200.0;
 
 fn main() {
     // todo: add bevy framepace (+limit fps)
     App::new()
-        // std plugins
+        // std old_plugins
         .add_plugins(
             DefaultPlugins
                 .set(WindowPlugin {
@@ -48,27 +34,22 @@ fn main() {
                     ..default()
                 })
                 .set(AudioPlugin {
-                    default_spatial_scale: SpatialScale::new_2d(AUDIO_SCALE),
+                    default_spatial_scale: SpatialScale::new(4.0), // todo: setup audio
                     ..default()
                 }),
         )
         .insert_resource(GlobalVolume {
             volume: Volume::new(0.01), // todo: set volume
         })
-        // 3-rd plugins
+        // 3-rd old_plugins
         .add_plugins(bevy_framepace::FramepacePlugin)
         .insert_resource(bevy_framepace::FramepaceSettings {
             limiter: bevy_framepace::Limiter::Manual(Duration::from_secs_f32(1.0 / 120.0)),
         })
-        .add_plugins(Shape2dPlugin::default())
-        .add_plugins(Sprite3dPlugin {})
-        // game plugins
+        // game old_plugins
         .add_systems(Startup, setup)
         .add_plugins(brg_core::BrgCorePlugin)
         .add_plugins(brg_editor::BrgEditorPlugin)
-        .add_plugins(game::plug::Plug {})
-        .add_plugins(components::plug::Plug {})
-        .add_plugins(plugins::plug::Plug {})
         .run();
 }
 
@@ -84,7 +65,6 @@ fn setup(mut commands: Commands) {
             scale:           1.0 / PIXELS_PER_METER,
             area:            Default::default(),
         })),
-        CmpMainCamera {},
         Transform {
             translation: Vec3::new(0.0, 0.0, 50.0),
             ..default()

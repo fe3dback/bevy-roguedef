@@ -2,8 +2,8 @@ use bevy::input::ButtonInput;
 use bevy::prelude::{Commands, KeyCode, Query, Res, With};
 use brg_core::prelude::V2;
 
-use crate::components::movement::CmpMovement;
-use crate::components::unit_creature_player::CmpUnitCreaturePlayer;
+use crate::components_old::movement::CmpMovement;
+use crate::components_old::unit_creature_player::CmpUnitCreaturePlayer;
 use crate::prefabs::sup::SupPrefabs;
 
 pub fn spawn_player(mut cmd: Commands, mut prefabs: SupPrefabs) {

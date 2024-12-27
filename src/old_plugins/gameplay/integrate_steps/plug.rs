@@ -1,9 +1,9 @@
 use bevy::app::{App, Plugin, Update};
 use bevy::prelude::Startup;
 
-use crate::plugins::gameplay::integrate_steps::evt::EvtOnIntegration;
-use crate::plugins::gameplay::integrate_steps::sys;
-use crate::plugins::gameplay::integrate_steps::sys::ResLocalIntegrationTimings;
+use crate::old_plugins::gameplay::integrate_steps::evt::EvtOnIntegration;
+use crate::old_plugins::gameplay::integrate_steps::sys;
+use crate::old_plugins::gameplay::integrate_steps::sys::ResLocalIntegrationTimings;
 
 pub struct Plug;
 
