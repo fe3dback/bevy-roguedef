@@ -15,4 +15,7 @@ pub enum GameSystemSet {
     InGameSpawnWorldEnvironment,
     // Spawn 3d terrain objects
     InGameSpawnWorldTerrain,
+
+    // Debug draw gizmos
+    InGameEditorGizmosDraw,
 }

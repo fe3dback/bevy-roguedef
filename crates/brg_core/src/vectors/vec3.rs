@@ -11,7 +11,7 @@ use crate::prelude::types::Meter;
 pub struct V3 {
     pub x: Meter,
     pub y: Meter,
-    pub z: Meter,
+    pub h: Meter,
 }
 
 #[allow(dead_code)]
@@ -22,28 +22,28 @@ impl V3 {
     // --- basic
 
     #[inline(always)]
-    pub const fn new(x: Meter, y: Meter, z: Meter) -> V3 {
-        V3 { x, y, z }
+    pub const fn new(x: Meter, y: Meter, h: Meter) -> V3 {
+        V3 { x, y, h }
     }
 
     #[inline(always)]
     pub const fn splat(f: Meter) -> V3 {
-        V3 { x: f, y: f, z: f }
+        V3 { x: f, y: f, h: f }
     }
 
     // --- from/to engine vectors
 
     #[inline(always)]
-    pub const fn new_3d(x: Meter, y: Meter, z: Meter) -> Vec3 {
-        Vec3 { x, y, z }
+    pub const fn new_3d(x: Meter, y: Meter, h: Meter) -> Vec3 {
+        Vec3 { x, y: h, z: y }
     }
 
     #[inline(always)]
     pub fn from_3d(vec: Vec3) -> Self {
         Self {
             x: vec.x,
-            y: -vec.y,
-            z: vec.z,
+            y: -vec.z,
+            h: vec.y,
         }
     }
 
@@ -51,8 +51,8 @@ impl V3 {
     pub fn as_3d(&self) -> Vec3 {
         Vec3 {
             x: self.x,
-            y: -self.y,
-            z: self.z,
+            z: -self.y,
+            y: self.h,
         }
     }
 }
@@ -69,7 +69,7 @@ impl AddAssign<&V3> for V3 {
     fn add_assign(&mut self, other: &Self) {
         self.x = &self.x + &other.x;
         self.y = &self.y + &other.y;
-        self.z = &self.z + &other.z;
+        self.h = &self.h + &other.h;
     }
 }
 
@@ -78,6 +78,6 @@ impl SubAssign<&V3> for V3 {
     fn sub_assign(&mut self, other: &Self) {
         self.x = &self.x - &other.x;
         self.y = &self.y - &other.y;
-        self.z = &self.z - &other.z;
+        self.h = &self.h - &other.h;
     }
 }

@@ -7,8 +7,7 @@ use bevy::prelude::{
     Cuboid,
     Mesh,
     Mesh3d,
-    MeshMaterial3d
-    ,
+    MeshMaterial3d,
     ResMut,
     StandardMaterial,
     StateScoped,
@@ -28,6 +27,8 @@ pub fn spawn_example_objects(
         MeshMaterial3d(materials.add(Color::WHITE)),
         CmpTransform2D {
             position: V2::new(0.0, 0.0),
+            yaw: std::f32::consts::FRAC_PI_2,
+            rotation_kind: brg_core::prelude::TransformRotationKind::YPointOnPosZ,
             ..default()
         },
     ));

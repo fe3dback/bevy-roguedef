@@ -3,12 +3,12 @@ use brg_core::prelude::V2;
 use brg_scene::prelude::InGame;
 
 // sun brightness 0..100k
-const L1_SUN_BRIGHT: f32 = 20000.0;
+const L1_SUN_BRIGHT: f32 = 5000.0;
 const L1_SUN_COLOR: Color = Color::srgb(1.0, 0.97, 0.95);
 const L1_SUN_ROTATION: V2 = V2::new(5.3, 0.25);
 
 // ambient brightness 0..50k
-const L2_AMBIENT_BRIGHT: f32 = 8000.0;
+const L2_AMBIENT_BRIGHT: f32 = 1000.0;
 const L2_AMBIENT_COLOR: Color = Color::srgb(0.85, 0.92, 0.8);
 const L2_AMBIENT_ROTATION: V2 = V2::new(2.0, 5.5);
 

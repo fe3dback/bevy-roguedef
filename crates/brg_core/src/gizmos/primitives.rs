@@ -1,13 +1,20 @@
 use bevy::prelude::{Color, Isometry3d};
 
 use super::sup::{GizmosX, DEFAULT_HEIGHT, ISO_IDEN};
-use crate::prelude::{Range, V2};
+use crate::prelude::{Range, V2, V3};
 
 impl GizmosX<'_, '_> {
     #[inline]
     fn iso(&self, center: V2) -> Isometry3d {
         let mut iso = ISO_IDEN;
-        iso.translation = center.as_3d().with_z(DEFAULT_HEIGHT).into();
+        iso.translation = center.as_3d().with_y(DEFAULT_HEIGHT).into();
+        iso
+    }
+
+    #[inline]
+    fn iso3d(&self, center: V3) -> Isometry3d {
+        let mut iso = ISO_IDEN;
+        iso.translation = center.as_3d().into();
         iso
     }
 
@@ -51,6 +58,15 @@ impl GizmosX<'_, '_> {
         self.gz.arrow(
             self.iso(p1).translation.into(),
             self.iso(p2).translation.into(),
+            color,
+        );
+    }
+
+    #[inline]
+    pub fn arrow_custom_height<C: Into<Color>>(&mut self, p1: V3, p2: V3, color: C) {
+        self.gz.arrow(
+            self.iso3d(p1).translation.into(),
+            self.iso3d(p2).translation.into(),
             color,
         );
     }

@@ -43,7 +43,7 @@ impl V2 {
         V3 {
             x: self.x,
             y: self.y,
-            z: height,
+            h: height,
         }
     }
 

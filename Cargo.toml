@@ -26,6 +26,7 @@ brg_scene = { path = "crates/brg_scene" }
 # bevy staff
 bevy = { version = "0.15.0", features = ["dynamic_linking", "wav"] }
 bevy_framepace = {version = "0.18.0"}
+bevy_flycam = "0.15.0"
 bevy_asset_loader = { version = "0.22.0" }
 bevy-trait-query = {version = "0.7.0"}
 bevy_vector_shapes = { version = "0.9.3" }

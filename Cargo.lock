@@ -429,6 +429,7 @@ dependencies = [
  "bevy-inspector-egui",
  "bevy-trait-query",
  "bevy_asset_loader",
+ "bevy_flycam",
  "bevy_framepace",
  "bevy_sprite3d",
  "bevy_vector_shapes",
@@ -796,6 +797,15 @@ checksum = "bfe562b883fb652acde84cb6bb01cbc9f23c377e411f1484467ecfdd3a3d234e"
 dependencies = [
  "bevy_macro_utils",
  "encase_derive_impl",
+]
+
+[[package]]
+name = "bevy_flycam"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "83039a8e4f7e92c96c97b0b3ac738a54781f77ce5086d3ae39698219586a7f1d"
+dependencies = [
+ "bevy",
 ]
 
 [[package]]
