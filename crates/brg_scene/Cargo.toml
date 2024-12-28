@@ -6,3 +6,5 @@ edition = "2024"
 [dependencies]
 bevy = { version = "0.15.0", features = ["dynamic_linking"] }
 strum = { version = "0.26.3", features = ["derive"] }
+bevy_asset_loader = { version = "0.22.0" }
+ron_asset_manager = { version = "0.5.2" }

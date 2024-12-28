@@ -11,6 +11,9 @@ pub enum GameSystemSet {
     // note: Prefix is important!
     //       use prefix "InGame" - for bind check `in_state(InGame)` to this set
 
+    // For spawning system entities on loading
+    LoadingSystem,
+
     // Spawn basic light, sky, etc...
     InGameSpawnWorldEnvironment,
     // Spawn 3d terrain objects

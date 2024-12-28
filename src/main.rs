@@ -1,18 +1,12 @@
 mod game;
+mod prefabs;
 mod world;
 
 use std::time::Duration;
 
 use bevy::app::*;
 use bevy::audio::{AudioPlugin, SpatialScale, Volume};
-use bevy::prelude::{
-    GlobalVolume
-
-
-    ,
-    Window,
-    WindowPlugin,
-};
+use bevy::prelude::{GlobalVolume, Window, WindowPlugin};
 use bevy::utils::default;
 use bevy::window::PresentMode;
 use bevy::DefaultPlugins;

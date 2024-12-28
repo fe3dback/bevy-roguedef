@@ -1,10 +1,12 @@
 use bevy::app::{App, Plugin};
 
+mod assets;
 mod features;
 mod state;
 mod system_set;
 
 pub mod prelude {
+    pub use crate::assets::prelude::*;
     pub use crate::features::prelude::*;
     pub use crate::state::prelude::*;
     pub use crate::system_set::prelude::*;
@@ -19,6 +21,7 @@ impl Plugin for BrgScenePlugin {
             .add_plugins(state::plug::Plug)
             .add_plugins(features::plug::Plug)
             .add_plugins(system_set::plug::Plug)
+            .add_plugins(assets::plug::Plug)
         //-
         ;
     }

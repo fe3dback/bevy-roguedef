@@ -2,9 +2,19 @@ use bevy::core::Name;
 use bevy::math::Vec3;
 use bevy::prelude::{Camera3d, Commands, StateScoped, Transform};
 use bevy_flycam::FlyCam;
+use brg_scene::prelude::GameState::Loading;
 use brg_scene::prelude::InGame;
 
 use crate::world::camera::cmp_active_camera::CmpMarkerActiveCamera;
+
+pub fn spawn_default_loading_camera(mut cmd: Commands) {
+    cmd.spawn((
+        StateScoped(Loading),
+        Name::from("Loading Camera"),
+        CmpMarkerActiveCamera,
+        Camera3d::default(),
+    ));
+}
 
 pub fn spawn_cameras(mut cmd: Commands) {
     cmd.spawn((

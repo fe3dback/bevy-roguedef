@@ -8,7 +8,7 @@ pub enum GameState {
 
 impl Default for GameState {
     fn default() -> Self {
-        Self::InGame { paused: false }
+        Self::Loading
     }
 }
 
