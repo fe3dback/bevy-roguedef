@@ -2,6 +2,7 @@
 
 #### editor
 ```
+F11    - Toggle editor features panel
 F12    - Toggle FPS display mode
 ```
 

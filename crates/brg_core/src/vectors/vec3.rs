@@ -42,7 +42,7 @@ impl V3 {
     pub fn from_3d(vec: Vec3) -> Self {
         Self {
             x: vec.x,
-            y: -vec.z,
+            y: vec.z,
             h: vec.y,
         }
     }
@@ -51,7 +51,7 @@ impl V3 {
     pub fn as_3d(&self) -> Vec3 {
         Vec3 {
             x: self.x,
-            z: -self.y,
+            z: self.y,
             y: self.h,
         }
     }

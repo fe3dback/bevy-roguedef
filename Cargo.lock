@@ -420,7 +420,6 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "bevy",
- "bevy-inspector-egui",
  "bevy-trait-query",
  "bevy_flycam",
  "bevy_framepace",
@@ -432,7 +431,6 @@ dependencies = [
  "rand_chacha",
  "serde",
  "serde_json",
- "strum 0.26.3",
  "uuid",
 ]
 
@@ -1602,6 +1600,7 @@ dependencies = [
  "bevy",
  "bevy-inspector-egui",
  "iyes_perf_ui",
+ "strum 0.26.3",
 ]
 
 [[package]]
@@ -2714,11 +2713,11 @@ checksum = "dfa686283ad6dd069f105e5ab091b04c62850d3e4cf5d67debad1933f55023df"
 
 [[package]]
 name = "home"
-version = "0.5.9"
+version = "0.5.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e3d1354bf6b7235cb4a0576c2619fd4ed18183f689b12b006a0ee7329eeff9a5"
+checksum = "589533453244b0995c858700322199b2becb13b627df2851f64a2775d024abcf"
 dependencies = [
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -4158,9 +4157,9 @@ dependencies = [
 
 [[package]]
 name = "rustversion"
-version = "1.0.18"
+version = "1.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e819f2bc632f285be6d7cd36e25940d45b2391dd6d9b939e79de557f7014248"
+checksum = "f7c45b9784283f1b2e7fb61b42047c2fd678ef0960d4f6f1eba131594cc369d4"
 
 [[package]]
 name = "rustybuzz"
