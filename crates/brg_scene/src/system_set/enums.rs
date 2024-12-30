@@ -14,10 +14,31 @@ pub enum GameSystemSet {
     // For spawning system entities on loading
     LoadingSystem,
 
+    // -----------------
+    // Initialize
+    // -----------------
+
     // Spawn basic light, sky, etc...
     InGameSpawnWorldEnvironment,
     // Spawn 3d terrain objects
     InGameSpawnWorldTerrain,
+    // Spawn player entities, player system objects, etc...
+    InGameSpawnPlayerStaff,
+
+    // -----------------
+    // Input
+    // -----------------
+    InGameProcessInput,
+
+    // -----------------
+    // Gameplay
+    // -----------------
+    InGameUpdateMovements,
+    InGameUpdateCameras,
+
+    // -----------------
+    // Draw
+    // -----------------
 
     // Debug draw gizmos
     InGameEditorGizmosDraw,

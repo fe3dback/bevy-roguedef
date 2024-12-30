@@ -6,8 +6,16 @@ use crate::prelude::TransformRotationKind;
 
 pub fn transform_apply(mut query: Query<(&CmpTransform2D, &mut Transform)>) {
     for (trm2d, mut trm3d) in query.iter_mut() {
+        // transfer 2d position
         trm3d.translation = trm2d.position.as_3d();
+
+        // transfer height
         trm3d.translation.y = trm2d.height;
+
+        // add visual origin
+        trm3d.translation += trm2d.origin_visual_offset.as_3d();
+
+        // set up rotation
         trm3d.rotation = Quat::from_euler(
             match trm2d.rotation_kind {
                 TransformRotationKind::NormalYUp => EulerRot::XYZ,

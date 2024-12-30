@@ -12,6 +12,7 @@ pub fn has_feature(feature: SceneFeature) -> impl Condition<()> {
             SceneFeature::EditorGizmos => true,
             SceneFeature::WorldEnvLight => true,
             SceneFeature::ExampleCubes => true,
+            SceneFeature::Units => true,
         },
     })
 }

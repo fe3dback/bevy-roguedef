@@ -11,4 +11,5 @@ pub enum SceneFeature {
     EditorGizmos,
     WorldEnvLight,
     ExampleCubes,
+    Units,
 }
