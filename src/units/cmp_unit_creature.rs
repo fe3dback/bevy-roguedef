@@ -1,7 +1,7 @@
 use bevy::prelude::{Component, Reflect};
+use brg_core::prelude::types::Speed;
 use brg_core::prelude::V2;
 
-use crate::core::measurements::Speed;
 use crate::units::cmp_unit::CmpUnit;
 
 // CmpUnitCreature is base class for all movable units

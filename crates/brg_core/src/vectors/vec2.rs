@@ -68,6 +68,11 @@ impl V2 {
     }
 
     #[inline(always)]
+    pub fn from_2d_ui(vec: Vec2) -> Self {
+        Self { x: vec.x, y: vec.y }
+    }
+
+    #[inline(always)]
     pub fn from_3d(vec: Vec3) -> Self {
         let vec = V3::from_3d(vec);
 

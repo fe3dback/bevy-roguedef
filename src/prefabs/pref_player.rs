@@ -1,8 +1,8 @@
 use bevy::pbr::{MeshMaterial3d, StandardMaterial};
 use bevy::prelude::{default, Capsule3d, Mesh3d, Name};
+use brg_core::prelude::types::Speed;
 use brg_core::prelude::{CmpTransform2D, V2, V3};
 
-use crate::core::measurements::Speed;
 use crate::prefabs::sup::SupPrefabs;
 use crate::units::cmp_unit_creature::CmpUnitMovementInput;
 use crate::units::player::cmp_marker_player::CmpMarkerPlayer;

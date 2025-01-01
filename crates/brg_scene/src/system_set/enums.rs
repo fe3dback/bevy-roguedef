@@ -2,6 +2,7 @@ use bevy::prelude::SystemSet;
 use strum::{Display, EnumIter};
 
 pub const MAGIC_PREFIX_CONDITION_IN_STATE_IN_GAME: &str = "InGame";
+pub const MAGIC_MATCH_CONDITION_EDITOR_GIZMOS: &str = "EditorGizmos";
 
 #[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone, Copy, EnumIter, Display)]
 pub enum GameSystemSet {

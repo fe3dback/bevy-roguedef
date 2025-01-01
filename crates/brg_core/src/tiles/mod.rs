@@ -12,5 +12,5 @@ pub mod prelude {
     pub use super::range::Range;
     pub use super::select::*;
     pub use super::selection::Selection;
-    pub use super::tile::Tile;
+    pub use super::tile::{Tile, VecExt};
 }

@@ -2,8 +2,12 @@ use bevy::ecs::schedule::{ScheduleLabel, SystemSetConfigs};
 use bevy::prelude::{in_state, App, IntoSystemSetConfigs};
 use strum::IntoEnumIterator;
 
-use super::enums::{GameSystemSet, MAGIC_PREFIX_CONDITION_IN_STATE_IN_GAME};
-use crate::prelude::InGame;
+use super::enums::{
+    GameSystemSet,
+    MAGIC_MATCH_CONDITION_EDITOR_GIZMOS,
+    MAGIC_PREFIX_CONDITION_IN_STATE_IN_GAME,
+};
+use crate::prelude::{has_feature, InGame, SceneFeature};
 
 pub fn init_system_sets_for(app: &mut App, schedule: impl ScheduleLabel + Clone) {
     let mut prev: Option<GameSystemSet> = None;
@@ -17,6 +21,13 @@ pub fn init_system_sets_for(app: &mut App, schedule: impl ScheduleLabel + Clone)
             .starts_with(MAGIC_PREFIX_CONDITION_IN_STATE_IN_GAME)
         {
             stated_set = stated_set.run_if(in_state(InGame));
+        }
+
+        if set
+            .to_string()
+            .contains(MAGIC_MATCH_CONDITION_EDITOR_GIZMOS)
+        {
+            stated_set = stated_set.run_if(has_feature(SceneFeature::EditorGizmos))
         }
 
         // add order of execution

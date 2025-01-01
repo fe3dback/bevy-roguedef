@@ -1,5 +1,6 @@
 use bevy::prelude::Reflect;
-use brg_core::prelude::types::{KiloMeter, Meter};
+
+use crate::prelude::types::{KiloMeter, Meter};
 
 #[derive(Debug, Reflect)]
 pub enum Speed {

@@ -1,4 +1,4 @@
-mod core;
+mod editor;
 mod game;
 mod prefabs;
 mod units;
