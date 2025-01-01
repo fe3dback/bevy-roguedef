@@ -1,7 +1,7 @@
 use bevy::prelude::{Color, Isometry3d};
+use brg_core::prelude::{Range, V2, V3};
 
 use super::sup::{GizmosX, ISO_IDEN};
-use crate::prelude::{Range, V2, V3};
 
 impl GizmosX<'_, '_> {
     #[inline]

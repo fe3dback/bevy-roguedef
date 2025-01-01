@@ -4,4 +4,5 @@ use strum::{Display, EnumIter};
 pub enum EditorFeature {
     ShowWorldOriginAxis,
     ShowWorldMousePosition,
+    DrawHeightmapPoints,
 }

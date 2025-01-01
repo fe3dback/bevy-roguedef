@@ -8,7 +8,8 @@ use bevy::prelude::{
     Projection,
     StateScoped,
 };
-use brg_core::prelude::{CmpTransform2D, ANGLE60, V2};
+use brg_core::prelude::{ANGLE60, V2};
+use brg_fundamental::prelude::CmpTransform2D;
 use brg_scene::prelude::GameState::Loading;
 use brg_scene::prelude::InGame;
 

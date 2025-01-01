@@ -1,5 +1,7 @@
-use bevy::prelude::{Handle, Image, Resource};
+use bevy::prelude::{Handle, Image, Resource, Scene};
 use bevy_asset_loader::prelude::AssetCollection;
+
+use crate::assets::asset_hm_data::AssetHeightMapData;
 
 #[derive(AssetCollection, Resource)]
 pub struct GameAssets {
@@ -8,6 +10,11 @@ pub struct GameAssets {
 
     #[asset(path = "textures/placeholders/grid_orange.ktx2")]
     pub texture_placeholder2: Handle<Image>,
+
+    #[asset(path = "mesh/debug/example_level.glb#Scene0")]
+    pub terrain_placeholder:         Handle<Scene>,
+    #[asset(path = "mesh/debug/example_level.hmdata.ron")]
+    pub terrain_placeholder_hm_data: Handle<AssetHeightMapData>,
     // #[asset(path = "data/data.game.ron")]
     // pub game: Handle<AssetGame>,
     // #[asset(path = "data/creatures", collection(typed, mapped))]

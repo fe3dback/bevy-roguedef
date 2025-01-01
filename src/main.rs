@@ -44,6 +44,7 @@ fn main() {
         .add_plugins(brg_core::BrgCorePlugin)
         .add_plugins(brg_editor::BrgEditorPlugin)
         .add_plugins(brg_scene::BrgScenePlugin)
+        .add_plugins(brg_fundamental::BrgFundamentalPlugin)
         .add_plugins(game::GamePlugin)
         .run();
 }

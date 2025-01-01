@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use brg_core::prelude::CmpTransform2D;
+use brg_fundamental::prelude::CmpTransform2D;
 
 use crate::units::cmp_unit_creature::CmpUnitMovementInput;
 

@@ -425,11 +425,11 @@ dependencies = [
  "bevy_framepace",
  "brg_core",
  "brg_editor",
+ "brg_fundamental",
  "brg_scene",
  "lazy_static",
  "priority-queue",
  "rand_chacha",
- "serde",
  "serde_json",
  "uuid",
 ]
@@ -1604,12 +1604,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "brg_fundamental"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "brg_core",
+ "brg_editor",
+ "brg_scene",
+]
+
+[[package]]
 name = "brg_scene"
 version = "0.1.0"
 dependencies = [
  "bevy",
  "bevy_asset_loader",
  "ron_asset_manager",
+ "serde",
  "strum 0.26.3",
 ]
 
@@ -2719,12 +2730,6 @@ checksum = "589533453244b0995c858700322199b2becb13b627df2851f64a2775d024abcf"
 dependencies = [
  "windows-sys 0.59.0",
 ]
-
-[[package]]
-name = "hound"
-version = "3.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62adaabb884c94955b19907d60019f4e145d091c75345379e70d1ee696f7854f"
 
 [[package]]
 name = "iana-time-zone"
@@ -4087,7 +4092,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6006a627c1a38d37f3d3a85c6575418cfe34a5392d60a686d0071e1c8d427acb"
 dependencies = [
  "cpal",
- "hound",
  "lewton",
  "thiserror",
 ]

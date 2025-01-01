@@ -1,7 +1,6 @@
 use bevy::prelude::{Component, Reflect, Transform};
-
-use crate::prelude::types::{Angle, Meter};
-use crate::prelude::{V2, V3};
+use brg_core::prelude::types::{Angle, Meter};
+use brg_core::prelude::{V2, V3};
 
 #[derive(Default, Reflect)]
 pub enum TransformRotationKind {

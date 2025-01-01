@@ -1,12 +1,9 @@
 use bevy::math::ops;
 use bevy::prelude::{Query, Res, Time, With, Without};
-use brg_core::prelude::{lerp, CmpTransform2D, V2};
+use brg_core::prelude::{lerp, V2};
+use brg_fundamental::prelude::{CmpMarkerCameraTarget, CmpTransform2D};
 
-use crate::world::camera::cmp::{
-    CmpCameraAutoFollowSettings,
-    CmpMarkerCameraActive,
-    CmpMarkerCameraTarget,
-};
+use crate::world::camera::cmp::{CmpCameraAutoFollowSettings, CmpMarkerCameraActive};
 
 pub fn update_game_camera_position(
     mut cam_query: Query<

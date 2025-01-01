@@ -1,7 +1,6 @@
 use bevy::prelude::{ReflectResource, Resource};
 use bevy::reflect::Reflect;
-
-use crate::prelude::V2;
+use brg_core::prelude::V2;
 
 #[derive(Resource, Default, Reflect)]
 #[reflect(Resource)]

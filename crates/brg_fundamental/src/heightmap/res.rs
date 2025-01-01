@@ -1,10 +1,9 @@
 use bevy::prelude::{ReflectResource, Resource};
 use bevy::reflect::Reflect;
 use bevy::utils::HashMap;
-
-use crate::prelude::consts::TERRAIN_HEIGHT;
-use crate::prelude::types::NormalizedF32;
-use crate::prelude::{Tile, VecExt, V2};
+use brg_core::prelude::consts::TERRAIN_HEIGHT;
+use brg_core::prelude::types::NormalizedF32;
+use brg_core::prelude::{Tile, VecExt, V2};
 
 #[derive(Resource, Reflect)]
 #[reflect(Resource)]

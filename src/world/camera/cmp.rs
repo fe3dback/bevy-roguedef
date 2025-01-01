@@ -13,9 +13,6 @@ pub struct CmpMarkerCameraTypeEditorFly;
 pub struct CmpMarkerCameraTypeGameTopDown;
 
 #[derive(Component, Debug, Reflect, Default)]
-pub struct CmpMarkerCameraTarget;
-
-#[derive(Component, Debug, Reflect, Default)]
 pub struct CmpCameraAutoFollowSettings {
     pub offset:     V2,
     pub snap_speed: f32,
