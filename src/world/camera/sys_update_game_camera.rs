@@ -1,5 +1,5 @@
 use bevy::math::ops;
-use bevy::prelude::{Query, Res, Time, With, Without};
+use bevy::prelude::{Camera, Query, Res, Time, With, Without};
 use brg_core::prelude::{lerp, V2};
 use brg_fundamental::prelude::{CmpMarkerCameraTarget, CmpTransform2D};
 
@@ -7,7 +7,7 @@ use crate::world::camera::cmp::{CmpCameraAutoFollowSettings, CmpMarkerCameraActi
 
 pub fn update_game_camera_position(
     mut cam_query: Query<
-        (&mut CmpTransform2D, &CmpCameraAutoFollowSettings),
+        (&mut CmpTransform2D, &Camera, &CmpCameraAutoFollowSettings),
         With<CmpMarkerCameraActive>,
     >,
     cam_target_query: Query<
@@ -37,13 +37,17 @@ pub fn update_game_camera_position(
         }
     };
 
-    for (mut cam, settings) in &mut cam_query {
+    for (mut trm, cam, settings) in &mut cam_query {
+        if !cam.is_active {
+            continue;
+        }
+
         let new_pos = targets_avg_pos + settings.offset;
         let t = 1.0 - ops::exp(-settings.snap_speed * time.delta_secs());
 
-        cam.position = V2::new(
-            lerp(cam.position.x, new_pos.x, t),
-            lerp(cam.position.y, new_pos.y, t),
+        trm.position = V2::new(
+            lerp(trm.position.x, new_pos.x, t),
+            lerp(trm.position.y, new_pos.y, t),
         )
     }
 }
