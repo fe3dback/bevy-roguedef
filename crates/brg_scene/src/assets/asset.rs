@@ -1,6 +1,8 @@
-use bevy::prelude::{Handle, Image, Resource, Scene};
+use bevy::prelude::{Handle, Image, Res, Resource, Scene};
+use bevy::utils::hashbrown::HashMap;
 use bevy_asset_loader::prelude::AssetCollection;
 
+use crate::assets::asset_creatures::AssetCreature;
 use crate::assets::asset_hm_data::AssetHeightMapData;
 
 #[derive(AssetCollection, Resource)]
@@ -17,8 +19,8 @@ pub struct GameAssets {
     pub terrain_placeholder_hm_data: Handle<AssetHeightMapData>,
     // #[asset(path = "data/data.game.ron")]
     // pub game: Handle<AssetGame>,
-    // #[asset(path = "data/creatures", collection(typed, mapped))]
-    // pub creatures: HashMap<String, Handle<AssetCreature>>,
+    #[asset(path = "data/creatures", collection(typed, mapped))]
+    pub creatures:                   HashMap<String, Handle<AssetCreature>>,
     //
     // #[asset(path = "sprites", collection(typed, mapped))]
     // pub sprites:                  HashMap<String, Handle<Image>>,

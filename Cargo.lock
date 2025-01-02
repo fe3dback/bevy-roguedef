@@ -418,45 +418,14 @@ dependencies = [
 name = "bevy-roguedef"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "bevy",
- "bevy-trait-query",
- "bevy_flycam",
+ "bevy-inspector-egui",
  "bevy_framepace",
  "brg_core",
  "brg_editor",
  "brg_fundamental",
  "brg_scene",
- "lazy_static",
- "priority-queue",
- "rand_chacha",
- "serde_json",
- "uuid",
-]
-
-[[package]]
-name = "bevy-trait-query"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e1c898c6d5d994be5439d4e330fc2247f88ea8c47c14af4dcd52b07e63ee9bcc"
-dependencies = [
- "bevy-trait-query-impl",
- "bevy_app",
- "bevy_core",
- "bevy_ecs",
- "tracing",
-]
-
-[[package]]
-name = "bevy-trait-query-impl"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "76f5fabc231da7f9842ca16c0550ccbbd7ff0adac8e9a24fc79842eca3c11db6"
-dependencies = [
- "proc-macro-crate",
- "proc-macro2",
- "quote",
- "syn 2.0.90",
+ "strum 0.26.3",
 ]
 
 [[package]]
@@ -785,15 +754,6 @@ checksum = "bfe562b883fb652acde84cb6bb01cbc9f23c377e411f1484467ecfdd3a3d234e"
 dependencies = [
  "bevy_macro_utils",
  "encase_derive_impl",
-]
-
-[[package]]
-name = "bevy_flycam"
-version = "0.15.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "83039a8e4f7e92c96c97b0b3ac738a54781f77ce5086d3ae39698219586a7f1d"
-dependencies = [
- "bevy",
 ]
 
 [[package]]
@@ -1591,6 +1551,7 @@ version = "0.1.0"
 dependencies = [
  "auto-impl-ops",
  "bevy",
+ "rand_chacha",
 ]
 
 [[package]]
@@ -3862,17 +3823,6 @@ checksum = "64d1ec885c64d0457d564db4ec299b2dae3f9c02808b8ad9c3a089c591b18033"
 dependencies = [
  "proc-macro2",
  "syn 2.0.90",
-]
-
-[[package]]
-name = "priority-queue"
-version = "2.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "714c75db297bc88a63783ffc6ab9f830698a6705aa0201416931759ef4c8183d"
-dependencies = [
- "autocfg",
- "equivalent",
- "indexmap",
 ]
 
 [[package]]

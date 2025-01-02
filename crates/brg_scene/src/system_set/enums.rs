@@ -25,6 +25,8 @@ pub enum GameSystemSet {
     InGameSpawnWorldTerrain,
     // Spawn player entities, player system objects, etc...
     InGameSpawnPlayerStaff,
+    // Spawn enemy mobs
+    InGameSpawnMobs,
 
     // -----------------
     // Input
@@ -40,6 +42,9 @@ pub enum GameSystemSet {
     // -----------------
     // Draw
     // -----------------
+
+    // Editor windows
+    InGameEditorWindowsDraw,
 
     // Debug draw gizmos
     InGameEditorGizmosDraw,

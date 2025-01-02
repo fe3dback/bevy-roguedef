@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 bevy = {workspace = true}
 auto-impl-ops = {workspace = true}
+rand_chacha = {workspace = true}

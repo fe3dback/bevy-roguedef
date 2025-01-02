@@ -2,10 +2,12 @@ use bevy::app::{App, Plugin};
 
 mod consts;
 mod consts_types;
+mod rand;
 mod tiles;
 mod vectors;
 
 pub mod prelude {
+    pub use crate::rand::prelude::*;
     pub use crate::tiles::prelude::*;
     pub use crate::vectors::prelude::*;
 
@@ -24,6 +26,7 @@ impl Plugin for BrgCorePlugin {
     fn build(&self, app: &mut App) {
         app
         //
+            .add_plugins(rand::plug::Plug)
         //-
         ;
     }

@@ -41,52 +41,6 @@ use crate::game::weapons::{CmpWeapon, Weapon};
 use crate::plugins::assets::asset::GameAssets;
 use crate::plugins::gameplay::integrate_steps::enums::EventType;
 
-#[derive(Resource, Debug, Reflect)]
-#[reflect(Resource)]
-pub struct ResEnemiesSpawnRules {
-    pub time_to_next_spawn: f32,
-    pub dice_sides:         i32,
-    pub dice_count:         i32,
-    pub spawn_clicked:      bool,
-}
-
-impl Default for ResEnemiesSpawnRules {
-    fn default() -> Self {
-        Self {
-            time_to_next_spawn: 1.0,
-            dice_sides:         4,
-            dice_count:         3,
-            spawn_clicked:      false,
-        }
-    }
-}
-
-pub fn editor_enemies_window_update(world: &mut World) {
-    world.resource_scope(|world, mut rules: Mut<ResEnemiesSpawnRules>| {
-        let Ok(egui_context) = world
-            .query_filtered::<&mut EguiContext, With<PrimaryWindow>>()
-            .get_single(world)
-        else {
-            return;
-        };
-
-        let mut ctx = egui_context.clone();
-
-        egui::Window::new("Enemies").show(ctx.get_mut(), |ui| {
-            ui.horizontal(|row| {
-                row.label("Dice sides/count");
-                row.add(egui::widgets::DragValue::new(&mut rules.dice_sides));
-                row.add(egui::widgets::DragValue::new(&mut rules.dice_count));
-            });
-            ui.horizontal(|row| {
-                if row.button("spawn").clicked() {
-                    rules.spawn_clicked = true;
-                }
-            });
-        });
-    });
-}
-
 pub fn spawn_enemies(
     mut cmd: Commands,
     mut rules: ResMut<ResEnemiesSpawnRules>,

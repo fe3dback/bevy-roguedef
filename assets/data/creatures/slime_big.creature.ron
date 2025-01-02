@@ -1,0 +1,6 @@
+(
+    name: "Big Slime",
+    movement: (
+        speed: 9.0
+    ),
+)

@@ -1,0 +1,6 @@
+(
+    name: "Tiny Slime",
+    movement: (
+        speed: 5.0
+    ),
+)
