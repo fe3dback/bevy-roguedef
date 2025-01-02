@@ -1579,6 +1579,7 @@ name = "brg_scene"
 version = "0.1.0"
 dependencies = [
  "bevy",
+ "bevy-inspector-egui",
  "bevy_asset_loader",
  "ron_asset_manager",
  "serde",
@@ -4074,8 +4075,6 @@ dependencies = [
 [[package]]
 name = "ron_asset_manager"
 version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aba2ccf634579d13f0740eb398bf5f7221076763b4d97a2476aef6557283900f"
 dependencies = [
  "bevy",
  "ron",

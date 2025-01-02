@@ -5,3 +5,4 @@ pub mod mobs;
 pub mod player;
 pub mod plug;
 mod sys_movement;
+pub mod weapon;

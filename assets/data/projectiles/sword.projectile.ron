@@ -1,0 +1,8 @@
+(
+    speed_start_mps: 1.0,
+    speed_acceleration_mps: 5.0,
+    collision_radius_m: 0.5,
+    collision_spread_radius_m: 1.5,
+    life_time_sec: 0.1,
+    cast: "data/spells/melee-damage.spell.ron"
+)

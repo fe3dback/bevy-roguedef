@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 bevy = {workspace = true}
 bevy_asset_loader = {workspace = true}
+bevy-inspector-egui = {workspace = true}
 ron_asset_manager = {workspace = true}
 strum = {workspace = true}
 serde = {workspace = true}

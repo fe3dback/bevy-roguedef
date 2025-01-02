@@ -13,6 +13,7 @@ impl Plugin for Plug {
             //
             .add_plugins(super::player::plug::Plug)
             .add_plugins(super::mobs::plug::Plug)
+            .add_plugins(super::weapon::plug::Plug)
             //
             .register_type::<CmpUnitMovementInput>()
             //

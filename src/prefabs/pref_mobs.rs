@@ -10,6 +10,7 @@ use brg_scene::prelude::{AssetCreature, AssetCreatureMovement};
 use crate::prefabs::sup_prefabs::SupPrefabs;
 use crate::units::cmp_unit_creature::CmpUnitMovementInput;
 use crate::units::mobs::enum_mob_type::MobKind;
+use crate::units::weapon::cmp_weapon::{CmpWeaponHolder, Weapon};
 
 impl<'w, 's> SupPrefabs<'w, 's> {
     pub(crate) fn mob(
@@ -21,9 +22,23 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         Mesh3d,
         MeshMaterial3d<StandardMaterial>,
         CmpUnitMovementInput,
+        CmpWeaponHolder,
     ) {
         let creature = self.creature_by_kind(kind);
 
+        // weapon
+        let mut weapon_holder = CmpWeaponHolder::default();
+        if let Some(weapon) = creature.weapon {
+            weapon_holder.weapons.insert(
+                weapon.path,
+                Weapon {
+                    handle: weapon.handle,
+                    ..default()
+                },
+            );
+        }
+
+        // assemble
         (
             CmpTransform2D {
                 position: V2::new(0.0, 0.0),
@@ -42,6 +57,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
                 speed: Speed::KMH(creature.movement.speed),
                 ..default()
             },
+            weapon_holder,
         )
     }
 
@@ -49,6 +65,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         let def = AssetCreature {
             name:     "Unknown creature".to_string(),
             movement: AssetCreatureMovement { speed: 1.0 },
+            weapon:   None,
         };
 
         let creature_path = format!("data/creatures/{}.creature.ron", kind.to_string());

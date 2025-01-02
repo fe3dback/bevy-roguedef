@@ -1,0 +1,7 @@
+(
+    damage: Some((
+        base: 1,
+        dice_count: 2,
+        dice_faces: 3,
+    )),
+)

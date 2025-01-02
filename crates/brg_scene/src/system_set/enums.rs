@@ -36,6 +36,7 @@ pub enum GameSystemSet {
     // -----------------
     // Gameplay
     // -----------------
+    InGamePrepareWeapons,
     InGameUpdateMovements,
     InGameUpdateCameras,
 

@@ -1,0 +1,6 @@
+(
+    magazine_capacity: 3,
+    magazine_reload_time_sec: 0.5,
+    hit_reload_time_sec: 0.2,
+    projectile: "data/projectiles/sword.projectile.ron",
+)

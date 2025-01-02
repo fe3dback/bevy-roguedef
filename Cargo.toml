@@ -41,7 +41,7 @@ bevy-inspector-egui = { version = "0.28.0" }
 bevy_asset_loader = { version = "0.22.0" }
 bevy_framepace = {version = "0.18.0"}
 # bevy-trait-query = {version = "0.7.0"}
-ron_asset_manager = { version = "0.5.2" }
+ron_asset_manager = { path = "../ron_asset_manager" }
 auto-impl-ops = { version = "0.2.1" }
 strum = { version = "0.26.3", features = ["derive"] }
 iyes_perf_ui = { git="https://github.com/IyesGames/iyes_perf_ui.git", branch = "main" }

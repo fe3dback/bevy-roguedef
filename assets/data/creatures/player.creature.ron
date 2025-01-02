@@ -1,9 +1,7 @@
 (
     name: "Player",
     movement: (
-        speed: 7.0
+        speed: 15.0
     ),
-    agent: (
-        sprite: "sprites/creatures/wizzard.png"
-    )
+    weapon: Some("data/weapons/sword.weapon.ron"),
 )
