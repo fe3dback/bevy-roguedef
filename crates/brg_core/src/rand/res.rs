@@ -33,8 +33,17 @@ impl ResRandomSource {
     #[inline]
     pub fn rand_int32_in_range(&mut self, from: i32, to: i32) -> i32 {
         let (from, to) = if from > to { (to, from) } else { (from, to) };
+        let local = i32::abs(self.rnd.next_u32() as i32 % (to - from));
 
-        self.rnd.next_u32() as i32 % (to - from) + from
+        local + from
+    }
+
+    #[inline]
+    pub fn rand_element<'v, T>(&mut self, vec: &'v Vec<T>) -> Option<&'v T> {
+        let size = vec.len();
+        let index = self.rand_int32_in_range(0, size as i32);
+
+        Some(&vec[index as usize])
     }
 
     #[inline]

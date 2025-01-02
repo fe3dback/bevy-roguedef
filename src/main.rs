@@ -14,7 +14,6 @@ use bevy::window::PresentMode;
 use bevy::DefaultPlugins;
 
 fn main() {
-    // todo: add bevy framepace (+limit fps)
     App::new()
         // std old_plugins
         .add_plugins(
@@ -28,12 +27,12 @@ fn main() {
                     ..default()
                 })
                 .set(AudioPlugin {
-                    default_spatial_scale: SpatialScale::new(4.0), // todo: setup audio
+                    default_spatial_scale: SpatialScale::new(1.0),
                     ..default()
                 }),
         )
         .insert_resource(GlobalVolume {
-            volume: Volume::new(0.01), // todo: set volume
+            volume: Volume::new(1.0), // todo: set volume
         })
         // 3-rd old_plugins
         .add_plugins(bevy_framepace::FramepacePlugin)

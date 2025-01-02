@@ -18,7 +18,8 @@ pub enum GameSystemSet {
     // -----------------
     // Initialize
     // -----------------
-
+    // Despawn various objects from world
+    InGameDespawnObjects,
     // Spawn basic light, sky, etc...
     InGameSpawnWorldEnvironment,
     // Spawn 3d terrain objects

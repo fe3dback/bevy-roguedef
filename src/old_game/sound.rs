@@ -50,23 +50,5 @@ impl<'w, 's> SupSounds<'w, 's> {
     }
 
     fn spawn_audio(&mut self, pos: V2, files: Vec<&str>, ttl: Duration, volume: f32) {
-        let random_file = self.rand.rnd.next_u32() % files.len() as u32;
-        let sound = files[random_file as usize].to_string();
-
-        self.cmd.spawn((
-            Name::from(format!("sounds/{}", sound)),
-            CmpTransform2D {
-                position: pos,
-                angle: 0.0,
-                ..default()
-            },
-            CmpTimeToLife {
-                seconds_left: ttl.as_secs_f32(),
-            },
-            AudioPlayer::new(self.asset_server.load(format!("sounds/{}.wav", sound))),
-            PlaybackSettings::ONCE
-                .with_spatial(true)
-                .with_volume(Volume::new(volume)),
-        ));
     }
 }

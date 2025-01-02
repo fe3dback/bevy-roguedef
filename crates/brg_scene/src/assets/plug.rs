@@ -9,6 +9,7 @@ use crate::prelude::{
     AssetCreature,
     AssetEffect,
     AssetProjectile,
+    AssetSound,
     AssetSpell,
     AssetWeapon,
     GameState,
@@ -21,6 +22,7 @@ impl Plugin for Plug {
         app
             //
             .add_plugins(RonAssetPlugin::<AssetHeightMapData>::create("hmdata.ron"))
+            .add_plugins(RonAssetPlugin::<AssetSound>::create("sound.ron"))
             .add_plugins(RonAssetPlugin::<AssetEffect>::create("effect.ron"))
             .add_plugins(RonAssetPlugin::<AssetSpell>::create("spell.ron"))
             .add_plugins(RonAssetPlugin::<AssetProjectile>::create("projectile.ron"))

@@ -5,6 +5,7 @@ use brg_scene::prelude::GameSystemSet;
 use crate::units::weapon::cmp_weapon::CmpWeaponHolder;
 use crate::units::weapon::evt_reload::EvtWeaponReload;
 use crate::units::weapon::evt_shot::EvtWeaponShot;
+use crate::units::weapon::sys_handle_events::on_reload;
 use crate::units::weapon::sys_reset_trigger::auto_reset_weapon_trigger;
 use crate::units::weapon::sys_weapons::{release_fire_trigger, reload, shot};
 
@@ -23,6 +24,7 @@ impl Plugin for Plug {
                 reload,
                 release_fire_trigger,
                 shot,
+                on_reload,
             ).in_set(GameSystemSet::InGamePrepareWeapons))
         //-
         ;

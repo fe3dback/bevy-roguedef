@@ -1,0 +1,12 @@
+(
+    samples: [
+        (
+            file: "sounds/reload2.wav",
+            volume: 0.75,
+        ),
+        (
+            file: "sounds/reload3.wav",
+            volume: 0.6,
+        )
+    ],
+)

@@ -1,5 +1,5 @@
 use bevy::pbr::{MeshMaterial3d, StandardMaterial};
-use bevy::prelude::{Mesh3d, Name};
+use bevy::prelude::{Mesh3d, Name, SpatialListener};
 use brg_fundamental::prelude::{CmpMarkerCameraTarget, CmpTransform2D};
 
 use crate::prefabs::sup_prefabs::SupPrefabs;
@@ -20,10 +20,17 @@ impl<'w, 's> SupPrefabs<'w, 's> {
             CmpUnitMovementInput,
             CmpWeaponHolder,
         ),
-        (CmpMarkerPlayer, CmpMarkerCameraTarget),
+        (CmpMarkerPlayer, CmpMarkerCameraTarget, SpatialListener),
     ) {
         let mob = self.mob(MobKind::Player);
 
-        (mob, (CmpMarkerPlayer, CmpMarkerCameraTarget))
+        (
+            mob,
+            (
+                CmpMarkerPlayer,
+                CmpMarkerCameraTarget,
+                SpatialListener::new(50.0),
+            ),
+        )
     }
 }
