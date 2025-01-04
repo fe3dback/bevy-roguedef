@@ -2,7 +2,7 @@ use bevy::prelude::{Asset, TypePath};
 use ron_asset_manager::prelude::RonAsset;
 use serde::Deserialize;
 
-#[derive(Asset, TypePath, RonAsset, Deserialize, Debug, Clone)]
+#[derive(Asset, TypePath, RonAsset, Deserialize, Debug, Clone, Default)]
 pub struct AssetEffect {
     #[asset]
     pub damage: Option<AssetEffectDamage>,

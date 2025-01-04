@@ -29,8 +29,10 @@ bevy = { workspace = true }
 bevy_framepace = {workspace = true}
 bevy-inspector-egui = {workspace = true}
 
+
 # rust libs
 strum = {workspace = true}
+
 
 [workspace.dependencies]
 brg_core = { path = "crates/brg_core" }
@@ -41,13 +43,15 @@ bevy-inspector-egui = { version = "0.28.0" }
 bevy_asset_loader = { version = "0.22.0" }
 bevy_framepace = {version = "0.18.0"}
 # bevy-trait-query = {version = "0.7.0"}
+bevy-persistent = { version = "0.7.0", features = ["json"] }
 ron_asset_manager = { path = "../ron_asset_manager" }
 auto-impl-ops = { version = "0.2.1" }
 strum = { version = "0.26.3", features = ["derive"] }
 iyes_perf_ui = { git="https://github.com/IyesGames/iyes_perf_ui.git", branch = "main" }
 serde = { version = "1.0.215", features = ["derive"] }
-#serde_json = "1.0.133"
+serde_json = "1.0.133"
 rand_chacha = "0.3.1"
+dirs = "5.0.1"
 #lazy_static = "1.5.0"
 #uuid = "1.11.0"
 #anyhow = "1.0.94"

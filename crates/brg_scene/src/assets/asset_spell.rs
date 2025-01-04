@@ -5,7 +5,7 @@ use serde::Deserialize;
 
 use crate::prelude::AssetEffect;
 
-#[derive(Asset, TypePath, RonAsset, Deserialize, Debug, Clone)]
+#[derive(Asset, TypePath, RonAsset, Deserialize, Debug, Clone, Default)]
 pub struct AssetSpell {
     #[asset]
     pub apply_one_time: Shandle<AssetEffect>,

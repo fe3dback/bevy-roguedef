@@ -2,6 +2,7 @@ use bevy::app::{App, Plugin};
 use bevy::prelude::{IntoSystemConfigs, Update};
 use brg_scene::prelude::{has_feature, GameSystemSet, SceneFeature};
 
+use crate::units::cmp_team::CmpTeam;
 use crate::units::cmp_unit_creature::CmpUnitMovementInput;
 use crate::units::sys_movement::update_unit_movement;
 
@@ -16,6 +17,7 @@ impl Plugin for Plug {
             .add_plugins(super::weapon::plug::Plug)
             //
             .register_type::<CmpUnitMovementInput>()
+            .register_type::<CmpTeam>()
             //
             .add_systems(Update, update_unit_movement.in_set(GameSystemSet::InGameUpdateMovements).run_if(has_feature(SceneFeature::Units)))
         //-

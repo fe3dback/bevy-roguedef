@@ -96,4 +96,9 @@ impl GizmosX<'_, '_> {
             color,
         );
     }
+
+    #[inline]
+    pub fn point_custom_height<C: Into<Color> + Copy>(&mut self, pos: V3, color: C) {
+        self.gz.sphere(self.iso3d(pos), 0.1, color).resolution(8);
+    }
 }

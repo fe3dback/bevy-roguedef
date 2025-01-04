@@ -28,6 +28,8 @@ pub enum GameSystemSet {
     InGameSpawnPlayerStaff,
     // Spawn enemy mobs
     InGameSpawnMobs,
+    // Spawn projectiles/debris/effects/etc...
+    InGameSpawnProjectilesAndEffects,
 
     // -----------------
     // Input

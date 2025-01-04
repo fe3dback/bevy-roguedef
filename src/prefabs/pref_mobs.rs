@@ -8,6 +8,7 @@ use brg_fundamental::prelude::CmpTransform2D;
 use brg_scene::prelude::{AssetCreature, AssetCreatureMovement};
 
 use crate::prefabs::sup_prefabs::SupPrefabs;
+use crate::units::cmp_team::{CmpTeam, ETeam};
 use crate::units::cmp_unit_creature::CmpUnitMovementInput;
 use crate::units::mobs::enum_mob_type::MobKind;
 use crate::units::weapon::cmp_weapon::{CmpWeaponHolder, Weapon};
@@ -18,6 +19,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         kind: MobKind,
     ) -> (
         CmpTransform2D,
+        CmpTeam,
         Name,
         Mesh3d,
         MeshMaterial3d<StandardMaterial>,
@@ -46,6 +48,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
                 height: 0.0,
                 ..default()
             },
+            CmpTeam::new(ETeam::Enemies),
             Name::from(format!("mob #{}", creature.name)),
             Mesh3d(self.basic_meshes.add(Capsule3d::new(0.35, 1.4))),
             MeshMaterial3d(self.materials.add(StandardMaterial {

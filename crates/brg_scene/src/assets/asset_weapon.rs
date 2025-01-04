@@ -14,4 +14,6 @@ pub struct AssetWeapon {
     pub projectile:               Shandle<AssetProjectile>,
     #[asset]
     pub reload_sound:             Option<Shandle<AssetSound>>,
+    #[asset]
+    pub fire_sound:               Option<Shandle<AssetSound>>,
 }

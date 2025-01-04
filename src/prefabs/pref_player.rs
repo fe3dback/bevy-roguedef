@@ -3,6 +3,7 @@ use bevy::prelude::{Mesh3d, Name, SpatialListener};
 use brg_fundamental::prelude::{CmpMarkerCameraTarget, CmpTransform2D};
 
 use crate::prefabs::sup_prefabs::SupPrefabs;
+use crate::units::cmp_team::{CmpTeam, ETeam};
 use crate::units::cmp_unit_creature::CmpUnitMovementInput;
 use crate::units::mobs::enum_mob_type::MobKind;
 use crate::units::player::cmp_marker_player::CmpMarkerPlayer;
@@ -14,6 +15,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
     ) -> (
         (
             CmpTransform2D,
+            CmpTeam,
             Name,
             Mesh3d,
             MeshMaterial3d<StandardMaterial>,
@@ -22,7 +24,8 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         ),
         (CmpMarkerPlayer, CmpMarkerCameraTarget, SpatialListener),
     ) {
-        let mob = self.mob(MobKind::Player);
+        let mut mob = self.mob(MobKind::Player);
+        mob.1.team = ETeam::Player;
 
         (
             mob,

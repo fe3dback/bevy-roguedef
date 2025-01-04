@@ -3,5 +3,6 @@
     magazine_reload_time_sec: 0.5,
     hit_reload_time_sec: 0.2,
     projectile: "data/projectiles/sword.projectile.ron",
-    reload_sound: Some("data/sounds/weapons/simple-reload.sound.ron")
+    reload_sound: Some("data/sounds/weapons/simple-reload.sound.ron"),
+    fire_sound: Some("data/sounds/weapons/simple-fire.sound.ron"),
 )

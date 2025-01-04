@@ -4,6 +4,7 @@ pub mod enum_phase;
 pub mod evt_reload;
 pub mod evt_shot;
 pub mod plug;
+pub mod projectiles;
 mod sys_handle_events;
 mod sys_reset_trigger;
 mod sys_weapons;

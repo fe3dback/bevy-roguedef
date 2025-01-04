@@ -1,23 +1,26 @@
-use bevy::prelude::{ButtonInput, KeyCode, Res, ResMut, With, World};
+use bevy::prelude::{warn, ButtonInput, KeyCode, Res, ResMut, With, World};
 use bevy::window::PrimaryWindow;
 use bevy_inspector_egui::bevy_egui::EguiContext;
 use bevy_inspector_egui::egui;
+use bevy_persistent::Persistent;
 use strum::IntoEnumIterator;
 
 use super::res::ResEditorFeaturesState;
 use crate::features::enums::EditorFeature;
 
 pub fn toggle_features_window(
-    mut data: ResMut<ResEditorFeaturesState>,
+    mut data: ResMut<Persistent<ResEditorFeaturesState>>,
     keyboard: Res<ButtonInput<KeyCode>>,
 ) {
     if keyboard.just_pressed(KeyCode::F11) {
-        data.enabled = !data.enabled;
+        if let Err(e) = data.update(|data| data.enabled = !data.enabled) {
+            warn!("editor features window: activate: {}", e);
+        }
     }
 }
 
 pub fn display_editor_features_window(world: &mut World) {
-    world.resource_scope::<ResEditorFeaturesState, _>(|world, mut data| {
+    world.resource_scope::<Persistent<ResEditorFeaturesState>, _>(|world, mut data| {
         if !data.enabled {
             return;
         }
@@ -39,10 +42,15 @@ pub fn display_editor_features_window(world: &mut World) {
                 }
 
                 ui.horizontal(|row| {
-                    row.checkbox(
-                        &mut data.features.get_mut(&id).unwrap(),
-                        feature.to_string(),
-                    );
+                    if row
+                        .checkbox(
+                            &mut data.features.get_mut(&id).unwrap(),
+                            feature.to_string(),
+                        )
+                        .changed()
+                    {
+                        _ = data.persist();
+                    }
                 });
             }
         });
