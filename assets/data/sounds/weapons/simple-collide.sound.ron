@@ -1,0 +1,12 @@
+(
+    samples: [
+        (
+            file: "sounds/bullet_hit1.wav",
+            volume: 1.1,
+        ),
+        (
+            file: "sounds/bullet_hit2.wav",
+            volume: 1.1,
+        )
+    ],
+)

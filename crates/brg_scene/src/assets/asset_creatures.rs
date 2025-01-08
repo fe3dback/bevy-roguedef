@@ -18,5 +18,6 @@ pub struct AssetCreature {
 
 #[derive(RonAsset, Deserialize, Default, Debug, Clone)]
 pub struct AssetCreatureMovement {
-    pub speed: f32,
+    pub speed:              f32,
+    pub collision_radius_m: f32,
 }

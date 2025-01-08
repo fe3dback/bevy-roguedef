@@ -26,7 +26,7 @@ impl<'w, 's> SupSound<'w, 's> {
             AudioPlayer::new(sample.file.handle.clone()),
             PlaybackSettings::DESPAWN
                 .with_spatial(true)
-                .with_volume(Volume::new(sample.volume * 100.0)),
+                .with_volume(Volume::new(sample.volume)),
         ));
     }
 }

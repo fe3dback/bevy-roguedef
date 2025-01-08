@@ -1,6 +1,7 @@
 use bevy::prelude::{App, Plugin};
 
 pub mod camera;
+mod collisions;
 pub mod common;
 mod coord;
 mod gizmos;
@@ -10,6 +11,7 @@ mod transform;
 
 pub mod prelude {
     pub use crate::camera::prelude::*;
+    pub use crate::collisions::prelude::*;
     pub use crate::common::prelude::*;
     pub use crate::coord::prelude::*;
     pub use crate::gizmos::prelude::*;
@@ -29,6 +31,7 @@ impl Plugin for BrgFundamentalPlugin {
             .add_plugins(coord::plug::Plug)
             .add_plugins(common::plug::Plug)
             .add_plugins(sound::plug::Plug)
+            .add_plugins(collisions::plug::Plug)
         //-
         ;
     }

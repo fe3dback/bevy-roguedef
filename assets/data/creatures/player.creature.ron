@@ -1,7 +1,8 @@
 (
     name: "Player",
     movement: (
-        speed: 15.0
+        speed: 15.0,
+        collision_radius_m: 0.4,
     ),
     weapon: Some("data/weapons/sword.weapon.ron"),
 )

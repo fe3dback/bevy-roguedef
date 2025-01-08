@@ -2,7 +2,8 @@ use std::f32;
 use std::f32::consts::PI;
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
-use bevy::prelude::{Reflect, Vec2, Vec3};
+use bevy::math::Rot2;
+use bevy::prelude::{Dir2, Reflect, Vec2, Vec3};
 
 use super::vec3::V3;
 use crate::prelude::types::{Angle, Meter};
@@ -218,6 +219,16 @@ impl V2 {
     #[inline]
     pub fn angle_to(self, to: Self) -> Angle {
         f32::atan2(to.y - self.y, self.x - to.x) + PI
+    }
+
+    #[inline]
+    pub fn as_dir2_to(self, to: Self) -> Dir2 {
+        Dir2::new_unchecked(V2::ZERO.polar_offset(1.0, self.angle_to(to)).as_2d())
+    }
+
+    #[inline]
+    pub fn as_rot2(self, to: Self) -> Rot2 {
+        Rot2::radians(self.angle_to(to))
     }
 
     #[inline]

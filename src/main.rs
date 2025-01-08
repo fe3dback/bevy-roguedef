@@ -28,12 +28,11 @@ fn main() {
                 })
                 .set(AudioPlugin {
                     default_spatial_scale: SpatialScale::new(1.0),
-                    ..default()
+                    global_volume:         GlobalVolume {
+                        volume: Volume::new(1.0), // todo: set volume
+                    },
                 }),
         )
-        .insert_resource(GlobalVolume {
-            volume: Volume::new(1.0), // todo: set volume
-        })
         // 3-rd old_plugins
         .add_plugins(bevy_framepace::FramepacePlugin)
         .insert_resource(bevy_framepace::FramepaceSettings {

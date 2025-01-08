@@ -2,11 +2,11 @@
     samples: [
         (
             file: "sounds/pl_gun1.wav",
-            volume: 0.5,
+            volume: 0.25,
         ),
         (
             file: "sounds/pl_gun2.wav",
-            volume: 0.5,
+            volume: 0.25,
         )
     ],
 )

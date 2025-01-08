@@ -6,15 +6,15 @@ use brg_core::prelude::{V2, V3};
 use crate::prelude::CmpTerrainMarkerMesh;
 
 #[derive(SystemParam)]
-pub struct SupWorldRayCast<'w, 's> {
+pub struct SupRayCastMesh<'w, 's> {
     pub mesh_ray_cast:      MeshRayCast<'w, 's>,
     pub query_cam: Query<'w, 's, (&'static Camera, &'static GlobalTransform), With<Camera3d>>,
     pub query_window:       Query<'w, 's, &'static Window, With<PrimaryWindow>>,
     pub query_terrain_mesh: Query<'w, 's, Entity, With<CmpTerrainMarkerMesh>>,
 }
 
-impl SupWorldRayCast<'_, '_> {
-    pub fn viewport(&self) -> Option<Rect> {
+impl SupRayCastMesh<'_, '_> {
+    pub(super) fn viewport(&self) -> Option<Rect> {
         for (cam, trm) in &self.query_cam {
             if !cam.is_active {
                 continue;
@@ -31,7 +31,7 @@ impl SupWorldRayCast<'_, '_> {
         None
     }
 
-    pub fn cursor_pos(&self) -> V2 {
+    pub(super) fn cursor_pos(&self) -> V2 {
         let Ok(win) = self.query_window.get_single() else {
             return V2::ZERO;
         };
@@ -42,7 +42,7 @@ impl SupWorldRayCast<'_, '_> {
         }
     }
 
-    pub fn ray_cast_from_screen(&mut self, viewport_position: V2) -> V2 {
+    pub(super) fn ray_cast_from_screen(&mut self, viewport_position: V2) -> V2 {
         for (cam, trm) in &self.query_cam {
             if !cam.is_active {
                 continue;
@@ -92,11 +92,7 @@ impl SupWorldRayCast<'_, '_> {
             ..default()
         });
 
-        // todo: delete
-        // info!("ray cast hit: {:?}", hits);
-
         let hit = hits.first();
-
         let hit_location = match hit {
             Some((_, hit)) => V3::from_3d(hit.point),
             None => {

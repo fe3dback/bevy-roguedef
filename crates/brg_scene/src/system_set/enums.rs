@@ -44,6 +44,11 @@ pub enum GameSystemSet {
     InGameUpdateCameras,
 
     // -----------------
+    // Sound effects
+    // -----------------
+    InGamePlaySound,
+
+    // -----------------
     // Draw
     // -----------------
 

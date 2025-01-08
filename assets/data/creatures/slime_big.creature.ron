@@ -1,6 +1,7 @@
 (
     name: "Big Slime",
     movement: (
-        speed: 9.0
+        speed: 9.0,
+        collision_radius_m: 1.5,
     ),
 )

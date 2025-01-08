@@ -13,7 +13,7 @@ use bevy::prelude::{
 use bevy::scene::SceneInstance;
 use brg_core::prelude::consts::TERRAIN_HEIGHT;
 use brg_core::prelude::{Range, V3};
-use brg_fundamental::prelude::{CmpTerrainMarkerMesh, ResHeightmap, SupWorldRayCast};
+use brg_fundamental::prelude::{CmpTerrainMarkerMesh, ResHeightmap, SupRayCastMesh};
 use brg_scene::prelude::InGame;
 
 use crate::prefabs::sup_prefabs::SupPrefabs;
@@ -39,7 +39,7 @@ pub fn debug_mark_terrain_as_heightmap_source(
 }
 
 pub fn debug_tmp_update_heightmap_from_terrain(
-    mut rcast: SupWorldRayCast,
+    mut rcast: SupRayCastMesh,
     mut hm: ResMut<ResHeightmap>,
     time: Res<bevy::time::Time>,
 ) {

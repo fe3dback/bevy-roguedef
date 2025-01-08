@@ -28,10 +28,9 @@ brg_fundamental = { path = "crates/brg_fundamental" }
 bevy = { workspace = true }
 bevy_framepace = {workspace = true}
 bevy-inspector-egui = {workspace = true}
-
-
 # rust libs
 strum = {workspace = true}
+auto-impl-ops = {workspace = true}
 
 
 [workspace.dependencies]

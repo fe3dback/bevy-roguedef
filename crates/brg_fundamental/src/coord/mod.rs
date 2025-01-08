@@ -5,5 +5,5 @@ mod sys;
 
 pub mod prelude {
     pub use super::res_coords::*;
-    pub use super::sup_raycast::SupWorldRayCast;
+    pub use super::sup_raycast::SupRayCastMesh;
 }

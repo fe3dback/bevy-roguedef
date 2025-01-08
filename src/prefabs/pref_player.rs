@@ -1,8 +1,8 @@
 use bevy::pbr::{MeshMaterial3d, StandardMaterial};
 use bevy::prelude::{Mesh3d, Name, SpatialListener};
-use brg_fundamental::prelude::{CmpMarkerCameraTarget, CmpTransform2D};
+use brg_fundamental::prelude::{CmpCollisionVolume, CmpMarkerCameraTarget, CmpTransform2D};
 
-use crate::prefabs::sup_prefabs::SupPrefabs;
+use super::sup_prefabs::SupPrefabs;
 use crate::units::cmp_team::{CmpTeam, ETeam};
 use crate::units::cmp_unit_creature::CmpUnitMovementInput;
 use crate::units::mobs::enum_mob_type::MobKind;
@@ -20,6 +20,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
             Mesh3d,
             MeshMaterial3d<StandardMaterial>,
             CmpUnitMovementInput,
+            CmpCollisionVolume,
             CmpWeaponHolder,
         ),
         (CmpMarkerPlayer, CmpMarkerCameraTarget, SpatialListener),
@@ -32,7 +33,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
             (
                 CmpMarkerPlayer,
                 CmpMarkerCameraTarget,
-                SpatialListener::new(50.0),
+                SpatialListener::new(1.5),
             ),
         )
     }

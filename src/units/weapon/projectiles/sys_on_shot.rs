@@ -1,6 +1,6 @@
-use bevy::prelude::{warn, Assets, Commands, EventReader, Query, Res};
+use bevy::prelude::{warn, Assets, Commands, EventReader, Query, Res, StateScoped};
 use brg_fundamental::prelude::CmpTransform2D;
-use brg_scene::prelude::AssetWeapon;
+use brg_scene::prelude::{AssetWeapon, InGame};
 
 use crate::prefabs::sup_prefabs::SupPrefabs;
 use crate::units::cmp_team::CmpTeam;
@@ -28,6 +28,10 @@ pub fn on_shot_spawn_projectile(
         projectile.0.position = owner_trm.position;
         projectile.0.angle = owner_trm.position.angle_to(evt.aim_to);
 
-        cmd.spawn((projectile, CmpTeam::new(owner_team.team)));
+        cmd.spawn((
+            projectile,
+            CmpTeam::new(owner_team.team),
+            StateScoped(InGame),
+        ));
     }
 }

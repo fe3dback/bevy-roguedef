@@ -4,10 +4,10 @@ use bevy::pbr::{MeshMaterial3d, StandardMaterial};
 use bevy::prelude::{default, Capsule3d, Mesh3d, Name};
 use brg_core::prelude::types::Speed;
 use brg_core::prelude::{V2, V3};
-use brg_fundamental::prelude::CmpTransform2D;
+use brg_fundamental::prelude::{CmpCollisionVolume, CmpTransform2D};
 use brg_scene::prelude::{AssetCreature, AssetCreatureMovement};
 
-use crate::prefabs::sup_prefabs::SupPrefabs;
+use super::sup_prefabs::SupPrefabs;
 use crate::units::cmp_team::{CmpTeam, ETeam};
 use crate::units::cmp_unit_creature::CmpUnitMovementInput;
 use crate::units::mobs::enum_mob_type::MobKind;
@@ -24,6 +24,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         Mesh3d,
         MeshMaterial3d<StandardMaterial>,
         CmpUnitMovementInput,
+        CmpCollisionVolume,
         CmpWeaponHolder,
     ) {
         let creature = self.creature_by_kind(kind);
@@ -60,6 +61,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
                 speed: Speed::KMH(creature.movement.speed),
                 ..default()
             },
+            CmpCollisionVolume::Circle(creature.movement.collision_radius_m),
             weapon_holder,
         )
     }
@@ -67,7 +69,10 @@ impl<'w, 's> SupPrefabs<'w, 's> {
     fn creature_by_kind(&mut self, kind: MobKind) -> AssetCreature {
         let def = AssetCreature {
             name:     "Unknown creature".to_string(),
-            movement: AssetCreatureMovement { speed: 1.0 },
+            movement: AssetCreatureMovement {
+                speed:              1.0,
+                collision_radius_m: 1.0,
+            },
             weapon:   None,
         };
 

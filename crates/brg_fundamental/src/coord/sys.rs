@@ -15,9 +15,9 @@ use bevy::prelude::{
 };
 use brg_core::prelude::{V2, V3};
 
-use crate::prelude::{CoordsArea, ResCoords, SupWorldRayCast};
+use crate::prelude::{CoordsArea, ResCoords, SupRayCastMesh};
 
-pub fn update_world_coords(mut data: ResMut<ResCoords>, mut cast: SupWorldRayCast) {
+pub fn update_world_coords(mut data: ResMut<ResCoords>, mut cast: SupRayCastMesh) {
     let Some(viewport_rect) = cast.viewport() else {
         warn!("can`t get camera viewport rect");
         return;

@@ -1,4 +1,7 @@
-use bevy::prelude::{Color, Isometry3d};
+use std::f32::consts::PI;
+
+use bevy::math::EulerRot;
+use bevy::prelude::{Color, Isometry3d, Quat};
 use brg_core::prelude::{Range, V2, V3};
 
 use super::sup::{GizmosX, ISO_IDEN};
@@ -34,8 +37,63 @@ impl GizmosX<'_, '_> {
     }
 
     #[inline]
-    pub fn circle<C: Into<Color>>(&mut self, center: V2, radius: f32, color: C) {
-        self.gz.circle(self.iso(center), radius, color);
+    pub fn circle_custom_height<C: Into<Color> + Copy>(
+        &mut self,
+        center: V3,
+        radius: f32,
+        color: C,
+    ) {
+        let mut iso_center = self.iso3d(center);
+
+        iso_center.rotation = Quat::from_euler(EulerRot::XYZ, 0.0, 0.0, 0.0);
+        self.gz.circle(iso_center, radius, color);
+
+        iso_center.rotation = Quat::from_euler(EulerRot::XYZ, PI / 2.0, 0.0, 0.0);
+        self.gz.circle(iso_center, radius, color);
+
+        iso_center.rotation = Quat::from_euler(EulerRot::XYZ, 0.0, PI / 2.0, 0.0);
+        self.gz.circle(iso_center, radius, color);
+    }
+
+    #[inline]
+    pub fn capsule<C: Into<Color> + Copy>(
+        &mut self,
+        center: V2,
+        radius: f32,
+        height: f32,
+        color: C,
+    ) {
+        self.capsule_custom_height(center.with_height(0.0), radius, height, color);
+    }
+
+    #[inline]
+    pub fn capsule_custom_height<C: Into<Color> + Copy>(
+        &mut self,
+        center: V3,
+        radius: f32,
+        height: f32,
+        color: C,
+    ) {
+        let half_height: f32 = height * 0.5;
+        let z = V3::new(0.0, 0.0, half_height);
+
+        let mut iso_bottom = self.iso3d(center - z);
+        iso_bottom.rotation = Quat::from_euler(EulerRot::XYZ, PI / 2.0, 0.0, 0.0);
+
+        let mut iso_top = self.iso3d(center + z);
+        iso_top.rotation = Quat::from_euler(EulerRot::XYZ, PI / 2.0, 0.0, 0.0);
+
+        self.gz.circle(iso_bottom, radius, color);
+        self.gz.circle(iso_top, radius, color);
+
+        let len: f32 = radius * 0.5;
+
+        let (x, y) = (V3::new(len, 0.0, 0.0), V3::new(0.0, len, 0.0));
+
+        self.line_custom_height((center - x) - z, (center - x) + z, color);
+        self.line_custom_height((center + x) - z, (center + x) + z, color);
+        self.line_custom_height((center - y) - z, (center - y) + z, color);
+        self.line_custom_height((center + y) - z, (center + y) + z, color);
     }
 
     #[inline]
@@ -85,20 +143,17 @@ impl GizmosX<'_, '_> {
     }
 
     #[inline]
-    pub fn point<C: Into<Color> + Copy>(&mut self, pos: V3, color: C) {
-        let pos2 = V2::new(pos.x, pos.y);
-        let size = V2::splat(0.1);
-
-        self.rect(pos2 - (size * 0.5), size, color);
-        self.line_custom_height(
-            V3::new(pos.x, pos.y, 0.0),
-            V3::new(pos.x, pos.y, pos.h),
-            color,
-        );
-    }
-
-    #[inline]
     pub fn point_custom_height<C: Into<Color> + Copy>(&mut self, pos: V3, color: C) {
-        self.gz.sphere(self.iso3d(pos), 0.1, color).resolution(8);
+        const LEN: f32 = 0.1;
+
+        let (x, y, z) = (
+            V3::new(LEN, 0.0, 0.0),
+            V3::new(0.0, LEN, 0.0),
+            V3::new(0.0, 0.0, LEN),
+        );
+
+        self.line_custom_height(pos - x, pos + x, color);
+        self.line_custom_height(pos - y, pos + y, color);
+        self.line_custom_height(pos - z, pos + z, color);
     }
 }

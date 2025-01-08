@@ -2,8 +2,8 @@ use bevy::color::palettes::tailwind::{GRAY_300, LIME_600, RED_600};
 use bevy::prelude::{Query, With};
 use brg_fundamental::prelude::{CmpTransform2D, GizmosX};
 
+use super::cmp_projectile::CmpProjectile;
 use crate::units::cmp_team::{CmpTeam, ETeam};
-use crate::units::weapon::projectiles::cmp_projectile::CmpProjectile;
 
 pub fn debug_draw_projectiles(
     mut gz: GizmosX,
