@@ -12,7 +12,7 @@ impl Plugin for Plug {
         app
         //
             .register_type::<CmpTimeToLife>()
-            .add_systems(Update, remove_expired_ttl_entities.in_set(GameSystemSet::InGameDespawnObjects))
+            .add_systems(Update, remove_expired_ttl_entities.in_set(GameSystemSet::InGame_NOPAUSE_DespawnObjects))
         //-
         ;
     }

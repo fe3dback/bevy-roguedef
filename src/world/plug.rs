@@ -16,8 +16,8 @@ impl Plugin for Plug {
         app
             //
             .add_plugins(camera::plug::Plug)
-            .add_systems(OnEnter(InGame), spawn_light.in_set(GameSystemSet::InGameSpawnWorldEnvironment).run_if(has_feature(SceneFeature::WorldEnvLight)))
-            .add_systems(OnEnter(InGame), (spawn_example_objects).in_set(GameSystemSet::InGameSpawnWorldTerrain).run_if(has_feature(SceneFeature::ExampleCubes)))
+            .add_systems(OnEnter(InGame), spawn_light.in_set(GameSystemSet::InGame_NOPAUSE_SpawnWorldEnvironment).run_if(has_feature(SceneFeature::WorldEnvLight)))
+            .add_systems(OnEnter(InGame), (spawn_example_objects).in_set(GameSystemSet::InGame_NOPAUSE_SpawnWorldTerrain).run_if(has_feature(SceneFeature::ExampleCubes)))
             .add_systems(Update, debug_mark_terrain_as_heightmap_source) // todo: delete
             // .add_systems(Update, debug_tmp_update_heightmap_from_terrain) // todo: delete
         //-

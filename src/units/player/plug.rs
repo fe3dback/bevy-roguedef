@@ -12,9 +12,9 @@ impl Plugin for Plug {
     fn build(&self, app: &mut App) {
         app
             //
-            .add_systems(OnEnter(InGame), spawn_player.in_set(GameSystemSet::InGameSpawnPlayerStaff).run_if(has_feature(SceneFeature::Units)))
-            .add_systems(Update, update_movement_input.in_set(GameSystemSet::InGameProcessInput))
-            .add_systems(Update, weapon_trigger_fire.in_set(GameSystemSet::InGameProcessInput))
+            .add_systems(OnEnter(InGame), spawn_player.in_set(GameSystemSet::InGame_NOPAUSE_SpawnPlayerStaff).run_if(has_feature(SceneFeature::Units)))
+            .add_systems(Update, update_movement_input.in_set(GameSystemSet::InGame_NOPAUSE_ProcessInput))
+            .add_systems(Update, weapon_trigger_fire.in_set(GameSystemSet::InGame_NOPAUSE_ProcessInput))
         //-
         ;
     }

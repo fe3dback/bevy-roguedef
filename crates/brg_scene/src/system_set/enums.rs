@@ -1,8 +1,12 @@
+#![allow(non_camel_case_types)]
+
 use bevy::prelude::SystemSet;
 use strum::{Display, EnumIter};
 
-pub const MAGIC_PREFIX_CONDITION_IN_STATE_IN_GAME: &str = "InGame";
+pub const MAGIC_PREFIX_CONDITION_IN_STATE_IN_GAME_NO_PAUSE: &str = "InGame_NOPAUSE_";
+pub const MAGIC_PREFIX_CONDITION_IN_STATE_IN_GAME_ALWAYS: &str = "InGame_ALWAYS_";
 pub const MAGIC_MATCH_CONDITION_EDITOR_GIZMOS: &str = "EditorGizmos";
+pub const MAGIC_MATCH_CONDITION_EDITOR: &str = "Editor";
 
 #[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone, Copy, EnumIter, Display)]
 pub enum GameSystemSet {
@@ -15,38 +19,42 @@ pub enum GameSystemSet {
     // For spawning system entities on loading
     LoadingSystem,
 
+    // Editor only logic with game state update
+    EditorChangeGameState,
+
     // -----------------
     // Initialize
     // -----------------
     // Despawn various objects from world
-    InGameDespawnObjects,
+    InGame_NOPAUSE_DespawnObjects,
     // Spawn basic light, sky, etc...
-    InGameSpawnWorldEnvironment,
+    InGame_NOPAUSE_SpawnWorldEnvironment,
     // Spawn 3d terrain objects
-    InGameSpawnWorldTerrain,
+    InGame_NOPAUSE_SpawnWorldTerrain,
     // Spawn player entities, player system objects, etc...
-    InGameSpawnPlayerStaff,
+    InGame_NOPAUSE_SpawnPlayerStaff,
     // Spawn enemy mobs
-    InGameSpawnMobs,
+    InGame_NOPAUSE_SpawnMobs,
     // Spawn projectiles/debris/effects/etc...
-    InGameSpawnProjectilesAndEffects,
+    InGame_NOPAUSE_SpawnProjectilesAndEffects,
 
     // -----------------
     // Input
     // -----------------
-    InGameProcessInput,
+    InGame_NOPAUSE_ProcessInput,
 
     // -----------------
     // Gameplay
     // -----------------
-    InGamePrepareWeapons,
-    InGameUpdateMovements,
-    InGameUpdateCameras,
+    InGame_NOPAUSE_PrepareWeapons,
+    InGame_NOPAUSE_UpdateMovements,
+    InGame_NOPAUSE_UpdateGameCameras,
+    InGame_ALWAYS_UpdateEditorCameras,
 
     // -----------------
     // Sound effects
     // -----------------
-    InGamePlaySound,
+    InGame_NOPAUSE_PlaySound,
 
     // -----------------
     // Draw

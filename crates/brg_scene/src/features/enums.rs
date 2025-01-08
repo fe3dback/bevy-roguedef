@@ -8,6 +8,7 @@ pub enum SceneType {
 
 #[derive(Eq, PartialEq, Debug)]
 pub enum SceneFeature {
+    Editor,
     EditorGizmos,
     WorldEnvLight,
     ExampleCubes,

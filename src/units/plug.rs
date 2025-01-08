@@ -19,7 +19,7 @@ impl Plugin for Plug {
             .register_type::<CmpUnitMovementInput>()
             .register_type::<CmpTeam>()
             //
-            .add_systems(Update, update_unit_movement.in_set(GameSystemSet::InGameUpdateMovements).run_if(has_feature(SceneFeature::Units)))
+            .add_systems(Update, update_unit_movement.in_set(GameSystemSet::InGame_NOPAUSE_UpdateMovements).run_if(has_feature(SceneFeature::Units)))
         //-
         ;
     }

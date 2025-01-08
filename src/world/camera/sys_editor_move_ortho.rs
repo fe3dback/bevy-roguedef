@@ -76,9 +76,14 @@ pub fn editor_ortho_wasd_move_camera(
 pub fn editor_ortho_change_scale(
     mut cmd: Commands,
     mut mouse: EventReader<MouseWheel>,
+    keyboard: Res<ButtonInput<KeyCode>>,
     mut cameras: Query<(Entity, &CmpCameraType, &Projection)>,
     mut settings: ResMut<ResCameraSettings>,
 ) {
+    if !keyboard.pressed(KeyCode::ShiftLeft) {
+        return;
+    }
+
     if settings.active != CmpCameraType::EditorTopDownOrthographic {
         return;
     }

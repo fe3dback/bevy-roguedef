@@ -14,7 +14,7 @@ impl Plugin for Plug {
             .register_type::<ResMobsSpawnRules>()
             .insert_resource(ResMobsSpawnRules::default())
             .add_systems(Update, editor_enemies_window_update.in_set(GameSystemSet::InGameEditorWindowsDraw).run_if(has_feature(SceneFeature::Units)))
-            .add_systems(Update, spawn_mobs.in_set(GameSystemSet::InGameSpawnMobs).run_if(has_feature(SceneFeature::Units)))
+            .add_systems(Update, spawn_mobs.in_set(GameSystemSet::InGame_NOPAUSE_SpawnMobs).run_if(has_feature(SceneFeature::Units)))
         //-
         ;
     }

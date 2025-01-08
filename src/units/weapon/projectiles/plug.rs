@@ -18,10 +18,10 @@ impl Plugin for Plug {
             // 
             .register_type::<CmpProjectile>()
             .add_event::<EvtProjectileCollided>()
-            .add_systems(Update, on_shot_spawn_projectile.in_set(GameSystemSet::InGameSpawnProjectilesAndEffects))
+            .add_systems(Update, on_shot_spawn_projectile.in_set(GameSystemSet::InGame_NOPAUSE_SpawnProjectilesAndEffects))
             .add_systems(Update, debug_draw_projectiles.in_set(GameSystemSet::InGameEditorGizmosDraw).run_if(has_editor_feature(EditorFeature::DrawProjectile)))
-            .add_systems(Update, move_projectiles.in_set(GameSystemSet::InGameUpdateMovements))
-            .add_systems(Update, play_sound_on_collide.in_set(GameSystemSet::InGamePlaySound))
+            .add_systems(Update, move_projectiles.in_set(GameSystemSet::InGame_NOPAUSE_UpdateMovements))
+            .add_systems(Update, play_sound_on_collide.in_set(GameSystemSet::InGame_NOPAUSE_PlaySound))
         //-
         ;
     }
