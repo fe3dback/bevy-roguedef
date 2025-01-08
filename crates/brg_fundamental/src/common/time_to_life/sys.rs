@@ -8,8 +8,8 @@ pub fn remove_expired_ttl_entities(
     time: Res<Time>,
 ) {
     for (ent, mut cmp) in &mut expired_q {
-        if cmp.seconds_left > 0.0 {
-            cmp.seconds_left -= time.delta().as_secs_f32();
+        if !cmp.left.is_zero() {
+            cmp.left = cmp.left.checked_sub(time.delta()).unwrap_or_default();
             continue;
         }
 

@@ -1,9 +1,9 @@
 use bevy::input::ButtonInput;
 use bevy::prelude::{Camera, Commands, DetectChanges, Entity, KeyCode, Query, Res, ResMut};
 
-use crate::world::camera::cmp::CmpMarkerCameraActive;
-use crate::world::camera::enums::CmpCameraType;
-use crate::world::camera::res::ResCameraSettings;
+use super::cmp::CmpMarkerCameraActive;
+use super::enums::CmpCameraType;
+use super::res::ResCameraSettings;
 
 pub fn switch_camera_on_keyboard_input(
     kbr: Res<ButtonInput<KeyCode>>,
@@ -16,8 +16,9 @@ pub fn switch_camera_on_keyboard_input(
     // todo: move from camera (this is global game state)
 
     settings.active = match settings.active {
-        CmpCameraType::EditorFly => CmpCameraType::GameTopDown,
-        CmpCameraType::GameTopDown => CmpCameraType::EditorFly,
+        CmpCameraType::EditorFly => CmpCameraType::EditorTopDownOrthographic,
+        CmpCameraType::EditorTopDownOrthographic => CmpCameraType::GameStrategy,
+        CmpCameraType::GameStrategy => CmpCameraType::EditorFly,
     };
 
     if settings.active != CmpCameraType::EditorFly {

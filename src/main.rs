@@ -29,7 +29,7 @@ fn main() {
                 .set(AudioPlugin {
                     default_spatial_scale: SpatialScale::new(1.0),
                     global_volume:         GlobalVolume {
-                        volume: Volume::new(1.0), // todo: set volume
+                        volume: Volume::new(0.1), // todo: set volume
                     },
                 }),
         )
