@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use brg_fundamental::prelude::CmpTransform2D;
 
-use crate::units::cmp_unit_creature::CmpUnitMovementInput;
+use super::cmp_unit_creature::CmpUnitMovementInput;
 
 /// Updates the movement of all units based on their movement inputs.
 pub fn update_unit_movement(

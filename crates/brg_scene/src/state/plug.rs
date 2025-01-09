@@ -16,6 +16,8 @@ impl Plugin for Plug {
             .add_systems(
                 Update,
                 editor_switch_pause.in_set(GameSystemSet::EditorChangeGameState),
-            );
+            )
+        //-
+        ;
     }
 }

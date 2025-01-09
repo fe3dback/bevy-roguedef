@@ -7,6 +7,7 @@ use crate::units::cmp_team::{CmpTeam, ETeam};
 use crate::units::cmp_unit_creature::CmpUnitMovementInput;
 use crate::units::mobs::enum_mob_type::MobKind;
 use crate::units::player::cmp_marker_player::CmpMarkerPlayer;
+use crate::units::stats::health::cmp_health::CmpHealth;
 use crate::units::weapon::cmp_weapon::CmpWeaponHolder;
 
 impl<'w, 's> SupPrefabs<'w, 's> {
@@ -15,18 +16,19 @@ impl<'w, 's> SupPrefabs<'w, 's> {
     ) -> (
         (
             CmpTransform2D,
-            CmpTeam,
             Name,
-            Mesh3d,
-            MeshMaterial3d<StandardMaterial>,
+            CmpTeam,
+            CmpHealth,
             CmpUnitMovementInput,
             CmpCollisionVolume,
             CmpWeaponHolder,
+            Mesh3d,
+            MeshMaterial3d<StandardMaterial>,
         ),
         (CmpMarkerPlayer, CmpMarkerCameraTarget, SpatialListener),
     ) {
         let mut mob = self.mob(MobKind::Player);
-        mob.1.team = ETeam::Player;
+        mob.2.team = ETeam::Player;
 
         (
             mob,

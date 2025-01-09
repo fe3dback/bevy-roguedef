@@ -5,12 +5,13 @@ use bevy::prelude::{default, Capsule3d, Mesh3d, Name};
 use brg_core::prelude::types::Speed;
 use brg_core::prelude::{V2, V3};
 use brg_fundamental::prelude::{CmpCollisionVolume, CmpTransform2D};
-use brg_scene::prelude::{AssetCreature, AssetCreatureMovement};
+use brg_scene::prelude::{AssetCreature, AssetCreatureMovement, AssetCreatureStats};
 
 use super::sup_prefabs::SupPrefabs;
 use crate::units::cmp_team::{CmpTeam, ETeam};
 use crate::units::cmp_unit_creature::CmpUnitMovementInput;
 use crate::units::mobs::enum_mob_type::MobKind;
+use crate::units::stats::health::cmp_health::CmpHealth;
 use crate::units::weapon::cmp_weapon::{CmpWeaponHolder, Weapon};
 
 impl<'w, 's> SupPrefabs<'w, 's> {
@@ -19,13 +20,14 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         kind: MobKind,
     ) -> (
         CmpTransform2D,
-        CmpTeam,
         Name,
-        Mesh3d,
-        MeshMaterial3d<StandardMaterial>,
+        CmpTeam,
+        CmpHealth,
         CmpUnitMovementInput,
         CmpCollisionVolume,
         CmpWeaponHolder,
+        Mesh3d,
+        MeshMaterial3d<StandardMaterial>,
     ) {
         let creature = self.creature_by_kind(kind);
 
@@ -49,20 +51,21 @@ impl<'w, 's> SupPrefabs<'w, 's> {
                 height: 0.0,
                 ..default()
             },
-            CmpTeam::new(ETeam::Enemies),
             Name::from(format!("mob #{}", creature.name)),
-            Mesh3d(self.basic_meshes.add(Capsule3d::new(0.35, 1.4))),
-            MeshMaterial3d(self.materials.add(StandardMaterial {
-                base_color: RED_700.into(),
-
-                ..default()
-            })),
+            CmpTeam::new(ETeam::Enemies),
+            CmpHealth::new_splat(creature.stats.health),
             CmpUnitMovementInput {
                 speed: Speed::KMH(creature.movement.speed),
                 ..default()
             },
             CmpCollisionVolume::Circle(creature.movement.collision_radius_m),
             weapon_holder,
+            Mesh3d(self.basic_meshes.add(Capsule3d::new(0.35, 1.4))),
+            MeshMaterial3d(self.materials.add(StandardMaterial {
+                base_color: RED_700.into(),
+
+                ..default()
+            })),
         )
     }
 
@@ -73,6 +76,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
                 speed:              1.0,
                 collision_radius_m: 1.0,
             },
+            stats:    AssetCreatureStats { health: 10.0 },
             weapon:   None,
         };
 

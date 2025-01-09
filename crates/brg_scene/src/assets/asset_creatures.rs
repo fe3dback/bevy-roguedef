@@ -13,6 +13,9 @@ pub struct AssetCreature {
     pub movement: AssetCreatureMovement,
 
     #[asset]
+    pub stats: AssetCreatureStats,
+
+    #[asset]
     pub weapon: Option<Shandle<AssetWeapon>>,
 }
 
@@ -20,4 +23,9 @@ pub struct AssetCreature {
 pub struct AssetCreatureMovement {
     pub speed:              f32,
     pub collision_radius_m: f32,
+}
+
+#[derive(RonAsset, Deserialize, Default, Debug, Clone)]
+pub struct AssetCreatureStats {
+    pub health: f32,
 }

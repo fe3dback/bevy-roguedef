@@ -5,5 +5,6 @@ pub mod cmp_unit_creature;
 pub mod mobs;
 pub mod player;
 pub mod plug;
+pub mod stats;
 mod sys_movement;
 pub mod weapon;

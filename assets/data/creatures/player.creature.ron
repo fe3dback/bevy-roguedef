@@ -4,5 +4,8 @@
         speed: 15.0,
         collision_radius_m: 0.4,
     ),
+    stats: (
+        health: 125.0,
+    ),
     weapon: Some("data/weapons/sword.weapon.ron"),
 )
