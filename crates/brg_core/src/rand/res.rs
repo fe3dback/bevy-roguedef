@@ -1,29 +1,31 @@
-use bevy::prelude::Resource;
+use std::marker::PhantomData;
+
+use bevy::prelude::{Resource, TypePath};
 use rand_chacha::rand_core::{RngCore, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 
 use crate::prelude::types::Angle;
 
 #[derive(Resource)]
-pub struct ResRandomSource {
-    rnd: ChaCha8Rng,
+pub struct ResRandomSource<T: TypePath> {
+    rnd:     ChaCha8Rng,
+    _marker: PhantomData<T>,
 }
 
-impl Default for ResRandomSource {
-    fn default() -> Self {
-        Self {
-            rnd: ChaCha8Rng::from_entropy(),
+impl<T: TypePath> ResRandomSource<T> {
+    pub fn new() -> ResRandomSource<T> {
+        ResRandomSource::<T> {
+            rnd:     ChaCha8Rng::from_entropy(),
+            _marker: PhantomData::default(),
         }
     }
-}
 
-impl ResRandomSource {
     #[inline]
-    pub fn rand_roll_dices(&mut self, dices: u16, dice_faces: u16) -> u32 {
+    pub fn rand_roll_dices(&mut self, dices: u32, dice_faces: u32) -> u32 {
         let mut result: u32 = 0;
 
         for _ in 0..dices {
-            let dice_result = self.rnd.next_u32() % dice_faces as u32 + 1;
+            let dice_result = self.rnd.next_u32() % dice_faces + 1;
             result += dice_result;
         }
 
@@ -39,7 +41,7 @@ impl ResRandomSource {
     }
 
     #[inline]
-    pub fn rand_element<'v, T>(&mut self, vec: &'v Vec<T>) -> Option<&'v T> {
+    pub fn rand_element<'v, E>(&mut self, vec: &'v Vec<E>) -> Option<&'v E> {
         let size = vec.len();
         let index = self.rand_int32_in_range(0, size as i32);
 

@@ -1,4 +1,4 @@
-use bevy::prelude::{warn, Assets, Commands, EventReader, Query, Res, StateScoped};
+use bevy::prelude::{warn, Assets, Commands, Entity, EventReader, Query, Res, StateScoped};
 use brg_fundamental::prelude::CmpTransform2D;
 use brg_scene::prelude::{AssetWeapon, InGame};
 
@@ -10,11 +10,11 @@ pub fn on_shot_spawn_projectile(
     mut cmd: Commands,
     mut consumer: EventReader<EvtWeaponShot>,
     mut prefabs: SupPrefabs,
-    query_owner: Query<(&CmpTransform2D, &CmpTeam)>,
+    query_owner: Query<(Entity, &CmpTransform2D, &CmpTeam)>,
     weapons: Res<Assets<AssetWeapon>>,
 ) {
     for evt in consumer.read() {
-        let Ok((owner_trm, owner_team)) = query_owner.get(evt.owner) else {
+        let Ok((owner_ent, owner_trm, owner_team)) = query_owner.get(evt.owner) else {
             warn!("skip spawn projectile: not found owner unit");
             continue;
         };
@@ -24,7 +24,7 @@ pub fn on_shot_spawn_projectile(
             continue;
         };
 
-        let mut projectile = prefabs.projectile(weapon.projectile.handle.clone());
+        let mut projectile = prefabs.projectile(owner_ent, weapon.projectile.handle.clone());
         projectile.0.position = owner_trm.position;
         projectile.0.angle = owner_trm.position.angle_to(evt.aim_to);
 

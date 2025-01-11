@@ -1,6 +1,8 @@
 use bevy::prelude::{Component, Reflect};
+use bevy_health_bar3d::prelude::{BarSettings, Percentage};
 
 #[derive(Component, Reflect)]
+#[require(BarSettings<CmpHealth>)]
 pub struct CmpHealth {
     pub(super) amount:       f32,
     pub(super) total:        f32,
@@ -33,5 +35,27 @@ impl CmpHealth {
 
     fn clamp(value: f32, total: f32) -> f32 {
         value.clamp(0.0, total)
+    }
+
+    pub fn take_damage(&mut self, amount: f32) {
+        if !self.alive {
+            return;
+        }
+
+        match self.amount > amount {
+            true => {
+                self.amount -= amount;
+            }
+            false => {
+                self.amount = 0.0;
+                self.alive = false;
+            }
+        }
+    }
+}
+
+impl Percentage for CmpHealth {
+    fn value(&self) -> f32 {
+        self.amount / self.total
     }
 }

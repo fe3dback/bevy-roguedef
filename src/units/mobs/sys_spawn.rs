@@ -3,12 +3,12 @@ use bevy::window::PrimaryWindow;
 use bevy_inspector_egui::bevy_egui::EguiContext;
 use bevy_inspector_egui::egui;
 use brg_core::prelude::{ResRandomSource, V2};
+use brg_fundamental::common::enum_randomizer_kind::RandomizerKindSpawn;
 use brg_scene::prelude::InGame;
-use strum::IntoEnumIterator;
 
+use super::enum_mob_type::MobKind;
+use super::res_spawn::ResMobsSpawnRules;
 use crate::prefabs::sup_prefabs::SupPrefabs;
-use crate::units::mobs::enum_mob_type::MobKind;
-use crate::units::mobs::res_spawn::ResMobsSpawnRules;
 
 pub fn editor_enemies_window_update(world: &mut World) {
     world.resource_scope(|world, mut rules: Mut<ResMobsSpawnRules>| {
@@ -38,7 +38,7 @@ pub fn editor_enemies_window_update(world: &mut World) {
 
 pub fn spawn_mobs(
     mut cmd: Commands,
-    mut rand: ResMut<ResRandomSource>,
+    mut rand: ResMut<ResRandomSource<RandomizerKindSpawn>>,
     mut pref: SupPrefabs,
     mut rules: ResMut<ResMobsSpawnRules>,
 ) {
@@ -50,7 +50,7 @@ pub fn spawn_mobs(
 
     let chances = vec![(MobKind::SlimeBig, 25), (MobKind::SlimeSmall, 100)];
 
-    for _ in 0..rand.rand_roll_dices(rules.dice_count, rules.dice_sides) {
+    for _ in 0..rand.rand_roll_dices(rules.dice_count as u32, rules.dice_sides as u32) {
         let rnd_angle = rand.rand_angle();
         let rnd_dist = rand.rand_int32_in_range(10, 15) as f32;
         let pos_spawn = V2::ZERO.polar_offset(rnd_dist, rnd_angle);

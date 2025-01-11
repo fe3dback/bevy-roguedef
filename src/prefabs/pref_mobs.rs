@@ -1,7 +1,9 @@
-use bevy::color::palettes::tailwind::RED_700;
+use bevy::color::palettes::tailwind::{GRAY_900, RED_700};
 use bevy::log::warn;
 use bevy::pbr::{MeshMaterial3d, StandardMaterial};
 use bevy::prelude::{default, Capsule3d, Mesh3d, Name};
+use bevy_health_bar3d::configuration::BarSettings;
+use bevy_health_bar3d::prelude::{BarBorder, BarHeight};
 use brg_core::prelude::types::Speed;
 use brg_core::prelude::{V2, V3};
 use brg_fundamental::prelude::{CmpCollisionVolume, CmpTransform2D};
@@ -23,6 +25,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         Name,
         CmpTeam,
         CmpHealth,
+        BarSettings<CmpHealth>,
         CmpUnitMovementInput,
         CmpCollisionVolume,
         CmpWeaponHolder,
@@ -54,6 +57,17 @@ impl<'w, 's> SupPrefabs<'w, 's> {
             Name::from(format!("mob #{}", creature.name)),
             CmpTeam::new(ETeam::Enemies),
             CmpHealth::new_splat(creature.stats.health),
+            BarSettings::<CmpHealth> {
+                // todo: make own health bar and spawn this cmp automatically
+                width: 1.4,
+                offset: 1.1,
+                height: BarHeight::Static(0.08),
+                border: BarBorder {
+                    width: 0.015,
+                    color: GRAY_900.into(),
+                },
+                ..default()
+            },
             CmpUnitMovementInput {
                 speed: Speed::KMH(creature.movement.speed),
                 ..default()

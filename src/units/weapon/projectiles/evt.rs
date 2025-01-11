@@ -6,9 +6,10 @@ use crate::units::cmp_team::ETeam;
 
 #[derive(Event)]
 pub struct EvtProjectileCollided {
+    pub caster_entity:     Entity,
     pub projectile_entity: Entity,
-    pub projectile_team:   ETeam,
     pub target_entity:     Entity,
+    pub caster_team:       ETeam,
     pub target_team:       ETeam,
     pub collision:         DtoCollisionHit,
     pub cast:              Handle<AssetSpell>,

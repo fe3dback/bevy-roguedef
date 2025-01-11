@@ -1,9 +1,9 @@
 (
-    speed_start_mps: 5.0,
-    speed_acceleration_mps: 3.0,
-    collision_radius_m: 0.5,
+    speed_start_mps: 15.0,
+    speed_acceleration_mps: 5.0,
+    collision_radius_m: 0.2,
     collision_spread_radius_m: 1.5,
-    life_time_sec: 1.0,
+    life_time_sec: 2.0,
     friendly_fire: false,
     cast: "data/spells/melee-damage.spell.ron",
     collide_sound: Some("data/sounds/weapons/simple-collide.sound.ron"),

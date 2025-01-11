@@ -1,3 +1,4 @@
+pub mod enum_randomizer_kind;
 pub mod plug;
 mod time_to_life;
 

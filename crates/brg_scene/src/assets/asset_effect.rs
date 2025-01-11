@@ -8,9 +8,10 @@ pub struct AssetEffect {
     pub damage: Option<AssetEffectDamage>,
 }
 
-#[derive(RonAsset, Deserialize, Debug, Clone)]
+#[derive(RonAsset, Deserialize, Debug, Clone, Copy)]
 pub struct AssetEffectDamage {
-    pub base:       u32,
-    pub dice_count: u32,
-    pub dice_faces: u32,
+    pub allow_friendly_fire: bool,
+    pub base:                u32,
+    pub dice_count:          u32,
+    pub dice_faces:          u32,
 }

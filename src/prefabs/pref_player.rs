@@ -1,5 +1,6 @@
 use bevy::pbr::{MeshMaterial3d, StandardMaterial};
 use bevy::prelude::{Mesh3d, Name, SpatialListener};
+use bevy_health_bar3d::configuration::BarSettings;
 use brg_fundamental::prelude::{CmpCollisionVolume, CmpMarkerCameraTarget, CmpTransform2D};
 
 use super::sup_prefabs::SupPrefabs;
@@ -19,6 +20,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
             Name,
             CmpTeam,
             CmpHealth,
+            BarSettings<CmpHealth>,
             CmpUnitMovementInput,
             CmpCollisionVolume,
             CmpWeaponHolder,

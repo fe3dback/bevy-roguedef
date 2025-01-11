@@ -74,9 +74,10 @@ pub fn move_projectiles(
                     proj_trm.position = collision.pos;
 
                     writer.send(EvtProjectileCollided {
+                        caster_entity: proj_data.caster,
                         projectile_entity: proj_ent,
-                        projectile_team: proj_team.team,
                         target_entity: target_ent,
+                        caster_team: proj_team.team,
                         target_team: target_team.team,
                         collision,
                         cast: proj_data.hit_spell_cast.clone(),

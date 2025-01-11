@@ -48,6 +48,7 @@ pub enum GameSystemSet {
     // -----------------
     InGame_NOPAUSE_PrepareWeapons,
     InGame_NOPAUSE_UpdateMovements,
+    InGame_NOPAUSE_CastSpells,
     InGame_NOPAUSE_UpdateGameCameras,
     InGame_ALWAYS_UpdateEditorCameras,
 
