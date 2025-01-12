@@ -1,3 +1,4 @@
+pub mod ai;
 pub mod cmp_team;
 pub mod cmp_unit;
 pub mod cmp_unit_building;

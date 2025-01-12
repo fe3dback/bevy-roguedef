@@ -1,39 +1,20 @@
-use bevy::pbr::{MeshMaterial3d, StandardMaterial};
-use bevy::prelude::{Mesh3d, Name, SpatialListener};
-use bevy_health_bar3d::configuration::BarSettings;
-use brg_fundamental::prelude::{CmpCollisionVolume, CmpMarkerCameraTarget, CmpTransform2D};
+use bevy::prelude::{default, EntityCommands, SpatialListener};
+use brg_fundamental::prelude::CmpMarkerCameraTarget;
 
+use super::prelude::MobSettings;
 use super::sup_prefabs::SupPrefabs;
-use crate::units::cmp_team::{CmpTeam, ETeam};
-use crate::units::cmp_unit_creature::CmpUnitMovementInput;
+use crate::units::cmp_team::ETeam;
 use crate::units::mobs::enum_mob_type::MobKind;
 use crate::units::player::cmp_marker_player::CmpMarkerPlayer;
-use crate::units::stats::health::cmp_health::CmpHealth;
-use crate::units::weapon::cmp_weapon::CmpWeaponHolder;
 
 impl<'w, 's> SupPrefabs<'w, 's> {
-    pub(crate) fn player(
-        &mut self,
-    ) -> (
-        (
-            CmpTransform2D,
-            Name,
-            CmpTeam,
-            CmpHealth,
-            BarSettings<CmpHealth>,
-            CmpUnitMovementInput,
-            CmpCollisionVolume,
-            CmpWeaponHolder,
-            Mesh3d,
-            MeshMaterial3d<StandardMaterial>,
-        ),
-        (CmpMarkerPlayer, CmpMarkerCameraTarget, SpatialListener),
-    ) {
-        let mut mob = self.mob(MobKind::Player);
-        mob.2.team = ETeam::Player;
-
-        (
-            mob,
+    pub(crate) fn player(&mut self) -> EntityCommands {
+        self.mob(
+            &MobSettings {
+                kind: MobKind::Player,
+                team: ETeam::Player,
+                ..default()
+            },
             (
                 CmpMarkerPlayer,
                 CmpMarkerCameraTarget,

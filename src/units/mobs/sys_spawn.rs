@@ -1,14 +1,16 @@
-use bevy::prelude::{Commands, Mut, ResMut, StateScoped, With, World};
+use bevy::prelude::{Commands, Mut, ResMut, With, World};
 use bevy::window::PrimaryWindow;
 use bevy_inspector_egui::bevy_egui::EguiContext;
 use bevy_inspector_egui::egui;
 use brg_core::prelude::{ResRandomSource, V2};
 use brg_fundamental::common::enum_randomizer_kind::RandomizerKindSpawn;
-use brg_scene::prelude::InGame;
 
 use super::enum_mob_type::MobKind;
 use super::res_spawn::ResMobsSpawnRules;
+use crate::prefabs::prelude::MobSettings;
 use crate::prefabs::sup_prefabs::SupPrefabs;
+use crate::units::ai::cmp_ai::{CmpAiBehaviorSimple, CmpAiControllable};
+use crate::units::cmp_team::ETeam;
 
 pub fn editor_enemies_window_update(world: &mut World) {
     world.resource_scope(|world, mut rules: Mut<ResMobsSpawnRules>| {
@@ -74,10 +76,14 @@ pub fn spawn_mobs(
             continue;
         };
 
-        let mut mob = pref.mob(kind);
-        mob.0.position = pos_spawn;
-        mob.0.angle = pos_spawn.angle_to(V2::ZERO);
-
-        cmd.spawn((mob, StateScoped(InGame)));
+        pref.mob(
+            &MobSettings {
+                kind,
+                team: ETeam::Enemies,
+                pos: pos_spawn,
+                angle: pos_spawn.angle_to(V2::ZERO),
+            },
+            (CmpAiControllable, CmpAiBehaviorSimple::default()),
+        );
     }
 }

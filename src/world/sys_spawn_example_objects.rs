@@ -8,22 +8,17 @@ use bevy::prelude::{
     Query,
     Res,
     ResMut,
-    StateScoped,
 };
 use bevy::scene::SceneInstance;
 use brg_core::prelude::consts::TERRAIN_HEIGHT;
 use brg_core::prelude::{Range, V3};
 use brg_fundamental::prelude::{CmpTerrainMarkerMesh, ResHeightmap, SupRayCastMesh};
-use brg_scene::prelude::InGame;
 
 use crate::prefabs::sup_prefabs::SupPrefabs;
 
-pub fn spawn_example_objects(mut commands: Commands, mut prefabs: SupPrefabs) {
-    let (floor, cube) = prefabs.example_scene();
-    commands.spawn((floor, StateScoped(InGame)));
-    commands.spawn((cube, StateScoped(InGame)));
-
-    commands.spawn((prefabs.example_terrain(), StateScoped(InGame)));
+pub fn spawn_example_objects(mut prefabs: SupPrefabs) {
+    prefabs.example_scene();
+    prefabs.example_terrain();
 }
 
 pub fn debug_mark_terrain_as_heightmap_source(

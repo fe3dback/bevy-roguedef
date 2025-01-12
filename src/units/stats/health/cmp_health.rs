@@ -52,6 +52,16 @@ impl CmpHealth {
             }
         }
     }
+
+    #[inline]
+    pub fn is_alive(&self) -> bool {
+        self.alive
+    }
+
+    #[inline]
+    pub fn is_invulnerable(&self) -> bool {
+        self.invulnerable
+    }
 }
 
 impl Percentage for CmpHealth {

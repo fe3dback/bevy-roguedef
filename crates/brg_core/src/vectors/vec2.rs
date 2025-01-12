@@ -222,6 +222,11 @@ impl V2 {
     }
 
     #[inline]
+    pub fn as_norm_dir_to(self, to: Self) -> V2 {
+        V2::ZERO.polar_offset(1.0, self.angle_to(to))
+    }
+
+    #[inline]
     pub fn as_dir2_to(self, to: Self) -> Dir2 {
         Dir2::new_unchecked(V2::ZERO.polar_offset(1.0, self.angle_to(to)).as_2d())
     }

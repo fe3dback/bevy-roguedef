@@ -17,6 +17,7 @@ impl Plugin for Plug {
             .add_plugins(super::weapon::plug::Plug)
             .add_plugins(super::stats::plug::Plug)
             .add_plugins(super::spells::plug::Plug)
+            .add_plugins(super::ai::plug::Plug)
             //
             .register_type::<CmpUnitMovementInput>()
             .register_type::<CmpTeam>()

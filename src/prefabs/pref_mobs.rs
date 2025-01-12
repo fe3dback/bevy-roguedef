@@ -1,38 +1,51 @@
-use bevy::color::palettes::tailwind::{GRAY_900, RED_700};
+use bevy::color::palettes::tailwind::{GRAY_700, GRAY_900, GREEN_700, RED_700};
 use bevy::log::warn;
 use bevy::pbr::{MeshMaterial3d, StandardMaterial};
-use bevy::prelude::{default, Capsule3d, Mesh3d, Name};
+use bevy::prelude::{
+    default,
+    Bundle,
+    Capsule3d,
+    Component,
+    EntityCommands,
+    Mesh3d,
+    Name,
+    StateScoped,
+};
 use bevy_health_bar3d::configuration::BarSettings;
 use bevy_health_bar3d::prelude::{BarBorder, BarHeight};
-use brg_core::prelude::types::Speed;
+use brg_core::prelude::types::{Angle, Speed};
 use brg_core::prelude::{V2, V3};
 use brg_fundamental::prelude::{CmpCollisionVolume, CmpTransform2D};
-use brg_scene::prelude::{AssetCreature, AssetCreatureMovement, AssetCreatureStats};
+use brg_scene::prelude::{AssetCreature, AssetCreatureMovement, AssetCreatureStats, InGame};
 
 use super::sup_prefabs::SupPrefabs;
 use crate::units::cmp_team::{CmpTeam, ETeam};
-use crate::units::cmp_unit_creature::CmpUnitMovementInput;
+use crate::units::cmp_unit_creature::{CmpUnitMovement, CmpUnitMovementInput};
 use crate::units::mobs::enum_mob_type::MobKind;
 use crate::units::stats::health::cmp_health::CmpHealth;
 use crate::units::weapon::cmp_weapon::{CmpWeaponHolder, Weapon};
 
+pub struct MobSettings {
+    pub kind:  MobKind,
+    pub team:  ETeam,
+    pub pos:   V2,
+    pub angle: Angle,
+}
+
+impl Default for MobSettings {
+    fn default() -> Self {
+        Self {
+            kind:  MobKind::SlimeSmall,
+            team:  ETeam::Neutral,
+            pos:   V2::ZERO,
+            angle: 0.0,
+        }
+    }
+}
+
 impl<'w, 's> SupPrefabs<'w, 's> {
-    pub(crate) fn mob(
-        &mut self,
-        kind: MobKind,
-    ) -> (
-        CmpTransform2D,
-        Name,
-        CmpTeam,
-        CmpHealth,
-        BarSettings<CmpHealth>,
-        CmpUnitMovementInput,
-        CmpCollisionVolume,
-        CmpWeaponHolder,
-        Mesh3d,
-        MeshMaterial3d<StandardMaterial>,
-    ) {
-        let creature = self.creature_by_kind(kind);
+    pub(crate) fn mob<T: Bundle>(&mut self, settings: &MobSettings, with: T) -> EntityCommands {
+        let creature = self.creature_by_kind(settings.kind);
 
         // weapon
         let mut weapon_holder = CmpWeaponHolder::default();
@@ -47,40 +60,51 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         }
 
         // assemble
-        (
-            CmpTransform2D {
-                position: V2::new(0.0, 0.0),
-                origin_visual_offset: V3::new(0.0, 0.0, 1.1),
-                height: 0.0,
-                ..default()
-            },
-            Name::from(format!("mob #{}", creature.name)),
-            CmpTeam::new(ETeam::Enemies),
-            CmpHealth::new_splat(creature.stats.health),
-            BarSettings::<CmpHealth> {
-                // todo: make own health bar and spawn this cmp automatically
-                width: 1.4,
-                offset: 1.1,
-                height: BarHeight::Static(0.08),
-                border: BarBorder {
-                    width: 0.015,
-                    color: GRAY_900.into(),
+        self.cmd.spawn((
+            (
+                StateScoped(InGame),
+                Name::from(format!("mob #{}", creature.name)),
+                CmpTransform2D {
+                    position: settings.pos,
+                    origin_visual_offset: V3::new(0.0, 0.0, 1.1),
+                    height: 0.0,
+                    angle: settings.angle,
+                    ..default()
                 },
-                ..default()
-            },
-            CmpUnitMovementInput {
-                speed: Speed::KMH(creature.movement.speed),
-                ..default()
-            },
-            CmpCollisionVolume::Circle(creature.movement.collision_radius_m),
-            weapon_holder,
-            Mesh3d(self.basic_meshes.add(Capsule3d::new(0.35, 1.4))),
-            MeshMaterial3d(self.materials.add(StandardMaterial {
-                base_color: RED_700.into(),
+                CmpTeam::new(settings.team),
+                CmpHealth::new_splat(creature.stats.health),
+                BarSettings::<CmpHealth> {
+                    // todo: make own health bar and spawn this cmp automatically
+                    width: 1.4,
+                    offset: 1.1,
+                    height: BarHeight::Static(0.08),
+                    border: BarBorder {
+                        width: 0.015,
+                        color: GRAY_900.into(),
+                    },
+                    ..default()
+                },
+                CmpUnitMovement {
+                    speed: Speed::KMH(creature.movement.speed),
+                },
+                CmpCollisionVolume::Circle(creature.movement.collision_radius_m),
+                weapon_holder,
+                Mesh3d(self.basic_meshes.add(Capsule3d::new(0.35, 1.4))),
+                MeshMaterial3d(
+                    self.materials.add(StandardMaterial {
+                        base_color: match settings.team {
+                            ETeam::Enemies => RED_700,
+                            ETeam::Player => GREEN_700,
+                            _ => GRAY_700,
+                        }
+                        .into(),
 
-                ..default()
-            })),
-        )
+                        ..default()
+                    }),
+                ),
+            ),
+            with,
+        ))
     }
 
     fn creature_by_kind(&mut self, kind: MobKind) -> AssetCreature {
