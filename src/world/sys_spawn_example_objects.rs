@@ -11,7 +11,7 @@ use bevy::prelude::{
 };
 use bevy::scene::SceneInstance;
 use brg_core::prelude::consts::TERRAIN_HEIGHT;
-use brg_core::prelude::{Range, V3};
+use brg_core::prelude::{BlockPosition, Range, Tile, V3};
 use brg_fundamental::prelude::{CmpTerrainMarkerMesh, ResHeightmap, SupRayCastMesh};
 
 use crate::prefabs::sup_prefabs::SupPrefabs;
@@ -45,7 +45,7 @@ pub fn debug_tmp_update_heightmap_from_terrain(
     const RAY_MIN: f32 = -100.0;
     const RAY_MAX: f32 = 100.0;
 
-    let range = Range::new(-20, -20, 20, 20);
+    let range = Range::<Tile>::new(-20, -20, 20, 20);
     let mut points: Vec<f32> = vec![];
 
     for tile in &range {

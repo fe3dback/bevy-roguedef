@@ -8,6 +8,8 @@
       <sourceFolder url="file://$MODULE_DIR$/crates/brg_scene/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/brg_fundamental/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/fmt-imports/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/height-baker/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/assets/maps" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

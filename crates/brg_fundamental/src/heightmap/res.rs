@@ -3,7 +3,7 @@ use bevy::reflect::Reflect;
 use bevy::utils::HashMap;
 use brg_core::prelude::consts::TERRAIN_HEIGHT;
 use brg_core::prelude::types::NormalizedF32;
-use brg_core::prelude::{Tile, VecExt, V2};
+use brg_core::prelude::{Block, BlockPosition, Tile, VecExt, TILE_SIZE_SQ, V2};
 
 #[derive(Resource, Reflect)]
 #[reflect(Resource)]
@@ -39,7 +39,7 @@ impl Default for ResHeightmap {
 impl ResHeightmap {
     pub fn height_at_pos(&self, pos: V2) -> f32 {
         let (tl, tr, bl, br) = self.heights_of_tile(pos.tile());
-        let uv = (pos - pos.tile().position()) / pos.tile().size();
+        let uv = (pos - pos.tile().position()) / TILE_SIZE_SQ;
         let (u, v) = (uv.x, uv.y);
 
         // 1            4

@@ -2,7 +2,7 @@ use bevy::color::palettes::tailwind::{RED_900, SKY_300};
 use bevy::color::Color;
 use bevy::prelude::{Mix, Query, Res, With};
 use brg_core::prelude::consts::TERRAIN_HEIGHT;
-use brg_core::prelude::{Range, VecExt, V2};
+use brg_core::prelude::{BlockPosition, Range, Tile, VecExt, V2};
 
 use crate::prelude::{CmpMarkerCameraTarget, CmpTransform2D, GizmosX, ResHeightmap};
 
@@ -33,7 +33,7 @@ pub fn editor_draw_heightmap_around_player(
     };
 
     let target_tile = targets_avg_pos.tile();
-    let range = Range::new(
+    let range = Range::<Tile>::new(
         target_tile.x - 25,
         target_tile.y - 25,
         target_tile.x + 25,

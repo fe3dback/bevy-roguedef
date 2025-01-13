@@ -1,21 +1,14 @@
-const CONTAINER_LEN: i32 = 15;
-// 15 * 15 = 225
-const AROUND_CENTER: i32 = 7; // CONTAINER_LEN/2
+use crate::prelude::types::Meter;
+use crate::prelude::V2;
 
-// How many tiles contains in one chunk (in one row)
+pub const TILE_SIZE: Meter = 1.0;
+pub const TILE_SIZE_SQ: V2 = V2::splat(TILE_SIZE);
+
+// How many elements(tiles) contains in one parent(chunk) (in one row)
 // One chunk contains 15x15 tiles = 225 tiles
-pub const TILES_PER_CHUNK: i32 = CONTAINER_LEN;
-pub const TILES_PER_CHUNK_HALF: f32 = TILES_PER_CHUNK as f32 / 2.0;
+pub const ELEMENTS_IN_CONTAINER: i32 = 15;
+pub const ELEMENTS_IN_CONTAINER_HALF: f32 = ELEMENTS_IN_CONTAINER as f32 / 2.0;
 
 // How many tiles contains around chunk center
 // in every direction (ceil(15/2)-1) = 7
-pub const TILES_AROUND_CENTER: i32 = AROUND_CENTER;
-
-// How many chunks contains in one area (in one row)
-// One area contains 15x15 chunks = 225 chunks
-pub const CHUNKS_PER_AREA: i32 = CONTAINER_LEN;
-pub const CHUNKS_PER_AREA_HALF: f32 = CHUNKS_PER_AREA as f32 / 2.0;
-
-// How many chunks contains around area center
-// in every direction (ceil(15/2)-1) = 7
-// pub const CHUNKS_AROUND_CENTER: i32 = 7; // todo: required?
+pub const ELEMENTS_AROUND_CENTER: i32 = 7;

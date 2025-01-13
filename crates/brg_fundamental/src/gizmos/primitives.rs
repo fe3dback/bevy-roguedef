@@ -2,7 +2,7 @@ use std::f32::consts::PI;
 
 use bevy::math::EulerRot;
 use bevy::prelude::{Color, Isometry3d, Quat};
-use brg_core::prelude::{Range, V2, V3};
+use brg_core::prelude::{BlockPosition, BlockSize, Range, Tile, V2, V3};
 
 use super::sup::{GizmosX, ISO_IDEN};
 
@@ -26,8 +26,8 @@ impl GizmosX<'_, '_> {
     }
 
     #[inline]
-    pub fn rect_range<C: Into<Color>>(&mut self, r: Range, color: C) {
-        self.rect(r.position(), r.size(), color);
+    pub fn rect_range<C: Into<Color>>(&mut self, r: Range<Tile>, color: C) {
+        self.rect(r.position(), r.size_m(), color);
     }
 
     #[inline]

@@ -1,10 +1,9 @@
+use super::block_range::Range;
 use super::prelude::Tile;
-use super::range::Range;
-use super::selection::Selection;
-use super::tile::VecExt;
+use crate::prelude::VecExt;
 use crate::vectors::prelude::V2;
 
-pub fn tiles_on_world(pos_tl: V2, pos_br: V2) -> Range {
+pub fn tiles_on_world(pos_tl: V2, pos_br: V2) -> Range<Tile> {
     Range::new(
         pos_tl.x as i32 - 1,
         pos_tl.y as i32 - 1,
@@ -13,29 +12,29 @@ pub fn tiles_on_world(pos_tl: V2, pos_br: V2) -> Range {
     )
 }
 
-pub fn select_tiles_with_center_inside_radius(center: V2, radius: f32) -> Selection {
-    let center_tile = center.tile();
+// pub fn select_tiles_with_center_inside_radius(center: V2, radius: f32) -> Selection {
+//     let center_tile = center.tile();
+//
+//     let radius_tiles_ext = (radius + 1.0).ceil() as i32;
+//     let possible = Range::<Tile>::new(
+//         center_tile.x - radius_tiles_ext,
+//         center_tile.y - radius_tiles_ext,
+//         center_tile.x + radius_tiles_ext,
+//         center_tile.y + radius_tiles_ext,
+//     );
+//
+//     let mut matched_tiles: Vec<Tile> = Vec::with_capacity(possible.len());
+//     for tile in &possible {
+//         let dist = tile.position_center().distance(center);
+//         if dist <= radius {
+//             matched_tiles.push(tile);
+//         }
+//     }
+//
+//     Selection::from_vec(matched_tiles)
+// }
 
-    let radius_tiles_ext = (radius + 1.0).ceil() as i32;
-    let possible = Range::new(
-        center_tile.x - radius_tiles_ext,
-        center_tile.y - radius_tiles_ext,
-        center_tile.x + radius_tiles_ext,
-        center_tile.y + radius_tiles_ext,
-    );
-
-    let mut matched_tiles: Vec<Tile> = Vec::with_capacity(possible.len());
-    for tile in &possible {
-        let dist = tile.position_center().distance(center);
-        if dist <= radius {
-            matched_tiles.push(tile);
-        }
-    }
-
-    return Selection::from_vec(matched_tiles);
-}
-
-pub fn select_n_tiles_around_position(center: V2, width: i32, height: i32) -> Range {
+pub fn select_n_tiles_around_position(center: V2, width: i32, height: i32) -> Range<Tile> {
     let center_tile = center.tile();
 
     if width <= 1 && height <= 1 {
@@ -62,10 +61,10 @@ pub fn select_n_tiles_around_position(center: V2, width: i32, height: i32) -> Ra
         true => height / 2,
     };
 
-    return Range::new(
+    Range::new(
         center_tile.x - grab_min_x,
         center_tile.y - grab_min_y,
         center_tile.x + grab_max_x,
         center_tile.y + grab_max_y,
-    );
+    )
 }

@@ -1,16 +1,24 @@
-mod area;
-mod chunk;
+mod block;
+mod block_child;
+mod block_from_vec;
+mod block_ops;
+mod block_parent;
+mod block_position;
+mod block_range;
+mod block_range_iter;
+mod block_size;
 mod consts;
-mod range;
 mod select;
-mod selection;
-mod tile;
 
 pub mod prelude {
-    pub use super::area::Area;
-    pub use super::chunk::Chunk;
-    pub use super::range::Range;
+    pub use super::block::{Area, Block, Chunk, Cluster, Tile};
+    pub use super::block_child::BlockChild;
+    pub use super::block_from_vec::VecExt;
+    pub use super::block_parent::BlockParent;
+    pub use super::block_position::BlockPosition;
+    pub use super::block_range::Range;
+    pub use super::block_range_iter::RangeIter;
+    pub use super::block_size::BlockSize;
+    pub use super::consts::{TILE_SIZE, TILE_SIZE_SQ};
     pub use super::select::*;
-    pub use super::selection::Selection;
-    pub use super::tile::{Tile, VecExt};
 }

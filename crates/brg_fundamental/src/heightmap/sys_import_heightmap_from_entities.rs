@@ -1,5 +1,5 @@
 use bevy::prelude::{Added, Commands, Entity, Query, ResMut};
-use brg_core::prelude::{Tile, VecExt};
+use brg_core::prelude::{Block, Tile, VecExt};
 
 use crate::prelude::{CmpExternalHeightmapDataImporter, CmpTransform2D, ResHeightmap};
 
