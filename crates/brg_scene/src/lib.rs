@@ -2,12 +2,14 @@ use bevy::app::{App, Plugin};
 
 mod assets;
 mod features;
+mod level;
 mod state;
 mod system_set;
 
 pub mod prelude {
     pub use crate::assets::prelude::*;
     pub use crate::features::prelude::*;
+    pub use crate::level::prelude::*;
     pub use crate::state::prelude::*;
     pub use crate::system_set::prelude::*;
 }

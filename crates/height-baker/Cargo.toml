@@ -1,0 +1,15 @@
+[package]
+name = "height-baker"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+preview = []
+
+[dependencies]
+brg_core = {workspace = true}
+brg_scene = {workspace = true}
+anyhow = {workspace = true}
+serde = {workspace = true}
+serde-binary = {workspace = true}
+exr = {version = "1.73.0"}

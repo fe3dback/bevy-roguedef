@@ -11,3 +11,6 @@ bevy-inspector-egui = {workspace = true}
 ron_asset_manager = {workspace = true}
 strum = {workspace = true}
 serde = {workspace = true}
+serde-binary = {workspace = true}
+serde_json = {workspace = true}
+anyhow = {workspace = true}

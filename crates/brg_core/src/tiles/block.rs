@@ -1,6 +1,9 @@
+use std::any::type_name;
+use std::fmt::{Debug, Display, Formatter};
 use std::marker::PhantomData;
 
 use bevy::prelude::Reflect;
+use serde::{Deserialize, Serialize};
 
 pub trait Block {
     fn at(x: i32, y: i32) -> Self;
@@ -15,27 +18,28 @@ pub(super) trait BlockXY {
     fn set_y(&mut self, y: i32);
 }
 
-#[derive(Default, Eq, PartialEq, Debug, Copy, Clone, Reflect, Hash)]
+#[derive(Default, Eq, PartialEq, Copy, Clone, Reflect, Hash, Serialize, Deserialize)]
 pub struct BlockOf<T> {
     pub x:         i32,
     pub y:         i32,
     #[reflect(ignore)]
+    #[serde(skip)]
     _phantom_data: PhantomData<T>,
 }
 
-#[derive(Default, Eq, PartialEq, Debug, Copy, Clone, Reflect, Hash)]
+#[derive(Default, Eq, PartialEq, Copy, Clone, Reflect, Hash, Serialize, Deserialize)]
 pub struct _type_tile;
 pub type Tile = BlockOf<_type_tile>;
 
-#[derive(Default, Eq, PartialEq, Debug, Copy, Clone, Reflect, Hash)]
+#[derive(Default, Eq, PartialEq, Copy, Clone, Reflect, Hash, Serialize, Deserialize)]
 pub struct _type_chunk;
 pub type Chunk = BlockOf<_type_chunk>;
 
-#[derive(Default, Eq, PartialEq, Debug, Copy, Clone, Reflect, Hash)]
+#[derive(Default, Eq, PartialEq, Copy, Clone, Reflect, Hash, Serialize, Deserialize)]
 pub struct _type_area;
 pub type Area = BlockOf<_type_area>;
 
-#[derive(Default, Eq, PartialEq, Debug, Copy, Clone, Reflect, Hash)]
+#[derive(Default, Eq, PartialEq, Copy, Clone, Reflect, Hash, Serialize, Deserialize)]
 pub struct _type_cluster;
 pub type Cluster = BlockOf<_type_cluster>;
 
@@ -71,6 +75,18 @@ macro_rules! impl_block {
             #[inline(always)]
             fn set_y(&mut self, y: i32) {
                 self.y = y;
+            }
+        }
+
+        impl Display for $blockStruct {
+            fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+                write!(f, "{}({}, {})", stringify!($blockStruct), self.x, self.y)
+            }
+        }
+
+        impl Debug for $blockStruct {
+            fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+                write!(f, "{}({}, {})", stringify!($blockStruct), self.x, self.y)
             }
         }
     };
