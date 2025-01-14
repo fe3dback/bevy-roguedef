@@ -2809,6 +2809,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "height-preview"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "brg_core",
+ "brg_scene",
+ "png",
+]
+
+[[package]]
 name = "hermit-abi"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

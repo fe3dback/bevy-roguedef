@@ -1,5 +1,7 @@
 use std::f32;
 use std::f32::consts::PI;
+use std::fmt::Display;
+use std::hash::{Hash, Hasher};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 use bevy::math::Rot2;
@@ -15,6 +17,19 @@ use crate::prelude::types::{Angle, Meter};
 pub struct V2 {
     pub x: Meter,
     pub y: Meter,
+}
+
+impl Hash for V2 {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        format!("{:.1$}", self.x, 5).hash(state);
+        format!("{:.1$}", self.y, 5).hash(state);
+    }
+}
+
+impl Display for V2 {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "V2[{:.2},{:.2}]", self.x, self.y)
+    }
 }
 
 #[allow(dead_code)]

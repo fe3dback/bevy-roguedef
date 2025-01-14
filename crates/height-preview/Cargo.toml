@@ -1,0 +1,13 @@
+[package]
+name = "height-preview"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+preview = []
+
+[dependencies]
+brg_core = {workspace = true}
+brg_scene = {workspace = true}
+anyhow = {workspace = true}
+png = {version = "0.17.16"}
