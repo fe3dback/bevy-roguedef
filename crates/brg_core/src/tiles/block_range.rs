@@ -78,6 +78,24 @@ impl BlockPosition for Range<Tile> {
             y: tl.y + (size.y / 2.0),
         }
     }
+
+    /// Range top-right position in absolute world coordinates
+    #[inline(always)]
+    fn position_tr(&self) -> V2 {
+        Tile::at(self.max_x, self.min_y).position_tr()
+    }
+
+    /// Range bottom-left position in absolute world coordinates
+    #[inline(always)]
+    fn position_bl(&self) -> V2 {
+        Tile::at(self.min_x, self.max_y).position_bl()
+    }
+
+    /// Range bottom-right position in absolute world coordinates
+    #[inline(always)]
+    fn position_br(&self) -> V2 {
+        Tile::at(self.max_x, self.max_y).position_br()
+    }
 }
 
 impl Range<Tile> {

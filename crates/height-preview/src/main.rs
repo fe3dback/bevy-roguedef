@@ -8,6 +8,7 @@ use brg_core::prelude::{Block, BlockChild, Chunk, Tile};
 use brg_scene::prelude::{RawLevelChunk, RawLevelChunkHeights, RawLevelData};
 
 enum OutputChannelType {
+    Empty,
     Splat,
     Minimal,
     Lite,
@@ -38,8 +39,11 @@ pub fn main() -> Result<()> {
 
     let mut pixels_buffer = PixelBuffer::new(png_width, png_height, 3);
 
-    for chunk_data in data.chunks {
+    let count = data.width_chunks * data.height_chunks;
+    for _ in 0..count {
         let chunk = Chunk::at(chunk_x, chunk_y);
+        let chunk_data = data.chunk_read(chunk);
+
         pixels_buffer.write_chunk(chunk, &chunk_data);
 
         chunk_x += 1;
@@ -98,6 +102,7 @@ impl PixelBuffer {
                 RawLevelChunkHeights::Lite(_, _, _) => OutputChannelType::Lite,
                 RawLevelChunkHeights::Minimal(_, _) => OutputChannelType::Minimal,
                 RawLevelChunkHeights::Splat(_) => OutputChannelType::Splat,
+                RawLevelChunkHeights::Empty => OutputChannelType::Empty,
             })
         }
     }
@@ -107,6 +112,7 @@ impl PixelBuffer {
 
         let index = self.index_by_tile(px);
         let (r, g, b) = match ch {
+            OutputChannelType::Empty => (data, data, data),
             OutputChannelType::Splat => (data, 0.0, 0.0),
             OutputChannelType::Minimal => (0.0, 0.0, data),
             OutputChannelType::Lite => (0.0, data, 0.0),

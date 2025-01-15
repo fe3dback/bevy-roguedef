@@ -15,12 +15,10 @@ macro_rules! impl_block_parent {
 
             fn parent(&self) -> Self::Parent {
                 Self::Parent::at(
-                    (((self.x as f32) + ELEMENTS_IN_CONTAINER_HALF)
-                        / (ELEMENTS_IN_CONTAINER as f32))
-                        .floor() as i32,
-                    (((self.y as f32) + ELEMENTS_IN_CONTAINER_HALF)
-                        / (ELEMENTS_IN_CONTAINER as f32))
-                        .floor() as i32,
+                    ((self.x as f32 + T_LIB_CONT_WIDTH_HALF) / (T_LIB_CONT_WIDTH as f32)).floor()
+                        as i32,
+                    ((self.y as f32 + T_LIB_CONT_WIDTH_HALF) / (T_LIB_CONT_HEIGHT as f32)).floor()
+                        as i32,
                 )
             }
         }

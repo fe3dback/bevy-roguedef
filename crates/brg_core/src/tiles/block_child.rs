@@ -21,18 +21,15 @@ macro_rules! impl_block_child {
 
             #[inline(always)]
             fn child_elem_center(&self) -> Self::Child {
-                Self::Child::at(
-                    self.x * ELEMENTS_IN_CONTAINER,
-                    self.y * ELEMENTS_IN_CONTAINER,
-                )
+                Self::Child::at(self.x * T_LIB_CONT_WIDTH, self.y * T_LIB_CONT_HEIGHT)
             }
 
             #[inline(always)]
             fn child_elem_top_left(&self) -> Self::Child {
                 let center = self.child_elem_center();
                 Self::Child::at(
-                    center.x - ELEMENTS_AROUND_CENTER,
-                    center.y - ELEMENTS_AROUND_CENTER,
+                    center.x - T_LIB_ELEMENTS_AROUND_CENTER,
+                    center.y - T_LIB_ELEMENTS_AROUND_CENTER,
                 )
             }
 
@@ -40,8 +37,8 @@ macro_rules! impl_block_child {
             fn child_elem_top_right(&self) -> Self::Child {
                 let center = self.child_elem_center();
                 Self::Child::at(
-                    center.x + ELEMENTS_AROUND_CENTER,
-                    center.y - ELEMENTS_AROUND_CENTER,
+                    center.x + T_LIB_ELEMENTS_AROUND_CENTER,
+                    center.y - T_LIB_ELEMENTS_AROUND_CENTER,
                 )
             }
 
@@ -49,8 +46,8 @@ macro_rules! impl_block_child {
             fn child_elem_bottom_left(&self) -> Self::Child {
                 let center = self.child_elem_center();
                 Self::Child::at(
-                    center.x - ELEMENTS_AROUND_CENTER,
-                    center.y + ELEMENTS_AROUND_CENTER,
+                    center.x - T_LIB_ELEMENTS_AROUND_CENTER,
+                    center.y + T_LIB_ELEMENTS_AROUND_CENTER,
                 )
             }
 
@@ -58,8 +55,8 @@ macro_rules! impl_block_child {
             fn child_elem_bottom_right(&self) -> Self::Child {
                 let center = self.child_elem_center();
                 Self::Child::at(
-                    center.x + ELEMENTS_AROUND_CENTER,
-                    center.y + ELEMENTS_AROUND_CENTER,
+                    center.x + T_LIB_ELEMENTS_AROUND_CENTER,
+                    center.y + T_LIB_ELEMENTS_AROUND_CENTER,
                 )
             }
 
@@ -67,10 +64,10 @@ macro_rules! impl_block_child {
             fn child_range(&self) -> Range<Self::Child> {
                 let center = self.child_elem_center();
                 Range::<Self::Child>::new(
-                    center.x - ELEMENTS_AROUND_CENTER,
-                    center.y - ELEMENTS_AROUND_CENTER,
-                    center.x + ELEMENTS_AROUND_CENTER,
-                    center.y + ELEMENTS_AROUND_CENTER,
+                    center.x - T_LIB_ELEMENTS_AROUND_CENTER,
+                    center.y - T_LIB_ELEMENTS_AROUND_CENTER,
+                    center.x + T_LIB_ELEMENTS_AROUND_CENTER,
+                    center.y + T_LIB_ELEMENTS_AROUND_CENTER,
                 )
             }
         }

@@ -7,6 +7,9 @@ use crate::prelude::V2;
 pub trait BlockPosition {
     fn position(&self) -> V2;
     fn position_center(&self) -> V2;
+    fn position_tr(&self) -> V2;
+    fn position_bl(&self) -> V2;
+    fn position_br(&self) -> V2;
 }
 
 impl BlockPosition for Tile {
@@ -24,21 +27,57 @@ impl BlockPosition for Tile {
     fn position_center(&self) -> V2 {
         self.position() + 0.5
     }
+
+    /// Tile top-right position in absolute world coordinates
+    #[inline(always)]
+    fn position_tr(&self) -> V2 {
+        self.position() + V2 { x: 1.0, y: 0.0 }
+    }
+
+    /// Tile bottom-left position in absolute world coordinates
+    #[inline(always)]
+    fn position_bl(&self) -> V2 {
+        self.position() + V2 { x: 0.0, y: 1.0 }
+    }
+
+    /// Tile bottom-right position in absolute world coordinates
+    #[inline(always)]
+    fn position_br(&self) -> V2 {
+        self.position() + V2 { x: 1.0, y: 1.0 }
+    }
 }
 
 macro_rules! impl_block_position_with_child {
     ($blockStruct:ty) => {
         impl BlockPosition for $blockStruct {
-            /// Tile top-left world position
+            /// Container top-left world position
             #[inline(always)]
             fn position(&self) -> V2 {
                 self.child_elem_top_left().position()
             }
 
-            /// Tile center position in absolute world coordinates
+            /// Container center position in absolute world coordinates
             #[inline(always)]
             fn position_center(&self) -> V2 {
                 self.child_elem_center().position_center()
+            }
+
+            /// Container top-right in absolute world coordinates
+            #[inline(always)]
+            fn position_tr(&self) -> V2 {
+                self.child_elem_top_right().position_tr()
+            }
+
+            /// Container bottom-left position in absolute world coordinates
+            #[inline(always)]
+            fn position_bl(&self) -> V2 {
+                self.child_elem_bottom_left().position_bl()
+            }
+
+            /// Container bottom-right position in absolute world coordinates
+            #[inline(always)]
+            fn position_br(&self) -> V2 {
+                self.child_elem_bottom_right().position_br()
             }
         }
     };

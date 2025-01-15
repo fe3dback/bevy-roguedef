@@ -19,6 +19,6 @@ pub mod prelude {
     pub use super::block_range::Range;
     pub use super::block_range_iter::RangeIter;
     pub use super::block_size::BlockSize;
-    pub use super::consts::{TILE_SIZE, TILE_SIZE_SQ};
+    pub use super::consts::*;
     pub use super::select::*;
 }
