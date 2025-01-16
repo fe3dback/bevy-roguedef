@@ -13,13 +13,12 @@ macro_rules! impl_block_parent {
         impl BlockParent for $blockStruct {
             type Parent = $parent;
 
+            #[inline(always)]
             fn parent(&self) -> Self::Parent {
-                Self::Parent::at(
-                    ((self.x as f32 + T_LIB_CONT_WIDTH_HALF) / (T_LIB_CONT_WIDTH as f32)).floor()
-                        as i32,
-                    ((self.y as f32 + T_LIB_CONT_WIDTH_HALF) / (T_LIB_CONT_HEIGHT as f32)).floor()
-                        as i32,
-                )
+                let parent_x = (self.x as f32 / T_LIB_CONT_ROW_LEN as f32).floor() as i32;
+                let parent_y = (self.y as f32 / T_LIB_CONT_ROW_LEN as f32).floor() as i32;
+
+                Self::Parent::at(parent_x, parent_y)
             }
         }
     };

@@ -43,9 +43,9 @@ pub fn editor_draw_heightmap_around_player(
     let color_high = SKY_300;
 
     for tile in &range {
-        let height_percent = hm.height_at_pos(tile.position()) / TERRAIN_HEIGHT;
+        let height_percent = hm.height_at_pos(tile.position_tl()) / TERRAIN_HEIGHT;
         let height_color = Color::mix(&color_low.into(), &color_high.into(), height_percent);
 
-        gz.point_custom_height(tile.position().with_height(0.05), height_color);
+        gz.point_custom_height(tile.position_tl().with_height(0.05), height_color);
     }
 }

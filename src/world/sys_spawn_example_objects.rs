@@ -49,7 +49,7 @@ pub fn debug_tmp_update_heightmap_from_terrain(
     let mut points: Vec<f32> = vec![];
 
     for tile in &range {
-        let pos = tile.position();
+        let pos = tile.position_tl();
         let floor = V3::new(pos.x, pos.y, RAY_MIN);
         let ceil = V3::new(pos.x, pos.y, RAY_MAX);
 

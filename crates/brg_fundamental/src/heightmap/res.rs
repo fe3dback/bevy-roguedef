@@ -39,7 +39,7 @@ impl Default for ResHeightmap {
 impl ResHeightmap {
     pub fn height_at_pos(&self, pos: V2) -> f32 {
         let (tl, tr, bl, br) = self.heights_of_tile(pos.tile());
-        let uv = (pos - pos.tile().position()) / T_LIB_TILE_SIZE_SQ;
+        let uv = (pos - pos.tile().position_tl()) / T_LIB_TILE_SIZE_SQ;
         let (u, v) = (uv.x, uv.y);
 
         // 1            4

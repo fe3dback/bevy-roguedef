@@ -2,7 +2,6 @@ use std::marker::PhantomData;
 
 use super::block::{Block, Tile};
 use super::block_position::BlockPosition;
-use super::block_size::BlockSize;
 use crate::prelude::V2;
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
@@ -43,17 +42,17 @@ impl<T> Range<T> {
     pub fn len(&self) -> usize {
         (self.width() * self.height()) as usize
     }
-}
 
-impl BlockSize for Range<Tile> {
+    /// return size (width, height) in elements
+    /// is alias for (self.width(), self.height())
     #[inline]
-    fn size(&self) -> (i32, i32) {
+    pub fn size(&self) -> (i32, i32) {
         (self.width(), self.height())
     }
 
     /// return range size in meters
     #[inline]
-    fn size_m(&self) -> V2 {
+    pub fn size_m(&self) -> V2 {
         V2 {
             x: self.width() as f32,
             y: self.height() as f32,
@@ -62,21 +61,21 @@ impl BlockSize for Range<Tile> {
 }
 
 impl BlockPosition for Range<Tile> {
-    /// Range top-left position in absolute world coordinates
-    #[inline(always)]
-    fn position(&self) -> V2 {
-        Tile::at(self.min_x, self.min_y).position()
-    }
-
     /// Range center position in absolute world coordinates
     #[inline(always)]
     fn position_center(&self) -> V2 {
-        let tl = self.position();
+        let tl = self.position_tl();
         let size = self.size_m();
         V2 {
             x: tl.x + (size.x / 2.0),
             y: tl.y + (size.y / 2.0),
         }
+    }
+
+    /// Range top-left position in absolute world coordinates
+    #[inline(always)]
+    fn position_tl(&self) -> V2 {
+        Tile::at(self.min_x, self.min_y).position_tl()
     }
 
     /// Range top-right position in absolute world coordinates

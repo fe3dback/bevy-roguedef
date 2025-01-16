@@ -4,16 +4,8 @@ use std::io::BufWriter;
 use std::path::Path;
 
 use anyhow::{Context, Result};
-use brg_core::prelude::{Block, BlockChild, Chunk, Tile};
-use brg_scene::prelude::{RawLevelChunk, RawLevelChunkHeights, RawLevelData};
-
-enum OutputChannelType {
-    Empty,
-    Splat,
-    Minimal,
-    Lite,
-    Full,
-}
+use brg_core::prelude::{Area, BlockChild, Chunk, Tile, T_LIB_CONT_SIZE_SQ};
+use brg_scene::prelude::LevelData;
 
 struct PixelBuffer {
     width:    u32,
@@ -28,28 +20,21 @@ pub fn main() -> Result<()> {
 
     let file_content =
         fs::read(input_directory.join("world.landscape.bin")).context("reading file")?;
-    let data = RawLevelData::from_bytes(file_content).context("decode bin")?;
+    let data = LevelData::decode(file_content).context("decode bin")?;
 
-    // build pixels buffer
-    let png_width = data.width_chunks * Chunk::size() as u32;
-    let png_height = data.height_chunks * Chunk::size() as u32;
-
-    let mut chunk_x: i32 = 0;
-    let mut chunk_y: i32 = 0;
-
+    // create image
+    let png_width = data.width() * Area::size() as u32 * Chunk::size() as u32;
+    let png_height = data.height() * Area::size() as u32 * Chunk::size() as u32;
     let mut pixels_buffer = PixelBuffer::new(png_width, png_height, 3);
 
-    let count = data.width_chunks * data.height_chunks;
-    for _ in 0..count {
-        let chunk = Chunk::at(chunk_x, chunk_y);
-        let chunk_data = data.chunk_read(chunk);
+    // copy to pixel buffer
+    let count = data.width() * data.height();
+    for ind in 0..count {
+        let area = data.area_by_index(ind as usize);
 
-        pixels_buffer.write_chunk(chunk, &chunk_data);
-
-        chunk_x += 1;
-        if chunk_x >= data.width_chunks as i32 {
-            chunk_x = 0;
-            chunk_y += 1;
+        for chunk in &area.child_range() {
+            let chunk_heights = data.landscape_chunk_heights(chunk);
+            pixels_buffer.write_chunk(chunk, &chunk_heights);
         }
     }
 
@@ -89,35 +74,16 @@ impl PixelBuffer {
         }
     }
 
-    pub fn write_chunk(&mut self, c: Chunk, data: &RawLevelChunk) {
-        let heights = data.heights.interpolate();
-
+    pub fn write_chunk(&mut self, c: Chunk, heights: &[f32; T_LIB_CONT_SIZE_SQ]) {
         for (ind, tile) in c.child_range().into_iter().enumerate() {
-            let half = (Chunk::size() as f32 / 2.0).floor() as i32;
-            let px = tile + Tile::at(half, half);
-
-            let height = heights[ind];
-            self.write_at(px, height, match data.heights {
-                RawLevelChunkHeights::Full(_) => OutputChannelType::Full,
-                RawLevelChunkHeights::Lite(_, _, _) => OutputChannelType::Lite,
-                RawLevelChunkHeights::Minimal(_, _) => OutputChannelType::Minimal,
-                RawLevelChunkHeights::Splat(_) => OutputChannelType::Splat,
-                RawLevelChunkHeights::Empty => OutputChannelType::Empty,
-            })
+            self.write_at(tile, heights[ind]);
         }
     }
 
-    fn write_at(&mut self, px: Tile, data: f32, ch: OutputChannelType) {
+    fn write_at(&mut self, px: Tile, data: f32) {
         let data = data.clamp(0.0, 1.0);
-
         let index = self.index_by_tile(px);
-        let (r, g, b) = match ch {
-            OutputChannelType::Empty => (data, data, data),
-            OutputChannelType::Splat => (data, 0.0, 0.0),
-            OutputChannelType::Minimal => (0.0, 0.0, data),
-            OutputChannelType::Lite => (0.0, data, 0.0),
-            OutputChannelType::Full => (data, data, data),
-        };
+        let (r, g, b) = (data, data, data);
 
         self.buffer[index] = (r * 255.0) as u8;
         self.buffer[index + 1] = (g * 255.0) as u8;

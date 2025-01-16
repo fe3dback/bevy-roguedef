@@ -1474,6 +1474,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "binary_rw"
+version = "4.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "61c448b21d82244ebe70b1e7595e3c3d709ec5400b859bc44329492e18d6a718"
+dependencies = [
+ "thiserror 1.0.69",
+]
+
+[[package]]
 name = "bindgen"
 version = "0.70.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1629,6 +1638,7 @@ dependencies = [
  "bevy",
  "bevy-inspector-egui",
  "bevy_asset_loader",
+ "binary_rw",
  "brg_core",
  "ron_asset_manager",
  "serde",

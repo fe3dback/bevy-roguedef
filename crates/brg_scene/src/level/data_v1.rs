@@ -1,14 +1,13 @@
 use std::borrow::Cow;
 use std::collections::HashMap;
 
-use anyhow::{Context, Result};
 use brg_core::prelude::{
     Area,
     Block,
     BlockParent,
     BlockPosition,
     Chunk,
-    T_LIB_CONT_WIDTH,
+    T_LIB_CONT_ROW_LEN,
     T_LIB_ELEM_INDEX_BL,
     T_LIB_ELEM_INDEX_BR,
     T_LIB_ELEM_INDEX_CENTER,
@@ -16,13 +15,12 @@ use brg_core::prelude::{
     T_LIB_ELEM_INDEX_TR,
     V2,
 };
-use serde::{Deserialize, Serialize};
 
-use super::heights::RawLevelChunkHeights;
+use super::data_v1_heights::RawLevelChunkHeights;
 use super::interpolate::weighted_fill;
 
-#[derive(Serialize, Deserialize)]
 pub struct RawLevelData {
+    pub version:       u8,
     pub name:          String,
     pub width_chunks:  u32,
     pub height_chunks: u32,
@@ -49,20 +47,22 @@ pub struct RawLevelData {
     pub areas: Vec<RawLevelArea>,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Clone)]
 pub struct RawLevelArea {
+    pub area:    Area,            // not saved to file
     pub heights: (f32, [f32; 4]), // Center, TL, TR, BL, BR
 }
 
-impl Default for RawLevelArea {
-    fn default() -> Self {
+impl RawLevelArea {
+    pub fn new(area: Area) -> Self {
         Self {
+            area,
             heights: (0.0, [0.0; 4]),
         }
     }
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Clone)]
 pub struct RawLevelChunk {
     pub heights: RawLevelChunkHeights,
 }
@@ -78,27 +78,20 @@ impl Default for RawLevelChunk {
 impl RawLevelData {
     pub fn new(name: impl Into<String>, width_chunks: u32, height_chunks: u32) -> Self {
         let (width_areas, height_areas) = (
-            (width_chunks as f32 / T_LIB_CONT_WIDTH as f32).ceil() as u32,
-            (height_chunks as f32 / T_LIB_CONT_WIDTH as f32).ceil() as u32,
+            (width_chunks as f32 / T_LIB_CONT_ROW_LEN as f32).ceil() as u32,
+            (height_chunks as f32 / T_LIB_CONT_ROW_LEN as f32).ceil() as u32,
         );
 
         Self {
+            version: 1,
             name: name.into(),
             width_chunks,
             height_chunks,
             width_areas,
             height_areas,
-            areas: vec![RawLevelArea::default(); (width_areas * height_areas) as usize],
+            areas: vec![RawLevelArea::new(Area::default()); (width_areas * height_areas) as usize],
             chunks: vec![RawLevelChunk::default(); (width_chunks * height_chunks) as usize],
         }
-    }
-
-    pub fn to_bytes(&self) -> Result<Vec<u8>> {
-        serde_json::to_vec(&self).context("failed encode raw level data into bytes")
-    }
-
-    pub fn from_bytes(data: Vec<u8>) -> Result<Self> {
-        serde_json::from_slice(&data).context("failed decode raw level data into bytes")
     }
 
     #[inline(always)]
@@ -126,8 +119,8 @@ impl RawLevelData {
     }
 
     #[inline(always)]
-    pub fn area_write(&mut self, a: Area, data: RawLevelArea) {
-        let index = self.area_index(a);
+    pub fn area_write(&mut self, data: RawLevelArea) {
+        let index = self.area_index(data.area);
         self.areas[index] = data;
     }
 
@@ -149,7 +142,7 @@ impl RawLevelData {
                     area.position_center() - c.position_center(),
                     area_data.heights.0,
                 );
-                key_points.insert(area.position() - c.position(), area_data.heights.1[0]);
+                key_points.insert(area.position_tl() - c.position_tl(), area_data.heights.1[0]);
                 key_points.insert(area.position_tr() - c.position_tr(), area_data.heights.1[1]);
                 key_points.insert(area.position_bl() - c.position_bl(), area_data.heights.1[2]);
                 key_points.insert(area.position_br() - c.position_br(), area_data.heights.1[3]);

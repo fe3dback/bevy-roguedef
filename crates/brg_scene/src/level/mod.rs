@@ -1,8 +1,10 @@
-mod data_v1;
-mod heights;
+mod data_v2;
+mod data_v2_api;
+mod data_v2_encode;
 mod interpolate;
 
 pub mod prelude {
-    pub use super::data_v1::*;
-    pub use super::heights::*;
+    pub use super::data_v2::*;
+    pub use super::data_v2_api::*;
+    pub use super::data_v2_encode::*;
 }

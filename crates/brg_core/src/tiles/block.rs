@@ -1,6 +1,4 @@
-use std::any::type_name;
 use std::fmt::{Debug, Display, Formatter};
-use std::marker::PhantomData;
 
 use bevy::prelude::Reflect;
 use serde::{Deserialize, Serialize};
@@ -9,50 +7,55 @@ pub trait Block {
     fn at(x: i32, y: i32) -> Self;
 }
 
-// only for internal use (like in range iter)
-pub(super) trait BlockXY {
+pub trait BlockXY {
     fn x(&self) -> i32;
     fn set_x(&mut self, x: i32);
-
     fn y(&self) -> i32;
     fn set_y(&mut self, y: i32);
 }
 
 #[derive(Default, Eq, PartialEq, Copy, Clone, Reflect, Hash, Serialize, Deserialize)]
-pub struct BlockOf<T> {
-    pub x:         i32,
-    pub y:         i32,
-    #[reflect(ignore)]
-    #[serde(skip)]
-    _phantom_data: PhantomData<T>,
+pub struct Tile {
+    pub x: i32,
+    pub y: i32,
 }
 
 #[derive(Default, Eq, PartialEq, Copy, Clone, Reflect, Hash, Serialize, Deserialize)]
-pub struct _type_tile;
-pub type Tile = BlockOf<_type_tile>;
+pub struct Chunk {
+    pub x: i32,
+    pub y: i32,
+}
 
 #[derive(Default, Eq, PartialEq, Copy, Clone, Reflect, Hash, Serialize, Deserialize)]
-pub struct _type_chunk;
-pub type Chunk = BlockOf<_type_chunk>;
+pub struct Area {
+    pub x: i32,
+    pub y: i32,
+}
 
 #[derive(Default, Eq, PartialEq, Copy, Clone, Reflect, Hash, Serialize, Deserialize)]
-pub struct _type_area;
-pub type Area = BlockOf<_type_area>;
-
-#[derive(Default, Eq, PartialEq, Copy, Clone, Reflect, Hash, Serialize, Deserialize)]
-pub struct _type_cluster;
-pub type Cluster = BlockOf<_type_cluster>;
+pub struct Cluster {
+    pub x: i32,
+    pub y: i32,
+}
 
 macro_rules! impl_block {
     ($blockStruct:ident) => {
         impl Block for $blockStruct {
             #[inline(always)]
             fn at(x: i32, y: i32) -> $blockStruct {
-                $blockStruct {
-                    x,
-                    y,
-                    _phantom_data: Default::default(),
-                }
+                $blockStruct { x, y }
+            }
+        }
+
+        impl Display for $blockStruct {
+            fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+                write!(f, "{}({},{})", stringify!($blockStruct), self.x, self.y)
+            }
+        }
+
+        impl Debug for $blockStruct {
+            fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+                write!(f, "{}({},{})", stringify!($blockStruct), self.x, self.y)
             }
         }
 
@@ -77,18 +80,6 @@ macro_rules! impl_block {
                 self.y = y;
             }
         }
-
-        impl Display for $blockStruct {
-            fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-                write!(f, "{}({}, {})", stringify!($blockStruct), self.x, self.y)
-            }
-        }
-
-        impl Debug for $blockStruct {
-            fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-                write!(f, "{}({}, {})", stringify!($blockStruct), self.x, self.y)
-            }
-        }
     };
 }
 
@@ -103,15 +94,7 @@ mod tests {
 
     #[test]
     fn check_xy() {
-        assert_eq!(Tile::at(1, 2), Tile {
-            x:             1,
-            y:             2,
-            _phantom_data: Default::default(),
-        });
-        assert_eq!(Cluster::at(-21, 1293), Cluster {
-            x:             -21,
-            y:             1293,
-            _phantom_data: Default::default(),
-        });
+        assert_eq!(Tile::at(1, 2), Tile { x: 1, y: 2 });
+        assert_eq!(Cluster::at(-21, 1293), Cluster { x: -21, y: 1293 });
     }
 }
