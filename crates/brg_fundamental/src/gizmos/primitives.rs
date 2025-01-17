@@ -8,7 +8,7 @@ use super::sup::{GizmosX, ISO_IDEN};
 
 impl GizmosX<'_, '_> {
     #[inline]
-    fn iso(&self, center: V2) -> Isometry3d {
+    fn iso(&mut self, center: V2) -> Isometry3d {
         let mut iso = ISO_IDEN;
         iso.translation = center
             .as_3d()
@@ -18,7 +18,7 @@ impl GizmosX<'_, '_> {
     }
 
     #[inline]
-    fn iso3d(&self, center: V3) -> Isometry3d {
+    fn iso3d(&mut self, center: V3) -> Isometry3d {
         let mut iso = ISO_IDEN;
         iso.translation = center.as_3d().into();
         iso.translation.y += self.heightmap.height_at_pos(V2::new(center.x, center.y));
@@ -32,8 +32,8 @@ impl GizmosX<'_, '_> {
 
     #[inline]
     pub fn rect<C: Into<Color>>(&mut self, tl: V2, size: V2, color: C) {
-        self.gz
-            .rect(self.iso(tl + (size * 0.5)), size.as_2d(), color);
+        let iso = self.iso(tl + (size * 0.5));
+        self.gz.rect(iso, size.as_2d(), color);
     }
 
     #[inline]
@@ -98,48 +98,42 @@ impl GizmosX<'_, '_> {
 
     #[inline]
     pub fn line<C: Into<Color>>(&mut self, p1: V2, p2: V2, color: C) {
-        self.gz.line(
-            self.iso(p1).translation.into(),
-            self.iso(p2).translation.into(),
-            color,
-        )
+        let iso1 = self.iso(p1).translation.into();
+        let iso2 = self.iso(p2).translation.into();
+
+        self.gz.line(iso1, iso2, color)
     }
 
     #[inline]
     pub fn line_custom_height<C: Into<Color>>(&mut self, p1: V3, p2: V3, color: C) {
-        self.gz.line(
-            self.iso3d(p1).translation.into(),
-            self.iso3d(p2).translation.into(),
-            color,
-        )
+        let iso1 = self.iso3d(p1).translation.into();
+        let iso2 = self.iso3d(p2).translation.into();
+
+        self.gz.line(iso1, iso2, color)
     }
 
     #[inline]
     pub fn line_gradient<C: Into<Color>>(&mut self, p1: V2, p2: V2, color1: C, color2: C) {
-        self.gz.line_gradient(
-            self.iso(p1).translation.into(),
-            self.iso(p2).translation.into(),
-            color1,
-            color2,
-        )
+        let iso1 = self.iso(p1).translation.into();
+        let iso2 = self.iso(p2).translation.into();
+
+        self.gz.line_gradient(iso1, iso2, color1, color2)
     }
 
     #[inline]
     pub fn arrow<C: Into<Color>>(&mut self, p1: V2, p2: V2, color: C) {
-        self.gz.arrow(
-            self.iso(p1).translation.into(),
-            self.iso(p2).translation.into(),
-            color,
-        );
+        let iso1 = self.iso(p1).translation.into();
+        let iso2 = self.iso(p2).translation.into();
+
+        self.gz.arrow(iso1, iso2, color);
     }
 
     #[inline]
     pub fn arrow_custom_height<C: Into<Color>>(&mut self, p1: V3, p2: V3, color: C) {
-        self.gz.arrow(
-            self.iso3d(p1).translation.into(),
-            self.iso3d(p2).translation.into(),
-            color,
-        );
+        let iso1 = self.iso3d(p1).translation.into();
+        let iso2 = self.iso3d(p2).translation.into();
+
+        self.gz.arrow(iso1, iso2, color);
     }
 
     #[inline]

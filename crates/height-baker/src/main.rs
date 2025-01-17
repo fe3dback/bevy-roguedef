@@ -37,7 +37,7 @@ pub struct Importer {
     scale_factor_y: u32, // how many tiles will be mapped to single exr pixel bv y
 }
 
-const MAP_SIZE_M: Meter = 4096.0 * 4.0; // 16 km^2
+const MAP_SIZE_M: Meter = 4096.0; // 4 km^2
 const MAP_NAME: &str = "example";
 
 fn main() -> Result<()> {
@@ -45,10 +45,8 @@ fn main() -> Result<()> {
         "/home/neo/code/fe3dback/bevy-roguedef/sources/terrain/example/Rugged Terrain with Rocky Peaks Height Map EXR.exr",
     );
 
-    let out_directory: PathBuf = PathBuf::from(format!(
-        "/home/neo/code/fe3dback/bevy-roguedef/assets/maps/{}/",
-        MAP_NAME
-    ));
+    let out_directory: PathBuf =
+        PathBuf::from("/home/neo/code/fe3dback/bevy-roguedef/assets/maps/");
 
     // prepare data
     let (bounds, samples) = load_exr(input_exr_file.as_path()).context("failed load exr")?;
@@ -87,7 +85,7 @@ fn main() -> Result<()> {
                 {
                     if chunk_in_center_percent_range(
                         chunk,
-                        50.0,
+                        35.0,
                         importer.chunks_width,
                         importer.chunks_height,
                     ) {
@@ -129,7 +127,7 @@ fn main() -> Result<()> {
 
     // write data to files
     {
-        let out_path = out_directory.join("world.landscape.bin");
+        let out_path = out_directory.join(format!("{}.level.bin", MAP_NAME));
         fs::create_dir_all(&out_path.parent().unwrap()).context("creating map directories")?;
 
         let mut file = File::create(out_path).context("failed create area file")?;

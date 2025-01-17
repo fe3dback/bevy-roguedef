@@ -16,29 +16,29 @@ pub struct LevelData {
 pub struct LevelDataLandscape {
     /// always has width*height elements
     /// in order of [top->bottom; left->right]
-    pub(super) areas: Vec<LevelDataLandscapeArea>,
+    pub areas: Vec<LevelDataLandscapeArea>,
 }
 
 #[derive(Clone)]
 pub struct LevelDataLandscapeArea {
     // key heights for area
     // (center, [TL, TR, BL, BR])
-    pub(super) heights: AreaHeights,
+    pub heights: AreaHeights,
 
     /// affects [chunks]
-    pub(super) has_chunks: bool,
+    pub has_chunks: bool,
 
     /// has [T_LIB_CONT_SIZE_SQ] elements when [has_chunks]
     /// otherwise will be empty
     /// in order of [top->bottom; left->right]
-    pub(super) chunks: Vec<LevelDataLandscapeChunk>,
+    pub chunks: Vec<LevelDataLandscapeChunk>,
 }
 
 #[derive(Debug, Clone)]
 pub struct LevelDataLandscapeChunk {
     /// height for every tile in chunk
     /// in order of [top->bottom; left->right]
-    pub(super) heights: [f32; T_LIB_CONT_SIZE_SQ],
+    pub heights: [f32; T_LIB_CONT_SIZE_SQ],
 }
 
 impl LevelData {

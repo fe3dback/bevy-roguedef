@@ -1,10 +1,10 @@
 use bevy::math::EulerRot;
-use bevy::prelude::{Quat, Query, Res, Transform};
+use bevy::prelude::{Quat, Query, Transform};
 
 use super::cmp::CmpTransform2D;
-use crate::prelude::{ResHeightmap, TransformHeightKind, TransformRotationKind};
+use crate::prelude::{SupHeightmap, TransformHeightKind, TransformRotationKind};
 
-pub fn transform_apply(mut query: Query<(&CmpTransform2D, &mut Transform)>, hm: Res<ResHeightmap>) {
+pub fn transform_apply(mut query: Query<(&CmpTransform2D, &mut Transform)>, mut hm: SupHeightmap) {
     for (trm2d, mut trm3d) in query.iter_mut() {
         // transfer 2d position
         trm3d.translation = trm2d.position.as_3d();

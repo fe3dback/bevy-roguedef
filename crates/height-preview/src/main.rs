@@ -15,11 +15,10 @@ struct PixelBuffer {
 }
 
 pub fn main() -> Result<()> {
-    let input_directory: &Path =
-        Path::new("/home/neo/code/fe3dback/bevy-roguedef/assets/maps/example");
+    let input_directory: &Path = Path::new("/home/neo/code/fe3dback/bevy-roguedef/assets/maps");
 
     let file_content =
-        fs::read(input_directory.join("world.landscape.bin")).context("reading file")?;
+        fs::read(input_directory.join("example.level.bin")).context("reading file")?;
     let data = LevelData::decode(file_content).context("decode bin")?;
 
     // create image
@@ -39,8 +38,8 @@ pub fn main() -> Result<()> {
     }
 
     // write to file
-    let png_file =
-        File::create(input_directory.join("preview.png")).context("creating preview png file")?;
+    let png_file = File::create(input_directory.join("example.preview.png"))
+        .context("creating preview png file")?;
     let png_buff = &mut BufWriter::new(png_file);
 
     let mut encoder = png::Encoder::new(png_buff, png_width, png_height);

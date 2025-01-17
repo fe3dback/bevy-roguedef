@@ -1,6 +1,6 @@
 use std::marker::PhantomData;
 
-use super::block::{Block, Tile};
+use super::block::{Area, Block, Chunk, Cluster, Tile};
 use super::block_position::BlockPosition;
 use crate::prelude::V2;
 
@@ -49,53 +49,65 @@ impl<T> Range<T> {
     pub fn size(&self) -> (i32, i32) {
         (self.width(), self.height())
     }
-
-    /// return range size in meters
-    #[inline]
-    pub fn size_m(&self) -> V2 {
-        V2 {
-            x: self.width() as f32,
-            y: self.height() as f32,
-        }
-    }
 }
 
-impl BlockPosition for Range<Tile> {
-    /// Range center position in absolute world coordinates
-    #[inline(always)]
-    fn position_center(&self) -> V2 {
-        let tl = self.position_tl();
-        let size = self.size_m();
-        V2 {
-            x: tl.x + (size.x / 2.0),
-            y: tl.y + (size.y / 2.0),
+macro_rules! impl_range_position {
+    ($blockStruct:ident) => {
+        impl Range<$blockStruct> {
+            /// return range size in meters
+            #[inline]
+            pub fn size_m(&self) -> V2 {
+                $blockStruct::size_m()
+                    * V2 {
+                        x: self.width() as f32,
+                        y: self.height() as f32,
+                    }
+            }
         }
-    }
 
-    /// Range top-left position in absolute world coordinates
-    #[inline(always)]
-    fn position_tl(&self) -> V2 {
-        Tile::at(self.min_x, self.min_y).position_tl()
-    }
+        impl BlockPosition for Range<$blockStruct> {
+            /// Range center position in absolute world coordinates
+            #[inline(always)]
+            fn position_center(&self) -> V2 {
+                let tl = self.position_tl();
+                let size = self.size_m();
+                V2 {
+                    x: tl.x + (size.x / 2.0),
+                    y: tl.y + (size.y / 2.0),
+                }
+            }
 
-    /// Range top-right position in absolute world coordinates
-    #[inline(always)]
-    fn position_tr(&self) -> V2 {
-        Tile::at(self.max_x, self.min_y).position_tr()
-    }
+            /// Range top-left position in absolute world coordinates
+            #[inline(always)]
+            fn position_tl(&self) -> V2 {
+                $blockStruct::at(self.min_x, self.min_y).position_tl()
+            }
 
-    /// Range bottom-left position in absolute world coordinates
-    #[inline(always)]
-    fn position_bl(&self) -> V2 {
-        Tile::at(self.min_x, self.max_y).position_bl()
-    }
+            /// Range top-right position in absolute world coordinates
+            #[inline(always)]
+            fn position_tr(&self) -> V2 {
+                $blockStruct::at(self.max_x, self.min_y).position_tr()
+            }
 
-    /// Range bottom-right position in absolute world coordinates
-    #[inline(always)]
-    fn position_br(&self) -> V2 {
-        Tile::at(self.max_x, self.max_y).position_br()
-    }
+            /// Range bottom-left position in absolute world coordinates
+            #[inline(always)]
+            fn position_bl(&self) -> V2 {
+                $blockStruct::at(self.min_x, self.max_y).position_bl()
+            }
+
+            /// Range bottom-right position in absolute world coordinates
+            #[inline(always)]
+            fn position_br(&self) -> V2 {
+                $blockStruct::at(self.max_x, self.max_y).position_br()
+            }
+        }
+    };
 }
+
+impl_range_position!(Tile);
+impl_range_position!(Chunk);
+impl_range_position!(Area);
+impl_range_position!(Cluster);
 
 impl Range<Tile> {
     #[inline]

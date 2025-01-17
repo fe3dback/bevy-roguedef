@@ -5,7 +5,7 @@ use std::{env, fs};
 
 use anyhow::{bail, Context};
 use quote::ToTokens;
-use syn::{ItemUse, UseTree};
+use syn::{Item, ItemUse, UseTree};
 
 fn main() -> anyhow::Result<()> {
     let args: Vec<String> = env::args().collect();
@@ -31,14 +31,32 @@ fn main() -> anyhow::Result<()> {
     // Обработка блока `use`
     let mut need_file_update = false;
     let mut modified_file = file_content.clone(); // Создаем копию для модификации
+
+    let mut new_items: Vec<Item> = vec![];
+
     for item in parsed_file.items {
         if let syn::Item::Use(item_use) = item {
-            let old_stream = item_use
-                .to_token_stream()
-                .to_string()
-                .replace("use ", "use|")
-                .replace(" ", "")
-                .replace("|", " ");
+            let mut old_stream = item_use.to_token_stream().to_string();
+            let parts: Vec<&str> = old_stream.split('{').collect();
+            if parts.len() == 2 {
+                let left = parts[0]
+                    .replace("use ", "use|")
+                    .replace(" ", "")
+                    .replace("|", " ");
+
+                let right = format!("{{{}", parts[1])
+                    .replace(", ", ",|")
+                    .replace(" ", "")
+                    .replace("|", " ");
+
+                old_stream = format!("{}{}", left, right);
+            } else {
+                old_stream = old_stream
+                    .replace("use ", "use|")
+                    .replace(" ", "")
+                    .replace("|", " ");
+            }
+
             let mut use_list = flatten_use_tree(&item_use);
 
             let mut found = false;
@@ -68,6 +86,8 @@ fn main() -> anyhow::Result<()> {
             println!(" - repl\nfrom=`{}`\n  to=`{}`", old_stream, new_stream);
             modified_file = modified_file.replace(&old_stream, &new_stream);
             need_file_update = true;
+        } else {
+            new_items.push(item);
         }
     }
 

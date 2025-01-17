@@ -1,14 +1,13 @@
 use bevy::color::palettes::tailwind::{RED_900, SKY_300};
 use bevy::color::Color;
-use bevy::prelude::{Mix, Query, Res, With};
+use bevy::prelude::{Mix, Query, With};
 use brg_core::prelude::consts::TERRAIN_HEIGHT;
 use brg_core::prelude::{BlockPosition, Range, Tile, VecExt, V2};
 
-use crate::prelude::{CmpMarkerCameraTarget, CmpTransform2D, GizmosX, ResHeightmap};
+use crate::prelude::{CmpMarkerCameraTarget, CmpTransform2D, GizmosX};
 
 pub fn editor_draw_heightmap_around_player(
     mut gz: GizmosX,
-    hm: Res<ResHeightmap>,
     cam_target_query: Query<&CmpTransform2D, With<CmpMarkerCameraTarget>>,
 ) {
     let targets_avg_pos = {
@@ -43,7 +42,7 @@ pub fn editor_draw_heightmap_around_player(
     let color_high = SKY_300;
 
     for tile in &range {
-        let height_percent = hm.height_at_pos(tile.position_tl()) / TERRAIN_HEIGHT;
+        let height_percent = gz.heightmap.height_at_pos(tile.position_tl()) / TERRAIN_HEIGHT;
         let height_color = Color::mix(&color_low.into(), &color_high.into(), height_percent);
 
         gz.point_custom_height(tile.position_tl().with_height(0.05), height_color);

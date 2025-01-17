@@ -1,10 +1,10 @@
 use bevy::app::App;
-use bevy::prelude::Plugin;
+use bevy::prelude::{AssetApp, Plugin};
 use bevy_asset_loader::prelude::*;
 use ron_asset_manager::RonAssetPlugin;
 
 use super::asset::GameAssets;
-use crate::assets::asset_hm_data::AssetHeightMapData;
+use crate::assets::asset_level::{AssetLevel, AssetLevelLoader};
 use crate::prelude::{
     AssetCreature,
     AssetEffect,
@@ -21,7 +21,9 @@ impl Plugin for Plug {
     fn build(&self, app: &mut App) {
         app
             //
-            .add_plugins(RonAssetPlugin::<AssetHeightMapData>::create("hmdata.ron"))
+            .register_asset_loader(AssetLevelLoader)
+            .init_asset::<AssetLevel>()
+            //
             .add_plugins(RonAssetPlugin::<AssetSound>::create("sound.ron"))
             .add_plugins(RonAssetPlugin::<AssetEffect>::create("effect.ron"))
             .add_plugins(RonAssetPlugin::<AssetSpell>::create("spell.ron"))

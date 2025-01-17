@@ -6,6 +6,7 @@ use super::sup_prefabs::SupPrefabs;
 use crate::units::cmp_team::ETeam;
 use crate::units::mobs::enum_mob_type::MobKind;
 use crate::units::player::cmp_marker_player::CmpMarkerPlayer;
+use crate::world::landscape::cmp::CmpLandscapeLoadActorInitiator;
 
 impl<'w, 's> SupPrefabs<'w, 's> {
     pub(crate) fn player(&mut self) -> EntityCommands {
@@ -13,11 +14,13 @@ impl<'w, 's> SupPrefabs<'w, 's> {
             &MobSettings {
                 kind: MobKind::Player,
                 team: ETeam::Player,
+                pos: self.coords.world_center,
                 ..default()
             },
             (
                 CmpMarkerPlayer,
                 CmpMarkerCameraTarget,
+                CmpLandscapeLoadActorInitiator,
                 SpatialListener::new(1.5),
             ),
         )

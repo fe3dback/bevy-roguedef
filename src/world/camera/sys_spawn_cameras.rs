@@ -15,14 +15,15 @@ use bevy::prelude::{
     Vec3,
 };
 use bevy::render::camera::ScalingMode;
+use brg_core::prelude::consts::TERRAIN_HEIGHT;
 use brg_core::prelude::{ANGLE60, V2};
-use brg_fundamental::prelude::{CmpTransform2D, TransformHeightKind};
+use brg_fundamental::prelude::{CmpTransform2D, ResCoords, TransformHeightKind};
 use brg_scene::prelude::GameState::Loading;
 use brg_scene::prelude::InGame;
 
+use super::cmp::{CmpCameraAutoFollowSettings, CmpMarkerCameraActive};
 use super::enums::CmpCameraType;
 use super::res::ResCameraSettings;
-use crate::world::camera::cmp::{CmpCameraAutoFollowSettings, CmpMarkerCameraActive};
 
 pub fn spawn_default_loading_camera(mut cmd: Commands) {
     cmd.spawn((
@@ -33,7 +34,7 @@ pub fn spawn_default_loading_camera(mut cmd: Commands) {
     ));
 }
 
-pub fn spawn_cameras(mut cmd: Commands, settings: Res<ResCameraSettings>) {
+pub fn spawn_cameras(mut cmd: Commands, settings: Res<ResCameraSettings>, coords: Res<ResCoords>) {
     let cam_editor_fly = cmd
         .spawn((
             StateScoped(InGame),
@@ -44,7 +45,12 @@ pub fn spawn_cameras(mut cmd: Commands, settings: Res<ResCameraSettings>) {
                 is_active: settings.active == CmpCameraType::EditorFly,
                 ..default()
             },
-            Transform::from_xyz(4.0, 4.0, 8.0).looking_at(Vec3::ZERO, Vec3::Y),
+            Transform::from_translation(
+                (coords.world_center + V2::new(0.0, 15.0))
+                    .with_height(TERRAIN_HEIGHT)
+                    .as_3d(),
+            )
+            .looking_at(coords.world_center.as_3d(), Vec3::Y),
         ))
         .id();
 
@@ -69,7 +75,7 @@ pub fn spawn_cameras(mut cmd: Commands, settings: Res<ResCameraSettings>) {
             }),
             CmpTransform2D {
                 height: 10.0,
-                position: V2::ZERO,
+                position: coords.world_center,
                 height_kind: TransformHeightKind::AboveTerrain,
                 yaw: PI / 2.0,
                 ..default()
@@ -96,6 +102,7 @@ pub fn spawn_cameras(mut cmd: Commands, settings: Res<ResCameraSettings>) {
                 ..default()
             }),
             CmpTransform2D {
+                position: coords.world_center,
                 height: 25.0,
                 yaw: ANGLE60,
                 ..default()

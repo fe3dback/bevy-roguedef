@@ -25,8 +25,7 @@ impl LevelData {
         // landscape
         {
             let (w, h) = (self.width, self.height);
-            self.landscape
-                .encode(w, h, &mut data)
+            data.write_bytes(self.landscape.encode(w, h).context("encode landscape")?)
                 .context("encode landscape")?;
         }
 
@@ -55,7 +54,10 @@ impl LevelData {
 }
 
 impl LevelDataLandscape {
-    fn encode(&self, w: u32, h: u32, data: &mut BinaryWriter) -> Result<()> {
+    fn encode(&self, w: u32, h: u32) -> Result<Vec<u8>> {
+        let mut buff = MemoryStream::new();
+        let mut data = BinaryWriter::new(&mut buff, Endian::Little);
+
         // asserts
         {
             let expected_len = (w * h) as usize;
@@ -71,11 +73,12 @@ impl LevelDataLandscape {
         // write areas
         {
             for (ind, area) in self.areas.iter().enumerate() {
-                area.encode(data).context(format!("encode area: {}", ind))?;
+                area.encode(&mut data)
+                    .context(format!("encode area: {}", ind))?;
             }
         }
 
-        Ok(())
+        Ok(buff.into())
     }
 
     fn decode(&mut self, w: u32, h: u32, data: &mut BinaryReader) -> Result<()> {

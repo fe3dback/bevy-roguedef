@@ -9,6 +9,7 @@ mod block_range_iter;
 mod block_size;
 mod consts;
 mod select;
+mod units;
 
 pub mod prelude {
     pub use super::block::{Area, Block, Chunk, Cluster, Tile};
@@ -20,4 +21,5 @@ pub mod prelude {
     pub use super::block_range_iter::RangeIter;
     pub use super::consts::*;
     pub use super::select::*;
+    pub use super::units::*;
 }

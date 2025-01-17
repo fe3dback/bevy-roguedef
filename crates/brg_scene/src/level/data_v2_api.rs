@@ -2,6 +2,7 @@ use std::borrow::Cow;
 use std::collections::HashMap;
 
 use brg_core::prelude::{
+    weighted_fill,
     Area,
     Block,
     BlockChild,
@@ -14,9 +15,14 @@ use brg_core::prelude::{
 };
 
 use super::data_v2::{LevelData, LevelDataLandscapeArea};
-use super::interpolate::weighted_fill;
+use crate::prelude::LevelDataLandscape;
 
 impl LevelData {
+    #[inline(always)]
+    pub fn name(&self) -> String {
+        self.name.clone()
+    }
+
     #[inline(always)]
     pub fn width(&self) -> u32 {
         self.width
@@ -25,6 +31,11 @@ impl LevelData {
     #[inline(always)]
     pub fn height(&self) -> u32 {
         self.width
+    }
+
+    #[inline(always)]
+    pub fn landscape(&self) -> &LevelDataLandscape {
+        &self.landscape
     }
 
     pub fn landscape_add_area(&mut self, area: Area, data: LevelDataLandscapeArea) {

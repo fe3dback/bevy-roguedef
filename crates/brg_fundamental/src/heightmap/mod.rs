@@ -1,10 +1,12 @@
 mod cmp;
+pub mod dto_landscape;
 pub mod plug;
 mod res;
+mod sup;
 mod sys_editor_draw_heightmap;
-mod sys_import_heightmap_from_entities;
+pub mod sys_on_scene_changed_load;
 
 pub mod prelude {
     pub use super::cmp::*;
-    pub use super::res::ResHeightmap;
+    pub use super::sup::SupHeightmap;
 }
