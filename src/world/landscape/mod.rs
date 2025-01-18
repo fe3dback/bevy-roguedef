@@ -12,4 +12,3 @@ mod sup_mesh;
 mod sup_spawn_chunk;
 mod sys_actor_tracker;
 mod sys_spawn_terrain_root;
-mod sys_switch_lod;

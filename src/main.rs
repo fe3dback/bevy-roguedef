@@ -8,7 +8,11 @@ use std::time::Duration;
 
 use bevy::app::*;
 use bevy::audio::{AudioPlugin, SpatialScale, Volume};
+use bevy::color::palettes::basic::WHITE;
+use bevy::pbr::wireframe::{WireframeConfig, WireframePlugin};
 use bevy::prelude::{GlobalVolume, Window, WindowPlugin};
+use bevy::render::settings::{RenderCreation, WgpuFeatures, WgpuSettings};
+use bevy::render::RenderPlugin;
 use bevy::utils::default;
 use bevy::window::PresentMode;
 use bevy::DefaultPlugins;
@@ -31,8 +35,21 @@ fn main() {
                     global_volume:         GlobalVolume {
                         volume: Volume::new(0.1), // todo: set volume
                     },
+                })
+                .set(RenderPlugin {
+                    render_creation: RenderCreation::Automatic(WgpuSettings {
+                        features: WgpuFeatures::POLYGON_MODE_LINE,
+                        ..default()
+                    }),
+                    ..default()
                 }),
         )
+        .add_plugins(WireframePlugin)
+        // Wireframes can be configured with this resource. This can be changed at runtime.
+        .insert_resource(WireframeConfig {
+            global:        false,
+            default_color: WHITE.into(),
+        })
         // 3-rd old_plugins
         .add_plugins(bevy_framepace::FramepacePlugin)
         .insert_resource(bevy_framepace::FramepaceSettings {

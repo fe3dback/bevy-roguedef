@@ -104,7 +104,7 @@ impl<'w, 's> SupLandscape<'w, 's> {
 
         let mesh = Mesh::new(
             PrimitiveTopology::TriangleList,
-            RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
+            RenderAssetUsages::RENDER_WORLD,
         )
         .with_inserted_attribute(
             Mesh::ATTRIBUTE_POSITION,

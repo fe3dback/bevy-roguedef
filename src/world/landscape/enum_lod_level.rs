@@ -1,4 +1,6 @@
-#[derive(PartialEq, Eq, Hash)]
+use strum::{EnumCount, EnumIter};
+
+#[derive(PartialEq, Eq, Hash, EnumCount, EnumIter, Copy, Clone)]
 pub enum EChunkLodLevel {
     /// has full details and vertice for every tile in chunk
     LOD0,

@@ -16,7 +16,6 @@ use super::sys_spawn_terrain_root::{
     sys_spawn_initial_chunks,
     sys_spawn_terrain_root,
 };
-use super::sys_switch_lod::sys_switch_lod;
 
 pub struct Plug;
 
@@ -35,7 +34,6 @@ impl Plugin for Plug {
             ).in_set(GameSystemSet::InGame_SpawnWorldTerrain))
             .add_systems(Update, sys_track_actors.in_set(GameSystemSet::InGame_NOPAUSE_UpdateGameplayCaches))
             .add_systems(OnExit(InGame), sys_despawn_terrain_root.in_set(GameSystemSet::InGame_NOPAUSE_DespawnObjects))
-            .add_systems(Update, sys_switch_lod.in_set(GameSystemSet::InGame_SpawnWorldTerrain))
             //
             .add_observer(sys_on_add_tracker_component)
             .add_observer(sys_on_remove_tracker_component)
