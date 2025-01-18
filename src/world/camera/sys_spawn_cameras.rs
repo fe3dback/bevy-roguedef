@@ -17,13 +17,19 @@ use bevy::prelude::{
 use bevy::render::camera::ScalingMode;
 use brg_core::prelude::consts::TERRAIN_HEIGHT;
 use brg_core::prelude::{ANGLE60, V2};
-use brg_fundamental::prelude::{CmpTransform2D, ResCoords, TransformHeightKind};
+use brg_fundamental::prelude::{
+    CmpTransform2D,
+    ResCoords,
+    TransformHeightKind,
+    TransformMasterSlave,
+};
 use brg_scene::prelude::GameState::Loading;
 use brg_scene::prelude::InGame;
 
 use super::cmp::{CmpCameraAutoFollowSettings, CmpMarkerCameraActive};
 use super::enums::CmpCameraType;
 use super::res::ResCameraSettings;
+use crate::world::landscape::cmp_actor_initiator::CmpLandscapeLoadActorInitiator;
 
 pub fn spawn_default_loading_camera(mut cmd: Commands) {
     cmd.spawn((
@@ -45,6 +51,12 @@ pub fn spawn_cameras(mut cmd: Commands, settings: Res<ResCameraSettings>, coords
                 is_active: settings.active == CmpCameraType::EditorFly,
                 ..default()
             },
+            CmpLandscapeLoadActorInitiator,
+            CmpTransform2D {
+                // actual pos/rot will be in bevy Transform component below
+                master: TransformMasterSlave::BevyTransformIsMaster,
+                ..default()
+            },
             Transform::from_translation(
                 (coords.world_center + V2::new(0.0, 15.0))
                     .with_height(TERRAIN_HEIGHT)
@@ -64,6 +76,7 @@ pub fn spawn_cameras(mut cmd: Commands, settings: Res<ResCameraSettings>, coords
                 is_active: settings.active == CmpCameraType::EditorTopDownOrthographic,
                 ..default()
             },
+            CmpLandscapeLoadActorInitiator,
             Projection::Orthographic(OrthographicProjection {
                 near: 0.1,
                 far: 100.0,

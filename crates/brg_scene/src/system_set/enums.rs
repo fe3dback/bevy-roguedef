@@ -28,9 +28,9 @@ pub enum GameSystemSet {
     // Despawn various objects from world
     InGame_NOPAUSE_DespawnObjects,
     // Spawn basic light, sky, etc...
-    InGame_NOPAUSE_SpawnWorldEnvironment,
+    InGame_SpawnWorldEnvironment,
     // Spawn 3d terrain objects
-    InGame_NOPAUSE_SpawnWorldTerrain,
+    InGame_SpawnWorldTerrain,
     // Spawn player entities, player system objects, etc...
     InGame_NOPAUSE_SpawnPlayerStaff,
     // Spawn enemy mobs
@@ -51,6 +51,11 @@ pub enum GameSystemSet {
     InGame_NOPAUSE_CastSpells,
     InGame_NOPAUSE_UpdateGameCameras,
     InGame_ALWAYS_UpdateEditorCameras,
+
+    // -----------------
+    // Gameplay finalization
+    // -----------------
+    InGame_NOPAUSE_UpdateGameplayCaches,
 
     // -----------------
     // Sound effects

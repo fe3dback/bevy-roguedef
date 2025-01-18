@@ -33,7 +33,7 @@ impl Plugin for Plug {
             .insert_resource(ResCameraSettings::default())
             //
             .add_systems(OnEnter(Loading), spawn_default_loading_camera.in_set(GameSystemSet::LoadingSystem))
-            .add_systems(OnEnter(InGame), spawn_cameras.in_set(GameSystemSet::InGame_NOPAUSE_SpawnWorldEnvironment))
+            .add_systems(OnEnter(InGame), spawn_cameras.in_set(GameSystemSet::InGame_SpawnWorldEnvironment))
             .add_systems(Update, (
                 update_game_camera_position,
             ).in_set(GameSystemSet::InGame_NOPAUSE_UpdateGameCameras))

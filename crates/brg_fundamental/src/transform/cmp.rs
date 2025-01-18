@@ -16,9 +16,20 @@ pub enum TransformHeightKind {
     Absolute,
 }
 
+#[derive(Default, Reflect)]
+pub enum TransformMasterSlave {
+    #[default]
+    /// map all trm values into bevy transform component
+    OwnTransformIsMaster,
+
+    /// support only basic mapping of position and height
+    BevyTransformIsMaster,
+}
+
 #[derive(Component, Reflect, Default)]
 #[require(Transform)]
 pub struct CmpTransform2D {
+    pub master:               TransformMasterSlave,
     pub position:             V2,
     pub origin_visual_offset: V3,
     pub height:               Meter,
