@@ -7,7 +7,7 @@ use super::asset_level::AssetLevel;
 
 #[derive(AssetCollection, Resource)]
 pub struct GameAssets {
-    #[asset(path = "maps/example.level.bin")]
+    #[asset(path = "maps/example/x.land.bin")]
     pub level: Handle<AssetLevel>,
 
     #[asset(path = "textures/placeholders/grid_blueprint.ktx2")]

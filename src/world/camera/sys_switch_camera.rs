@@ -15,11 +15,14 @@ pub fn switch_camera_on_keyboard_input(
 
     // todo: move from camera (this is global game state)
 
-    settings.active = match settings.active {
-        CmpCameraType::EditorFly => CmpCameraType::EditorTopDownOrthographic,
-        CmpCameraType::EditorTopDownOrthographic => CmpCameraType::GameStrategy,
-        CmpCameraType::GameStrategy => CmpCameraType::EditorFly,
-    };
+    {
+        // todo: game camera only if unit feature is enabled
+        settings.active = match settings.active {
+            CmpCameraType::EditorFly => CmpCameraType::EditorTopDownOrthographic,
+            CmpCameraType::EditorTopDownOrthographic => CmpCameraType::GameStrategy,
+            CmpCameraType::GameStrategy => CmpCameraType::EditorFly,
+        };
+    }
 
     if settings.active != CmpCameraType::EditorFly {
         settings.editor_fly_grab_active = false;

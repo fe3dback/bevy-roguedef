@@ -3,7 +3,8 @@ use bevy::prelude::Resource;
 #[derive(Resource, Eq, PartialEq)]
 pub enum SceneType {
     Empty,
-    Basic,
+    Game,
+    Editor,
 }
 
 #[derive(Eq, PartialEq, Debug)]

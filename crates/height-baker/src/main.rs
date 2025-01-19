@@ -45,8 +45,10 @@ fn main() -> Result<()> {
         "/home/neo/code/fe3dback/bevy-roguedef/sources/terrain/example/Rugged Terrain with Rocky Peaks Height Map EXR.exr",
     );
 
-    let out_directory: PathBuf =
-        PathBuf::from("/home/neo/code/fe3dback/bevy-roguedef/assets/maps/");
+    let out_directory: PathBuf = PathBuf::from(format!(
+        "/home/neo/code/fe3dback/bevy-roguedef/assets/maps/{}/",
+        MAP_NAME
+    ));
 
     // prepare data
     let (bounds, samples) = load_exr(input_exr_file.as_path()).context("failed load exr")?;
@@ -127,7 +129,7 @@ fn main() -> Result<()> {
 
     // write data to files
     {
-        let out_path = out_directory.join(format!("{}.level.bin", MAP_NAME));
+        let out_path = out_directory.join("x.land.bin");
         fs::create_dir_all(&out_path.parent().unwrap()).context("creating map directories")?;
 
         let mut file = File::create(out_path).context("failed create area file")?;

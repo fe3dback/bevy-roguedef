@@ -32,6 +32,6 @@ impl AssetLoader for AssetLevelLoader {
     }
 
     fn extensions(&self) -> &[&str] {
-        &["level.bin"]
+        &["land.bin"]
     }
 }
