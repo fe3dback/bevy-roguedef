@@ -1,8 +1,5 @@
 use bevy::app::{App, Plugin};
-use bevy::prelude::{OnEnter, PreUpdate};
-use brg_scene::prelude::InGame;
-
-use super::sys::init_coord;
+use bevy::prelude::PreUpdate;
 
 pub struct Plug;
 
@@ -12,7 +9,6 @@ impl Plugin for Plug {
         //
             .register_type::<super::res_coords::ResCoords>()
             .insert_resource(super::res_coords::ResCoords::default())
-            .add_systems(OnEnter(InGame), init_coord)
             .add_systems(PreUpdate, super::sys::update_world_coords)
         //-
         ;

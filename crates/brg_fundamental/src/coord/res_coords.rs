@@ -5,7 +5,6 @@ use brg_core::prelude::V2;
 #[derive(Resource, Default, Reflect)]
 #[reflect(Resource)]
 pub struct ResCoords {
-    pub world_center:     V2,
     pub screen_world_box: CoordsArea,
     pub screen_ui_pos:    CoordsArea,
     pub screen_ui_width:  u32,

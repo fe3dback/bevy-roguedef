@@ -14,7 +14,6 @@ impl<'w, 's> SupPrefabs<'w, 's> {
             &MobSettings {
                 kind: MobKind::Player,
                 team: ETeam::Player,
-                pos: self.coords.world_center,
                 ..default()
             },
             (

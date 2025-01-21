@@ -1,6 +1,6 @@
 use std::f32::consts;
 
-use bevy::input::mouse::MouseMotion;
+use bevy::input::mouse::{MouseMotion, MouseScrollUnit, MouseWheel};
 use bevy::prelude::{
     ButtonInput,
     Camera,
@@ -22,8 +22,8 @@ use bevy::prelude::{
 };
 use bevy::window::{CursorGrabMode, PrimaryWindow};
 
-use crate::world::camera::enums::CmpCameraType;
-use crate::world::camera::res::ResCameraSettings;
+use super::enums::CmpCameraType;
+use super::res::ResCameraSettings;
 
 pub fn editor_fly_toggle_mouse_lock(
     mut settings: ResMut<ResCameraSettings>,
@@ -69,14 +69,26 @@ pub fn editor_fly_lock_cursor(
 }
 
 pub fn editor_fly_look_and_move(
-    mut motion: EventReader<MouseMotion>,
+    mut mouse_motion: EventReader<MouseMotion>,
     keyboard: Res<ButtonInput<KeyCode>>,
+    mut mouse: EventReader<MouseWheel>,
     mut cameras: Query<(&mut Transform, &Camera, &CmpCameraType)>,
-    settings: Res<ResCameraSettings>,
+    mut settings: ResMut<ResCameraSettings>,
     time: Res<Time>,
 ) {
     if !settings.editor_fly_grab_active {
         return;
+    }
+
+    for ev in mouse.read() {
+        let delta = match ev.unit {
+            MouseScrollUnit::Line => ev.y * 100.0,
+            MouseScrollUnit::Pixel => ev.y,
+        };
+
+        let delta = delta * 0.01;
+        settings.editor_fly_speed_mul += delta;
+        settings.editor_fly_speed_mul = settings.editor_fly_speed_mul.clamp(0.5, 16.0);
     }
 
     for (mut trm, cam, cam_type) in &mut cameras {
@@ -89,7 +101,7 @@ pub fn editor_fly_look_and_move(
         }
 
         // look around
-        let motion = motion.read().fold(Vec2::ZERO, |acc, m| acc + m.delta);
+        let motion = mouse_motion.read().fold(Vec2::ZERO, |acc, m| acc + m.delta);
         let (yaw, pitch, _) = trm.rotation.to_euler(EulerRot::YXZ);
         trm.rotation = Quat::from_euler(
             EulerRot::YXZ,
@@ -124,6 +136,7 @@ pub fn editor_fly_look_and_move(
             speed /= 3.0;
         }
 
-        trm.translation += move_vec * speed * time.delta().as_secs_f32();
+        trm.translation +=
+            move_vec * speed * settings.editor_fly_speed_mul * time.delta().as_secs_f32();
     }
 }

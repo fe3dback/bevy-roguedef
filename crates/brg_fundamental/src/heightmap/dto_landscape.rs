@@ -50,6 +50,11 @@ pub(super) struct LandscapeChunk {
 
 impl Landscape {
     pub(super) fn chunk_heights(&self, chunk: Chunk) -> Option<Cow<[f32; T_LIB_CONT_SIZE_SQ]>> {
+        // apply offset to center map, so pos[0.0] will be in [width/2, height/2]
+        let offset_x = self.width as usize * Area::size() / 2;
+        let offset_y = self.height as usize * Area::size() / 2;
+        let chunk = Chunk::at(offset_x as i32, offset_y as i32) + chunk;
+
         let area = chunk.parent();
         let area_index = self.area_index(area);
         if area_index < 0 || area_index >= (self.width * self.height) as usize {

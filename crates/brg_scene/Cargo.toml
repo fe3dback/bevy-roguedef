@@ -14,4 +14,4 @@ serde = {workspace = true}
 serde-binary = {workspace = true}
 serde_json = {workspace = true}
 anyhow = {workspace = true}
-binary_rw = "4.1.0"
+binary_rw = {workspace = true}

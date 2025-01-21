@@ -4,6 +4,7 @@ use bevy::prelude::{Component, Reflect};
 pub enum CmpCameraType {
     EditorFly,
     EditorTopDownOrthographic,
-    #[default]
     GameStrategy,
+    #[default]
+    Unknown,
 }

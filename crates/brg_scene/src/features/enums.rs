@@ -1,5 +1,7 @@
 use bevy::prelude::Resource;
 
+pub const DEFAULT_SCENE: SceneType = SceneType::Editor;
+
 #[derive(Resource, Eq, PartialEq)]
 pub enum SceneType {
     Empty,

@@ -10,7 +10,6 @@ impl<'w, 's> SupPrefabs<'w, 's> {
             Name::from("example #plane"),
             StateScoped(InGame),
             CmpTransform2D {
-                position: self.coords.world_center,
                 yaw: std::f32::consts::FRAC_PI_2,
                 rotation_kind: TransformRotationKind::YPointOnPosZ,
                 ..default()
@@ -26,7 +25,6 @@ impl<'w, 's> SupPrefabs<'w, 's> {
             Name::from("example #cube"),
             StateScoped(InGame),
             CmpTransform2D {
-                position: self.coords.world_center,
                 height: 0.5,
                 ..default()
             },

@@ -20,23 +20,6 @@ use brg_scene::prelude::{AssetLevel, GameAssets};
 
 use crate::prelude::{CoordsArea, ResCoords, SupRayCastMesh};
 
-pub fn init_coord(
-    mut data: ResMut<ResCoords>,
-    levels: Res<Assets<AssetLevel>>,
-    game: Res<GameAssets>,
-) {
-    let (mut width, mut height) = (1024.0, 1024.0);
-
-    {
-        if let Some(map) = levels.get(&game.level) {
-            width = map.level.width() as f32 * Area::size_m().x;
-            height = map.level.height() as f32 * Area::size_m().y;
-        }
-    }
-
-    data.world_center = V2::new(width / 2.0, height / 2.0);
-}
-
 pub fn update_world_coords(mut data: ResMut<ResCoords>, mut cast: SupRayCastMesh) {
     let Some(viewport_rect) = cast.viewport() else {
         warn!("can`t get camera viewport rect");

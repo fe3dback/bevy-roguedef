@@ -2811,6 +2811,7 @@ name = "height-baker"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "binary_rw",
  "brg_core",
  "brg_scene",
  "exr",

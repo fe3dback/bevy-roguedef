@@ -1,7 +1,7 @@
 use bevy::app::App;
 use bevy::prelude::Plugin;
 
-use super::enums::SceneType;
+use super::enums::DEFAULT_SCENE;
 
 pub struct Plug;
 
@@ -9,7 +9,7 @@ impl Plugin for Plug {
     fn build(&self, app: &mut App) {
         app
             //
-            .insert_resource(SceneType::Game)
+            .insert_resource(DEFAULT_SCENE)
         //-
         ;
     }

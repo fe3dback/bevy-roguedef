@@ -13,3 +13,4 @@ anyhow = {workspace = true}
 serde = {workspace = true}
 serde-binary = {workspace = true}
 exr = {version = "1.73.0"}
+binary_rw = {workspace = true}
