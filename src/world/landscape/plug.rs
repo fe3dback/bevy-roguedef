@@ -1,6 +1,6 @@
 use bevy::app::{App, Plugin};
 use bevy::prelude::{IntoSystemConfigs, OnEnter, OnExit, Update};
-use brg_scene::prelude::{GameSystemSet, InGame};
+use brg_scene::prelude::{has_feature_in_app, GameSystemSet, InGame, SceneFeature};
 
 use super::evt_actor_move_in_chunk::EvtActorMoveInChunk;
 use super::res_actor_tracker::ResActorTracker;
@@ -22,22 +22,27 @@ pub struct Plug;
 impl Plugin for Plug {
     fn build(&self, app: &mut App) {
         app
-            //
             .insert_resource(ResLandscapeState::default())
             .insert_resource(ResActorTracker::default())
             .add_event::<EvtActorMoveInChunk>()
-            //
-            .add_systems(OnEnter(InGame), sys_spawn_terrain_root.in_set(GameSystemSet::InGame_SpawnWorldTerrain))
-            .add_systems(Update, (
-                sys_spawn_initial_chunks,
-                sys_spawn_chunks_on_actor_moves,
-            ).in_set(GameSystemSet::InGame_SpawnWorldTerrain))
-            .add_systems(Update, sys_track_actors.in_set(GameSystemSet::InGame_NOPAUSE_UpdateGameplayCaches))
-            .add_systems(OnExit(InGame), sys_despawn_terrain_root.in_set(GameSystemSet::InGame_NOPAUSE_DespawnObjects))
-            //
-            .add_observer(sys_on_add_tracker_component)
-            .add_observer(sys_on_remove_tracker_component)
         //-
         ;
+
+        if has_feature_in_app(app, SceneFeature::WorldLandscape) {
+            app
+                //
+                .add_systems(OnEnter(InGame), sys_spawn_terrain_root.in_set(GameSystemSet::InGame_SpawnWorldTerrain))
+                .add_systems(Update, (
+                    sys_spawn_initial_chunks,
+                    sys_spawn_chunks_on_actor_moves,
+                ).in_set(GameSystemSet::InGame_SpawnWorldTerrain))
+                .add_systems(Update, sys_track_actors.in_set(GameSystemSet::InGame_NOPAUSE_UpdateGameplayCaches))
+                .add_systems(OnExit(InGame), sys_despawn_terrain_root.in_set(GameSystemSet::InGame_NOPAUSE_DespawnObjects))
+                //
+                .add_observer(sys_on_add_tracker_component)
+                .add_observer(sys_on_remove_tracker_component)
+            //-
+            ;
+        }
     }
 }
