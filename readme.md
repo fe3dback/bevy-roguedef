@@ -12,6 +12,9 @@ F1     - Pause / Resume game
 F11    - Toggle editor features panel
 F12    - Toggle FPS display mode
 
+Ctrl+Z        - Undo
+Ctrl+Shift-Z  - Redo
+
 Tilda (`)    - switch camera between [InGame, EditorFly, EditorTopDown]
 InGame:
     - not have direct controls

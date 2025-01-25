@@ -6,7 +6,7 @@ use bevy_persistent::Persistent;
 use strum::IntoEnumIterator;
 
 use super::res::ResEditorFeaturesState;
-use crate::features::enums::EditorFeature;
+use crate::prelude::EditorFeature;
 
 pub fn toggle_features_window(
     mut data: ResMut<Persistent<ResEditorFeaturesState>>,
@@ -14,7 +14,7 @@ pub fn toggle_features_window(
 ) {
     if keyboard.just_pressed(KeyCode::F11) {
         if let Err(e) = data.update(|data| data.enabled = !data.enabled) {
-            warn!("editor features window: activate: {}", e);
+            warn!("editor editor window: activate: {}", e);
         }
     }
 }
@@ -34,7 +34,7 @@ pub fn display_editor_features_window(world: &mut World) {
 
         let mut ctx = egui_context.clone();
 
-        egui::Window::new("Editor features").show(ctx.get_mut(), |ui| {
+        egui::Window::new("Editor editor").show(ctx.get_mut(), |ui| {
             for feature in EditorFeature::iter() {
                 let id = feature.to_string();
                 if data.features.get(&id).is_none() {

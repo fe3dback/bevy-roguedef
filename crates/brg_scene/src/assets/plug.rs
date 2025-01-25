@@ -4,7 +4,9 @@ use bevy_asset_loader::prelude::*;
 use ron_asset_manager::RonAssetPlugin;
 
 use super::asset::GameAssets;
-use crate::assets::asset_level::{AssetLevel, AssetLevelLoader};
+use super::asset_doodad::AssetDoodad;
+use super::asset_level::AssetLevel;
+use super::asset_level::AssetLevelLoader;
 use crate::prelude::{
     AssetCreature,
     AssetEffect,
@@ -30,6 +32,7 @@ impl Plugin for Plug {
             .add_plugins(RonAssetPlugin::<AssetProjectile>::create("projectile.ron"))
             .add_plugins(RonAssetPlugin::<AssetWeapon>::create("weapon.ron"))
             .add_plugins(RonAssetPlugin::<AssetCreature>::create("creature.ron")) 
+            .add_plugins(RonAssetPlugin::<AssetDoodad>::create("dod.ron")) 
 
             .add_loading_state(
                 LoadingState::new(GameState::Loading)

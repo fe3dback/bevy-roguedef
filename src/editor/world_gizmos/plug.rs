@@ -1,7 +1,6 @@
 use bevy::app::{App, Plugin};
 use bevy::prelude::{IntoSystemConfigs, Update};
-use brg_editor::prelude::{has_editor_feature, EditorFeature};
-use brg_scene::prelude::GameSystemSet;
+use brg_scene::prelude::{has_editor_feature, EditorFeature, GameSystemSet};
 
 use super::sys_debug_draw_coords::sys_debug_draw_world_origin;
 use super::sys_debug_draw_world_origin::sys_debug_draw_world_mouse_pos;

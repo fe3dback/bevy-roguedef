@@ -19,8 +19,15 @@ pub enum GameSystemSet {
     // For spawning system entities on loading
     LoadingSystem,
 
-    // Editor only logic with game state update
-    EditorChangeGameState,
+    // -----------------
+    // Editor
+    // -----------------
+
+    // editor-only, when changing game state (like pause/resume, save/load, etc..)
+    Editor_ChangeGlobalGameState,
+
+    // draw editor only egui panels
+    Editor_Draw_Panels,
 
     // -----------------
     // Initialize

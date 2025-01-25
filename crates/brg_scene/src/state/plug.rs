@@ -15,7 +15,7 @@ impl Plugin for Plug {
             .enable_state_scoped_entities::<GameState>()
             .add_systems(
                 Update,
-                editor_switch_pause.in_set(GameSystemSet::EditorChangeGameState),
+                editor_switch_pause.in_set(GameSystemSet::Editor_ChangeGlobalGameState),
             )
         //-
         ;

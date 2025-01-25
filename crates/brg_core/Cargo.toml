@@ -9,3 +9,4 @@ auto-impl-ops = {workspace = true}
 rand_chacha = {workspace = true}
 dirs = {workspace = true}
 serde = {workspace = true}
+anyhow = {workspace = true}

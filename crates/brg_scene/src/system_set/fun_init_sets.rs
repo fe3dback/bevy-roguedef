@@ -39,7 +39,7 @@ pub fn init_system_sets_for(app: &mut App, schedule: impl ScheduleLabel + Clone)
             stated_set = stated_set.run_if(has_feature(SceneFeature::EditorGizmos))
         }
 
-        if set.to_string().contains(MAGIC_MATCH_CONDITION_EDITOR) {
+        if set.to_string().starts_with(MAGIC_MATCH_CONDITION_EDITOR) {
             stated_set = stated_set.run_if(has_feature(SceneFeature::Editor))
         }
 

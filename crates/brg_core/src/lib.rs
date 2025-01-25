@@ -2,11 +2,13 @@ use bevy::app::{App, Plugin};
 
 mod consts;
 mod consts_types;
+mod id;
 mod rand;
 mod tiles;
 mod vectors;
 
 pub mod prelude {
+    pub use crate::id::prelude::*;
     pub use crate::rand::prelude::*;
     pub use crate::tiles::prelude::*;
     pub use crate::vectors::prelude::*;

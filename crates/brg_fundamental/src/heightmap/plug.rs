@@ -1,7 +1,6 @@
 use bevy::app::{App, Plugin};
 use bevy::prelude::{IntoSystemConfigs, OnEnter, Update};
-use brg_editor::prelude::{has_editor_feature, EditorFeature};
-use brg_scene::prelude::{GameSystemSet, InGame};
+use brg_scene::prelude::{has_editor_feature, EditorFeature, GameSystemSet, InGame};
 
 use super::res::{ResHeightmapCache, ResLandscape};
 use super::sys_editor_draw_heightmap::editor_draw_heightmap_around_player;

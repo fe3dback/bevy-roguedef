@@ -6,6 +6,5 @@ edition = "2024"
 [dependencies]
 bevy = {workspace = true}
 brg_core = {workspace = true}
-brg_editor = {workspace = true}
 brg_scene = {workspace = true}
 strum = {workspace = true}

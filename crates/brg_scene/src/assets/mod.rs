@@ -1,5 +1,6 @@
 mod asset;
 mod asset_creatures;
+mod asset_doodad;
 mod asset_effect;
 mod asset_level;
 mod asset_projectile;

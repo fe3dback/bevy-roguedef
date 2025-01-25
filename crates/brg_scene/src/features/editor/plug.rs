@@ -3,8 +3,8 @@ use bevy::prelude::{Plugin, Update};
 use bevy_persistent::{Persistent, StorageFormat};
 use brg_core::prelude::consts::path_config_dir;
 
-use crate::features::res::ResEditorFeaturesState;
-use crate::features::sys::{display_editor_features_window, toggle_features_window};
+use super::res::ResEditorFeaturesState;
+use super::sys::{display_editor_features_window, toggle_features_window};
 
 pub struct Plug;
 
@@ -13,9 +13,9 @@ impl Plugin for Plug {
         app
             //
             .insert_resource(Persistent::<ResEditorFeaturesState>::builder()
-                .name("editor features")
+                .name("editor editor")
                 .format(StorageFormat::Json)
-                .path(path_config_dir().join("editor-features.json"))
+                .path(path_config_dir().join("editor-editor.json"))
                 .default(ResEditorFeaturesState::default())
                 .revertible(true)
                 .revert_to_default_on_deserialization_errors(true)

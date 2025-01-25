@@ -3,6 +3,7 @@ use bevy::utils::hashbrown::HashMap;
 use bevy_asset_loader::prelude::AssetCollection;
 
 use super::asset_creatures::AssetCreature;
+use super::asset_doodad::AssetDoodad;
 use super::asset_level::AssetLevel;
 
 #[derive(AssetCollection, Resource)]
@@ -18,4 +19,7 @@ pub struct GameAssets {
 
     #[asset(path = "data/creatures", collection(typed, mapped))]
     pub creatures: HashMap<String, Handle<AssetCreature>>,
+
+    #[asset(path = "data/doodads", collection(typed, mapped))]
+    pub doodads: HashMap<String, Handle<AssetDoodad>>,
 }
