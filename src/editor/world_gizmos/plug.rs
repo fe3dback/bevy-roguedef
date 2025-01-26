@@ -11,8 +11,8 @@ impl Plugin for Plug {
     fn build(&self, app: &mut App) {
         app
             //
-            .add_systems(Update, sys_debug_draw_world_origin.in_set(GameSystemSet::InGameEditorGizmosDraw).run_if(has_editor_feature(EditorFeature::GizmosOriginAxis)))
-            .add_systems(Update, sys_debug_draw_world_mouse_pos.in_set(GameSystemSet::InGameEditorGizmosDraw).run_if(has_editor_feature(EditorFeature::GizmosWorldMouse)))
+            .add_systems(Update, sys_debug_draw_world_origin.in_set(GameSystemSet::GizmosDraw).run_if(has_editor_feature(EditorFeature::GizmosOriginAxis)))
+            .add_systems(Update, sys_debug_draw_world_mouse_pos.in_set(GameSystemSet::GizmosDraw).run_if(has_editor_feature(EditorFeature::GizmosWorldMouse)))
         //-
         ;
     }

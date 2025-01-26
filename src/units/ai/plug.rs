@@ -12,7 +12,7 @@ impl Plugin for Plug {
         app
             //
             .register_type::<CmpAiBehaviorSimple>()
-            .add_systems(Update, ai_simple_move_to_enemy.in_set(GameSystemSet::InGame_NOPAUSE_ProcessInput))
+            .add_systems(Update, ai_simple_move_to_enemy.in_set(GameSystemSet::NOT_ON_PAUSE__ProcessInput))
         //-
         ;
     }

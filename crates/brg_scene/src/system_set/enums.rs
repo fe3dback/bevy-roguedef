@@ -3,10 +3,9 @@
 use bevy::prelude::SystemSet;
 use strum::{Display, EnumIter};
 
-pub const MAGIC_PREFIX_CONDITION_IN_STATE_IN_GAME_NO_PAUSE: &str = "InGame_NOPAUSE_";
-pub const MAGIC_PREFIX_CONDITION_IN_STATE_IN_GAME_ALWAYS: &str = "InGame_ALWAYS_";
-pub const MAGIC_MATCH_CONDITION_EDITOR_GIZMOS: &str = "EditorGizmos";
-pub const MAGIC_MATCH_CONDITION_EDITOR: &str = "Editor";
+pub const MAGIC_NOT_ON_PAUSE: &str = "NOT_ON_PAUSE";
+pub const MAGIC_EDITOR_ONLY: &str = "EDITOR_ONLY";
+pub const MAGIC_ALLOW_ON_LOADING: &str = "ALLOW_ON_LOAD";
 
 #[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone, Copy, EnumIter, Display)]
 pub enum GameSystemSet {
@@ -16,66 +15,66 @@ pub enum GameSystemSet {
     // note: Prefix is important!
     //       use prefix "InGame" - for bind check `in_state(InGame)` to this set
 
-    // For spawning system entities on loading
-    LoadingSystem,
+    // For loading game assets
+    ALLOW_ON_LOAD__LoadingAssets,
+
+    // For spawning SYSTEM/staff/special entities
+    ALLOW_ON_LOAD__LoadingSystem,
 
     // -----------------
     // Editor
     // -----------------
 
     // editor-only, when changing game state (like pause/resume, save/load, etc..)
-    Editor_ChangeGlobalGameState,
+    EDITOR_ONLY__ChangeGlobalGameState,
 
     // draw editor only egui panels
-    Editor_Draw_Panels,
+    EDITOR_ONLY__DrawEditorEguiPanels,
 
     // -----------------
     // Initialize
     // -----------------
     // Despawn various objects from world
-    InGame_NOPAUSE_DespawnObjects,
+    NOT_ON_PAUSE__DespawnObjects,
     // Spawn basic light, sky, etc...
-    InGame_SpawnWorldEnvironment,
+    SpawnWorldEnvironment,
     // Spawn 3d terrain objects
-    InGame_SpawnWorldTerrain,
+    SpawnWorldTerrain,
     // Spawn player entities, player system objects, etc...
-    InGame_NOPAUSE_SpawnPlayerStaff,
+    NOT_ON_PAUSE__SpawnPlayerStaff,
     // Spawn enemy mobs
-    InGame_NOPAUSE_SpawnMobs,
+    NOT_ON_PAUSE__SpawnMobs,
     // Spawn projectiles/debris/effects/etc...
-    InGame_NOPAUSE_SpawnProjectilesAndEffects,
+    NOT_ON_PAUSE__SpawnProjectilesAndEffects,
 
     // -----------------
     // Input
     // -----------------
-    InGame_NOPAUSE_ProcessInput,
+    NOT_ON_PAUSE__ProcessInput,
 
     // -----------------
     // Gameplay
     // -----------------
-    InGame_NOPAUSE_PrepareWeapons,
-    InGame_NOPAUSE_UpdateMovements,
-    InGame_NOPAUSE_CastSpells,
-    InGame_NOPAUSE_UpdateGameCameras,
-    InGame_ALWAYS_UpdateEditorCameras,
+    NOT_ON_PAUSE__PrepareWeapons,
+    NOT_ON_PAUSE__UpdateMovements,
+    NOT_ON_PAUSE__CastSpells,
+    NOT_ON_PAUSE__UpdateGameCameras,
+    UpdateDebugCameras,
 
     // -----------------
     // Gameplay finalization
     // -----------------
-    InGame_NOPAUSE_UpdateGameplayCaches,
+    NOT_ON_PAUSE__UpdateGameplayCaches,
 
     // -----------------
     // Sound effects
     // -----------------
-    InGame_NOPAUSE_PlaySound,
+    NOT_ON_PAUSE__PlaySound,
 
     // -----------------
     // Draw
     // -----------------
 
-    // Editor windows
-    InGameEditorWindowsDraw,
-
     // Debug draw gizmos
-    InGameEditorGizmosDraw,
+    GizmosDraw,
 }

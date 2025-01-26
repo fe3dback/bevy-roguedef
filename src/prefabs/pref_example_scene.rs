@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use brg_fundamental::prelude::*;
-use brg_scene::prelude::InGame;
+use brg_scene::prelude::Loaded;
 
 use super::sup_prefabs::SupPrefabs;
 
@@ -8,7 +8,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
     pub(crate) fn example_scene(&mut self) {
         self.cmd.spawn((
             Name::from("example #plane"),
-            StateScoped(InGame),
+            StateScoped(Loaded),
             CmpTransform2D {
                 yaw: std::f32::consts::FRAC_PI_2,
                 rotation_kind: TransformRotationKind::YPointOnPosZ,
@@ -23,7 +23,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         ));
         self.cmd.spawn((
             Name::from("example #cube"),
-            StateScoped(InGame),
+            StateScoped(Loaded),
             CmpTransform2D {
                 height: 0.5,
                 ..default()

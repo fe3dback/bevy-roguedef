@@ -1,5 +1,4 @@
 use bevy::prelude::{
-    error,
     warn,
     Assets,
     Camera,
@@ -16,7 +15,6 @@ use bevy::prelude::{
     With,
 };
 use brg_core::prelude::{Area, V2, V3};
-use brg_scene::prelude::{AssetLevel, GameAssets};
 
 use crate::prelude::{CoordsArea, ResCoords, SupRayCastMesh};
 

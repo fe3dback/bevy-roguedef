@@ -24,7 +24,7 @@ pub enum IdError {
 ///   - x - [IdCategory] (u=units, d=doodads, ...)
 ///   - A - every other char from str(1..=4) is base64 char [(0-9 A-Z a-z + -)]
 /// - so id range is 64 ^ 4
-#[derive(Default, Debug, Eq, PartialEq, Clone, Copy)]
+#[derive(Default, Debug, Eq, PartialEq, Clone, Copy, Hash)]
 pub struct Id {
     /// layout:
     /// u8  - category (enum 0..255)

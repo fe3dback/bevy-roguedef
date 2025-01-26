@@ -1,6 +1,8 @@
+use strum::Display;
+
 use super::id::IdError;
 
-#[derive(Default, Debug, Eq, PartialEq, Clone, Copy)]
+#[derive(Default, Debug, Eq, PartialEq, Clone, Copy, Display)]
 pub enum IdCategory {
     #[default]
     Unknown,

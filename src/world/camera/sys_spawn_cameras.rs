@@ -19,7 +19,7 @@ use brg_core::prelude::consts::TERRAIN_HEIGHT;
 use brg_core::prelude::{ANGLE60, V2};
 use brg_fundamental::prelude::{CmpTransform2D, TransformHeightKind, TransformMasterSlave};
 use brg_scene::prelude::GameState::Loading;
-use brg_scene::prelude::{InGame, SceneFeature, SupFeatures};
+use brg_scene::prelude::{Loaded, SceneFeature, SupFeatures};
 
 use super::cmp::{CmpCameraAutoFollowSettings, CmpMarkerCameraActive};
 use super::enums::CmpCameraType;
@@ -43,7 +43,7 @@ pub fn spawn_cameras(
 ) {
     let cam_editor_fly = cmd
         .spawn((
-            StateScoped(InGame),
+            StateScoped(Loaded),
             Name::from("Camera - Editor Fly"),
             CmpCameraType::EditorFly,
             Camera3d::default(),
@@ -66,7 +66,7 @@ pub fn spawn_cameras(
 
     let cam_editor_top_down_orthographic = cmd
         .spawn((
-            StateScoped(InGame),
+            StateScoped(Loaded),
             Name::from("Camera - Editor TopDown Orthographic"),
             CmpCameraType::EditorTopDownOrthographic,
             Camera3d::default(),
@@ -96,7 +96,7 @@ pub fn spawn_cameras(
     if features.has_feature(SceneFeature::Units) {
         let cam_game_top_down = cmd
             .spawn((
-                StateScoped(InGame),
+                StateScoped(Loaded),
                 Name::from("Camera - Game Strategy"),
                 CmpCameraType::GameStrategy,
                 CmpCameraAutoFollowSettings {

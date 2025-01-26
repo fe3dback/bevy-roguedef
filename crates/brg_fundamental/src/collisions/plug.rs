@@ -12,7 +12,7 @@ impl Plugin for Plug {
         app
         //
             .register_type::<CmpCollisionVolume>()
-            .add_systems(Update, show_debug_collisions.in_set(GameSystemSet::InGameEditorGizmosDraw).run_if(has_editor_feature(EditorFeature::VolumesCollision)))
+            .add_systems(Update, show_debug_collisions.in_set(GameSystemSet::GizmosDraw).run_if(has_editor_feature(EditorFeature::VolumesCollision)))
         //-
         ;
     }

@@ -3,7 +3,7 @@ use bevy::prelude::{ComputedStates, States};
 #[derive(States, Clone, Debug, Eq, PartialEq, Hash)]
 pub enum GameState {
     Loading, // assets loading
-    InGame { paused: bool },
+    Loaded { game_paused: bool },
 }
 
 impl Default for GameState {
@@ -13,16 +13,16 @@ impl Default for GameState {
 }
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
-pub struct InGame;
+pub struct Loaded;
 
-impl ComputedStates for InGame {
+impl ComputedStates for Loaded {
     // Computed states can be calculated from one or many source states.
     type SourceStates = GameState;
 
     // Now, we define the rule that determines the value of our computed state.
-    fn compute(sources: GameState) -> Option<InGame> {
+    fn compute(sources: GameState) -> Option<Loaded> {
         match sources {
-            GameState::InGame { .. } => Some(InGame),
+            GameState::Loaded { .. } => Some(Loaded),
             _ => None,
         }
     }

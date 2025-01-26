@@ -29,7 +29,7 @@ impl Plugin for Plug {
                 shot,
                 on_reload,
                 on_shot,
-            ).in_set(GameSystemSet::InGame_NOPAUSE_PrepareWeapons))
+            ).in_set(GameSystemSet::NOT_ON_PAUSE__PrepareWeapons))
         //-
         ;
     }

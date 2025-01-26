@@ -10,7 +10,7 @@ use bevy::app::*;
 use bevy::audio::{AudioPlugin, SpatialScale, Volume};
 use bevy::color::palettes::basic::WHITE;
 use bevy::pbr::wireframe::{WireframeConfig, WireframePlugin};
-use bevy::prelude::{GlobalVolume, Window, WindowPlugin};
+use bevy::prelude::{AssetPlugin, ClearColor, Color, GlobalVolume, Window, WindowPlugin};
 use bevy::render::settings::{RenderCreation, WgpuFeatures, WgpuSettings};
 use bevy::render::RenderPlugin;
 use bevy::utils::default;
@@ -42,6 +42,10 @@ fn main() {
                         ..default()
                     }),
                     ..default()
+                })
+                .set(AssetPlugin {
+                    watch_for_changes_override: Some(true), // only in dev
+                    ..default()
                 }),
         )
         .add_plugins(WireframePlugin)
@@ -50,6 +54,7 @@ fn main() {
             global:        false,
             default_color: WHITE.into(),
         })
+        .insert_resource(ClearColor(Color::srgb(0.01, 0.02, 0.01)))
         // 3-rd old_plugins
         .add_plugins(bevy_framepace::FramepacePlugin)
         .insert_resource(bevy_framepace::FramepaceSettings {

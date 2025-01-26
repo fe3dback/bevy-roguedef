@@ -4,7 +4,7 @@ use bevy::prelude::{default, Entity, EntityCommands, Handle, Name, StateScoped};
 use brg_core::prelude::types::{Angle, Speed};
 use brg_core::prelude::V2;
 use brg_fundamental::prelude::{CmpCollisionVolume, CmpTimeToLife, CmpTransform2D};
-use brg_scene::prelude::{AssetProjectile, InGame};
+use brg_scene::prelude::{AssetProjectile, Loaded};
 
 use super::sup_prefabs::SupPrefabs;
 use crate::units::cmp_team::{CmpTeam, ETeam};
@@ -24,7 +24,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         let projectile = self.assets_projectiles.get(&settings.handle).unwrap_or(def);
 
         self.cmd.spawn((
-            StateScoped(InGame),
+            StateScoped(Loaded),
             Name::from(format!("prj ({:?})", settings.handle.path())),
             CmpTransform2D {
                 position: settings.position,

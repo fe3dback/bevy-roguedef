@@ -14,7 +14,7 @@ pub fn editor_switch_pause(
     }
 
     match state.get() {
-        GameState::InGame { paused } => match paused {
+        GameState::Loaded { game_paused } => match game_paused {
             true => manager.game_resume(),
             false => manager.game_pause(),
         },

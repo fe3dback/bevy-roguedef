@@ -16,7 +16,7 @@ use bevy_health_bar3d::prelude::{BarBorder, BarHeight};
 use brg_core::prelude::types::{Angle, Speed};
 use brg_core::prelude::{V2, V3};
 use brg_fundamental::prelude::{CmpCollisionVolume, CmpTransform2D};
-use brg_scene::prelude::{AssetCreature, AssetCreatureMovement, AssetCreatureStats, InGame};
+use brg_scene::prelude::{AssetCreature, AssetCreatureMovement, AssetCreatureStats, Loaded};
 
 use super::sup_prefabs::SupPrefabs;
 use crate::units::cmp_team::{CmpTeam, ETeam};
@@ -62,7 +62,7 @@ impl<'w, 's> SupPrefabs<'w, 's> {
         // assemble
         self.cmd.spawn((
             (
-                StateScoped(InGame),
+                StateScoped(Loaded),
                 Name::from(format!("mob #{}", creature.name)),
                 CmpTransform2D {
                     position: settings.pos,

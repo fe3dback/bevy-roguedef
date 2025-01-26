@@ -1,6 +1,6 @@
 use bevy::app::{App, Plugin};
 use bevy::prelude::{IntoSystemConfigs, OnEnter, Update};
-use brg_scene::prelude::{has_editor_feature, EditorFeature, GameSystemSet, InGame};
+use brg_scene::prelude::{has_editor_feature, EditorFeature, GameSystemSet, Loaded};
 
 use super::res::{ResHeightmapCache, ResLandscape};
 use super::sys_editor_draw_heightmap::editor_draw_heightmap_around_player;
@@ -18,8 +18,8 @@ impl Plugin for Plug {
             .insert_resource(ResLandscape::default())
             .insert_resource(ResHeightmapCache::default())
             //
-            .add_systems(OnEnter(InGame), sys_on_scene_changed_load_level.in_set(GameSystemSet::LoadingSystem))
-            .add_systems(Update, editor_draw_heightmap_around_player.in_set(GameSystemSet::InGameEditorGizmosDraw).run_if(has_editor_feature(EditorFeature::LandscapeHeightmap)))
+            .add_systems(OnEnter(Loaded), sys_on_scene_changed_load_level.in_set(GameSystemSet::ALLOW_ON_LOAD__LoadingSystem))
+            .add_systems(Update, editor_draw_heightmap_around_player.in_set(GameSystemSet::GizmosDraw).run_if(has_editor_feature(EditorFeature::LandscapeHeightmap)))
         //-
         ;
     }

@@ -16,7 +16,7 @@ impl Plugin for Plug {
             .register_type::<CmpHealth>()
             .add_plugins(HealthBarPlugin::<CmpHealth>::default())
             .insert_resource(ColorScheme::<CmpHealth>::new().background_color(GRAY_950.with_alpha(0.5).into()).foreground_color(ForegroundColor::Static(LIME_50.into())))
-            .add_systems(Update, despawn_on_death.in_set(GameSystemSet::InGame_NOPAUSE_DespawnObjects))
+            .add_systems(Update, despawn_on_death.in_set(GameSystemSet::NOT_ON_PAUSE__DespawnObjects))
         //-
         ;
     }

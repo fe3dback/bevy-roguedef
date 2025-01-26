@@ -1,6 +1,6 @@
 use bevy::app::{App, Plugin};
 use bevy::prelude::{IntoSystemConfigs, OnEnter, OnExit, Update};
-use brg_scene::prelude::{has_feature_in_app, GameSystemSet, InGame, SceneFeature};
+use brg_scene::prelude::{has_feature_in_app, GameSystemSet, Loaded, SceneFeature};
 
 use super::evt_actor_move_in_chunk::EvtActorMoveInChunk;
 use super::res_actor_tracker::ResActorTracker;
@@ -31,13 +31,13 @@ impl Plugin for Plug {
         if has_feature_in_app(app, SceneFeature::WorldLandscape) {
             app
                 //
-                .add_systems(OnEnter(InGame), sys_spawn_terrain_root.in_set(GameSystemSet::InGame_SpawnWorldTerrain))
+                .add_systems(OnEnter(Loaded), sys_spawn_terrain_root.in_set(GameSystemSet::SpawnWorldTerrain))
                 .add_systems(Update, (
                     sys_spawn_initial_chunks,
                     sys_spawn_chunks_on_actor_moves,
-                ).in_set(GameSystemSet::InGame_SpawnWorldTerrain))
-                .add_systems(Update, sys_track_actors.in_set(GameSystemSet::InGame_NOPAUSE_UpdateGameplayCaches))
-                .add_systems(OnExit(InGame), sys_despawn_terrain_root.in_set(GameSystemSet::InGame_NOPAUSE_DespawnObjects))
+                ).in_set(GameSystemSet::SpawnWorldTerrain))
+                .add_systems(Update, sys_track_actors.in_set(GameSystemSet::NOT_ON_PAUSE__UpdateGameplayCaches))
+                .add_systems(OnExit(Loaded), sys_despawn_terrain_root.in_set(GameSystemSet::NOT_ON_PAUSE__DespawnObjects))
                 //
                 .add_observer(sys_on_add_tracker_component)
                 .add_observer(sys_on_remove_tracker_component)

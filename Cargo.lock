@@ -1604,6 +1604,7 @@ dependencies = [
  "dirs",
  "rand_chacha",
  "serde",
+ "strum 0.26.3",
 ]
 
 [[package]]
@@ -1643,6 +1644,7 @@ dependencies = [
  "bevy_asset_loader",
  "binary_rw",
  "brg_core",
+ "ron",
  "ron_asset_manager",
  "serde",
  "serde-binary",
@@ -4363,6 +4365,10 @@ checksum = "93fc1dc3aaa9bfed95e02e6eadabb4baf7e3078b0bd1b4d7b6b0b68378900502"
 dependencies = [
  "winapi-util",
 ]
+
+[[package]]
+name = "sandbox"
+version = "0.1.0"
 
 [[package]]
 name = "scoped-tls"

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use brg_core::prelude::V2;
-use brg_scene::prelude::InGame;
+use brg_scene::prelude::Loaded;
 
 // sun brightness 0..100k
 const L1_SUN_BRIGHT: f32 = 5000.0;
@@ -14,7 +14,7 @@ const L2_AMBIENT_ROTATION: V2 = V2::new(2.0, 5.5);
 
 pub fn spawn_light(mut cmd: Commands) {
     cmd.spawn((
-        StateScoped(InGame),
+        StateScoped(Loaded),
         Name::from("Light Sun"),
         DirectionalLight {
             color: L1_SUN_COLOR,
@@ -28,7 +28,7 @@ pub fn spawn_light(mut cmd: Commands) {
     ));
 
     cmd.spawn((
-        StateScoped(InGame),
+        StateScoped(Loaded),
         Name::from("Light Ambient"),
         DirectionalLight {
             color: L2_AMBIENT_COLOR,

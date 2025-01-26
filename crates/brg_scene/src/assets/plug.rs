@@ -5,8 +5,7 @@ use ron_asset_manager::RonAssetPlugin;
 
 use super::asset::GameAssets;
 use super::asset_doodad::AssetDoodad;
-use super::asset_level::AssetLevel;
-use super::asset_level::AssetLevelLoader;
+use super::asset_level::{AssetLevel, AssetLevelLoader};
 use crate::prelude::{
     AssetCreature,
     AssetEffect,
@@ -36,7 +35,7 @@ impl Plugin for Plug {
 
             .add_loading_state(
                 LoadingState::new(GameState::Loading)
-                    .continue_to_state(GameState::InGame { paused: false })
+                    .continue_to_state(GameState::Loaded { game_paused: false })
                     .load_collection::<GameAssets>(),
             )
         // .init_asset_loader::<AssetLdtkCircuitLoader>()

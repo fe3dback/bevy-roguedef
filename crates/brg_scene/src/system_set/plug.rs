@@ -2,7 +2,7 @@ use bevy::app::{App, Startup};
 use bevy::prelude::{OnEnter, OnExit, Plugin, Update};
 
 use super::fun_init_sets::init_system_sets_for;
-use crate::prelude::{GameState, InGame};
+use crate::prelude::{GameState, Loaded};
 
 pub struct Plug;
 
@@ -12,8 +12,8 @@ impl Plugin for Plug {
         init_system_sets_for(app, Update);
         init_system_sets_for(app, OnEnter(GameState::Loading));
         init_system_sets_for(app, OnExit(GameState::Loading));
-        init_system_sets_for(app, OnEnter(InGame));
-        init_system_sets_for(app, OnExit(InGame));
+        init_system_sets_for(app, OnEnter(Loaded));
+        init_system_sets_for(app, OnExit(Loaded));
 
         // check that expr ^
         // match all game states
@@ -21,7 +21,7 @@ impl Plugin for Plug {
         let x = GameState::Loading;
         match x {
             GameState::Loading => {}
-            GameState::InGame { .. } => {}
+            GameState::Loaded { .. } => {}
         };
 
         app

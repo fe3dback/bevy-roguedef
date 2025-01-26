@@ -1,7 +1,7 @@
 use bevy::app::{App, Plugin};
 use bevy::prelude::{IntoSystemConfigs, OnEnter, Update};
 use brg_scene::prelude::GameState::Loading;
-use brg_scene::prelude::{GameSystemSet, InGame};
+use brg_scene::prelude::{GameSystemSet, Loaded};
 
 use super::cmp::CmpCameraAutoFollowSettings;
 use super::res::ResCameraSettings;
@@ -32,11 +32,11 @@ impl Plugin for Plug {
             //
             .insert_resource(ResCameraSettings::default())
             //
-            .add_systems(OnEnter(Loading), spawn_default_loading_camera.in_set(GameSystemSet::LoadingSystem))
-            .add_systems(OnEnter(InGame), spawn_cameras.in_set(GameSystemSet::InGame_SpawnWorldEnvironment))
+            .add_systems(OnEnter(Loading), spawn_default_loading_camera.in_set(GameSystemSet::ALLOW_ON_LOAD__LoadingSystem))
+            .add_systems(OnEnter(Loaded), spawn_cameras.in_set(GameSystemSet::SpawnWorldEnvironment))
             .add_systems(Update, (
                 update_game_camera_position,
-            ).in_set(GameSystemSet::InGame_NOPAUSE_UpdateGameCameras))
+            ).in_set(GameSystemSet::NOT_ON_PAUSE__UpdateGameCameras))
             .add_systems(Update, (
                 switch_camera_on_keyboard_input,
                 switch_camera_on_settings_change,
@@ -46,7 +46,7 @@ impl Plugin for Plug {
                 editor_ortho_wasd_move_camera,
                 editor_ortho_change_scale,
                 update_game_camera_position,
-            ).in_set(GameSystemSet::InGame_ALWAYS_UpdateEditorCameras))
+            ).in_set(GameSystemSet::UpdateDebugCameras))
         //-
         ;
     }

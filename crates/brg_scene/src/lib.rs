@@ -1,6 +1,7 @@
 use bevy::app::{App, Plugin};
 
 mod assets;
+mod assets2;
 mod features;
 mod level;
 mod state;
@@ -23,7 +24,7 @@ impl Plugin for BrgScenePlugin {
             .add_plugins(state::plug::Plug)
             .add_plugins(features::plug::Plug)
             .add_plugins(system_set::plug::Plug)
-            .add_plugins(assets::plug::Plug)
+            .add_plugins(assets2::plug::Plug)
         //-
         ;
     }

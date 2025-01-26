@@ -16,3 +16,4 @@ serde-binary = {workspace = true}
 serde_json = {workspace = true}
 anyhow = {workspace = true}
 binary_rw = {workspace = true}
+ron = {workspace = true}
