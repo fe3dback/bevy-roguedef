@@ -1,11 +1,12 @@
 use bevy::prelude::{Asset, TypePath};
 use bevy::utils::hashbrown::HashMap;
-use brg_core::prelude::Id;
+use brg_core::prelude::{Id, IdCategory};
 
 use super::assets_mgas_doodads::{AssetMGADoodad, AssetMGADoodadCategory};
 
 pub trait MgaTypedData {
     fn get(data: &AssetMGAInstance) -> &Self;
+    fn category() -> IdCategory;
 }
 
 #[derive(Asset, TypePath)]

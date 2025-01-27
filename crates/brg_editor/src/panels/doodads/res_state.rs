@@ -1,8 +1,10 @@
 use bevy::prelude::Resource;
-
-use super::enum_bank::EBank;
+use bevy::utils::HashMap;
+use brg_core::prelude::{ICDoodads, ICDoodadsCategory, IdOf};
 
 #[derive(Resource, Default)]
 pub struct ResPanelState {
-    pub bank: EBank,
+    pub initialized:       bool,
+    pub available_assets:  HashMap<IdOf<ICDoodadsCategory>, Vec<IdOf<ICDoodads>>>,
+    pub selected_category: Option<IdOf<ICDoodadsCategory>>,
 }

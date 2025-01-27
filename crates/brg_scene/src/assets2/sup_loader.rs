@@ -123,11 +123,11 @@ impl<'w> SupAssetLoader<'w> {
     }
 
     fn validate(&self) -> Result<()> {
-        for asset in self.assets.all::<AssetMGADoodad>(IdCategory::Doodads) {
-            self.validate_have_asset_by_id(asset.id, asset.category)?;
+        for asset in self.assets.all::<AssetMGADoodad>() {
+            self.validate_have_asset_by_id(*asset.id, *asset.category)?;
             self.validate_id_must_have_category(
-                asset.id,
-                asset.category,
+                *asset.id,
+                *asset.category,
                 IdCategory::DoodadsCategory,
             )?;
         }

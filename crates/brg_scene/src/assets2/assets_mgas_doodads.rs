@@ -1,13 +1,13 @@
-use brg_core::prelude::Id;
+use brg_core::prelude::{ICDoodads, ICDoodadsCategory, IdCategory, IdOf};
 use serde::Deserialize;
 
 use super::assets_mgas::{AssetMGAInstance, MgaTypedData};
 
 #[derive(Debug, Clone, Copy, Deserialize)]
 pub struct AssetMGADoodad {
-    pub id:       Id,
+    pub id:       IdOf<ICDoodads>,
     #[serde(rename = "cat")]
-    pub category: Id,
+    pub category: IdOf<ICDoodadsCategory>,
 }
 
 impl MgaTypedData for AssetMGADoodad {
@@ -18,11 +18,15 @@ impl MgaTypedData for AssetMGADoodad {
             None => panic!("MGA Is not doodad"),
         }
     }
+
+    fn category() -> IdCategory {
+        IdCategory::Doodads
+    }
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct AssetMGADoodadCategory {
-    pub id:    Id,
+    pub id:    IdOf<ICDoodadsCategory>,
     pub title: String,
 }
 
@@ -33,5 +37,9 @@ impl MgaTypedData for AssetMGADoodadCategory {
             Some(v) => v,
             None => panic!("MGA Is not doodad_category"),
         }
+    }
+
+    fn category() -> IdCategory {
+        IdCategory::DoodadsCategory
     }
 }

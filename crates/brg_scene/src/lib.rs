@@ -9,6 +9,7 @@ mod system_set;
 
 pub mod prelude {
     pub use crate::assets::prelude::*;
+    pub use crate::assets2::prelude::*;
     pub use crate::features::prelude::*;
     pub use crate::level::prelude::*;
     pub use crate::state::prelude::*;
