@@ -19,7 +19,6 @@ impl IdCategory {
             IdCategory::DoodadsCategory => 2,
 
             IdCategory::Unknown => 255,
-            _ => 255,
         }
     }
 

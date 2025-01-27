@@ -1,5 +1,4 @@
 use bevy::prelude::{Reflect, ReflectResource, Resource};
-use brg_core::prelude::types::Speed;
 use brg_core::prelude::V2;
 
 use super::enums::CmpCameraType;

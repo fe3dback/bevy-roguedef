@@ -23,11 +23,5 @@ impl Plugin for Plug {
             GameState::Loading => {}
             GameState::Loaded { .. } => {}
         };
-
-        app
-        //
-
-        //-
-        ;
     }
 }

@@ -5,7 +5,6 @@ use bevy::prelude::{
     default,
     Bundle,
     Capsule3d,
-    Component,
     EntityCommands,
     Mesh3d,
     Name,
@@ -20,7 +19,7 @@ use brg_scene::prelude::{AssetCreature, AssetCreatureMovement, AssetCreatureStat
 
 use super::sup_prefabs::SupPrefabs;
 use crate::units::cmp_team::{CmpTeam, ETeam};
-use crate::units::cmp_unit_creature::{CmpUnitMovement, CmpUnitMovementInput};
+use crate::units::cmp_unit_creature::CmpUnitMovement;
 use crate::units::mobs::enum_mob_type::MobKind;
 use crate::units::stats::health::cmp_health::CmpHealth;
 use crate::units::weapon::cmp_weapon::{CmpWeaponHolder, Weapon};

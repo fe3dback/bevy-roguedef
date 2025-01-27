@@ -1,10 +1,12 @@
-use anyhow::{Error, Result};
-use bevy::asset::LoadContext;
 use bevy::prelude::{Asset, TypePath};
 use bevy::utils::hashbrown::HashMap;
 use brg_core::prelude::Id;
 
-use super::assets_mgas_doodads::AssetMGADoodad;
+use super::assets_mgas_doodads::{AssetMGADoodad, AssetMGADoodadCategory};
+
+pub trait MgaTypedData {
+    fn get(data: &AssetMGAInstance) -> &Self;
+}
 
 #[derive(Asset, TypePath)]
 pub struct AssetMGA(pub HashMap<Id, AssetMGAInstance>);
@@ -12,25 +14,14 @@ pub struct AssetMGA(pub HashMap<Id, AssetMGAInstance>);
 #[derive(Default)]
 pub struct AssetMGAInstance {
     pub doodad:          Option<AssetMGADoodad>,
-    pub doodad_category: Option<bool>, // todo
+    pub doodad_category: Option<AssetMGADoodadCategory>,
     pub unit:            Option<bool>, // todo
 }
 
 impl AssetMGAInstance {
     #[inline]
-    pub fn get<T: MgaTypedData>(&self) -> T {
+    pub fn get<T: MgaTypedData>(&self) -> &T {
         T::get(self)
-    }
-}
-
-pub trait MgaTypedData {
-    fn get(data: &AssetMGAInstance) -> Self;
-}
-
-impl MgaTypedData for AssetMGADoodad {
-    #[inline]
-    fn get(data: &AssetMGAInstance) -> Self {
-        data.doodad.unwrap()
     }
 }
 
@@ -184,7 +175,7 @@ pub mod loader {
                 ..default()
             }),
             IdCategory::DoodadsCategory => Ok(AssetMGAInstance {
-                doodad_category: Some(true), // todo
+                doodad_category: Some(ron::from_str(&String::from_utf8(asset.raw_bytes)?)?),
                 ..default()
             }),
             IdCategory::Units => Ok(AssetMGAInstance {

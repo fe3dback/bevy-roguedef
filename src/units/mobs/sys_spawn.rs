@@ -1,4 +1,4 @@
-use bevy::prelude::{Commands, Mut, ResMut, With, World};
+use bevy::prelude::{Mut, ResMut, With, World};
 use bevy::window::PrimaryWindow;
 use bevy_inspector_egui::bevy_egui::EguiContext;
 use bevy_inspector_egui::egui;
@@ -39,7 +39,6 @@ pub fn editor_enemies_window_update(world: &mut World) {
 }
 
 pub fn spawn_mobs(
-    mut cmd: Commands,
     mut rand: ResMut<ResRandomSource<RandomizerKindSpawn>>,
     mut pref: SupPrefabs,
     mut rules: ResMut<ResMobsSpawnRules>,

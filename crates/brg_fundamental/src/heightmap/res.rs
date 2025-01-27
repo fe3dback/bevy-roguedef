@@ -5,7 +5,7 @@ use bevy::reflect::Reflect;
 use bevy::utils::hashbrown::HashSet;
 use bevy::utils::HashMap;
 use brg_core::prelude::types::NormalizedF32;
-use brg_core::prelude::{Chunk, CntOfAreas, Tile, T_LIB_CONT_SIZE_SQ, T_LIB_TILE_SIZE_SQ, V2};
+use brg_core::prelude::{Chunk, CntOfAreas, Tile, T_LIB_CONT_SIZE_SQ};
 
 use super::dto_landscape::Landscape;
 
@@ -23,6 +23,7 @@ pub struct ResLandscape {
     pub width:     CntOfAreas,
     pub height:    CntOfAreas,
     #[reflect(ignore)]
+    #[allow(private_interfaces)]
     pub landscape: Landscape,
 }
 

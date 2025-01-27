@@ -15,7 +15,7 @@ pub struct SupRayCastMesh<'w, 's> {
 
 impl SupRayCastMesh<'_, '_> {
     pub(super) fn viewport(&self) -> Option<Rect> {
-        for (cam, trm) in &self.query_cam {
+        for (cam, _) in &self.query_cam {
             if !cam.is_active {
                 continue;
             }

@@ -1,5 +1,5 @@
 use bevy::ecs::system::SystemParam;
-use bevy::prelude::{Assets, Commands, Entity, Handle, Query, Res, ResMut};
+use bevy::prelude::{Assets, Entity, Handle, Query, Res, ResMut};
 use brg_core::prelude::ResRandomSource;
 use brg_fundamental::common::enum_randomizer_kind::RandomizerKindSpells;
 use brg_scene::prelude::{AssetEffect, AssetEffectDamage, AssetSpell};
@@ -9,7 +9,6 @@ use crate::units::stats::health::cmp_health::CmpHealth;
 
 #[derive(SystemParam)]
 pub struct SupSpells<'w, 's> {
-    pub(super) cmd:                 Commands<'w, 's>,
     pub(super) asset_spells:        Res<'w, Assets<AssetSpell>>,
     pub(super) asset_effects:       Res<'w, Assets<AssetEffect>>,
     pub(super) rand:                ResMut<'w, ResRandomSource<RandomizerKindSpells>>,

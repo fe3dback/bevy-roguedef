@@ -7,6 +7,7 @@ use super::enum_lod_level::EChunkLodLevel;
 pub struct CmpLandscapeRoot;
 
 #[derive(Component)]
+#[allow(unused)]
 pub struct CmpLandscapeChild {
     pub chunk: Chunk,
     pub lod:   EChunkLodLevel,

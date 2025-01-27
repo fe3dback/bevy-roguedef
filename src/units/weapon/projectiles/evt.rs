@@ -5,6 +5,7 @@ use brg_scene::prelude::{AssetSound, AssetSpell};
 use crate::units::cmp_team::ETeam;
 
 #[derive(Event)]
+#[allow(unused)]
 pub struct EvtProjectileCollided {
     pub caster_entity:     Entity,
     pub projectile_entity: Entity,

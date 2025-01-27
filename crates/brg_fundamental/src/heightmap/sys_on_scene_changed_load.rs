@@ -1,5 +1,5 @@
-use bevy::prelude::{error, info, Assets, EventWriter, Events, Res, ResMut};
-use brg_core::prelude::{Area, Block, T_LIB_CONT_SIZE_SQ};
+use bevy::prelude::{error, info, Assets, Res, ResMut};
+use brg_core::prelude::T_LIB_CONT_SIZE_SQ;
 use brg_scene::prelude::{AssetLevel, GameAssets};
 
 use super::dto_landscape::{Landscape, LandscapeArea, LandscapeChunk};

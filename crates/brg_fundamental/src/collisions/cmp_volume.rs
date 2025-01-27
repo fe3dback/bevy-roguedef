@@ -1,5 +1,4 @@
-use bevy::math::bounding::BoundingVolume;
-use bevy::prelude::{Component, Isometry2d, Reflect};
+use bevy::prelude::{Component, Reflect};
 use brg_core::prelude::types::Meter;
 
 #[derive(Component, Copy, Clone, Reflect)]

@@ -1,20 +1,5 @@
-use bevy::prelude::{
-    warn,
-    Assets,
-    Camera,
-    Camera3d,
-    GlobalTransform,
-    InfinitePlane3d,
-    MeshRayCast,
-    Query,
-    RayCastSettings,
-    Res,
-    ResMut,
-    Vec3,
-    Window,
-    With,
-};
-use brg_core::prelude::{Area, V2, V3};
+use bevy::prelude::{warn, ResMut};
+use brg_core::prelude::V2;
 
 use crate::prelude::{CoordsArea, ResCoords, SupRayCastMesh};
 

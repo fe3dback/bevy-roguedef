@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use super::vec2::V2;
-use crate::prelude::{Chunk, T_LIB_CONT_ROW_LEN, T_LIB_CONT_SIZE_SQ};
+use crate::prelude::{T_LIB_CONT_ROW_LEN, T_LIB_CONT_SIZE_SQ};
 
 pub fn weighted_fill(key_points: HashMap<V2, f32>, offset: V2) -> [f32; T_LIB_CONT_SIZE_SQ] {
     let mut result = [0.0; T_LIB_CONT_SIZE_SQ];
@@ -49,8 +49,10 @@ pub fn weighted_fill(key_points: HashMap<V2, f32>, offset: V2) -> [f32; T_LIB_CO
     result
 }
 
+#[allow(unused_imports)]
 mod tests {
     use super::*;
+    use crate::prelude::Chunk;
 
     #[test]
     fn weighted_fill_test() {

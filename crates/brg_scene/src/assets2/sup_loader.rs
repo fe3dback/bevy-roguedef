@@ -4,14 +4,13 @@ use anyhow::{bail, Result};
 use bevy::asset::LoadState;
 use bevy::ecs::system::SystemParam;
 use bevy::prelude::{info, warn, Asset, AssetServer, EventWriter, NextState, Res, ResMut};
-use brg_core::prelude::IdCategory;
+use brg_core::prelude::{Id, IdCategory};
 
 use super::assets_mgas::AssetMGA;
 use super::assets_mgas_doodads::AssetMGADoodad;
 use super::dto_status::{DtoLoadingStatus, ELoadingStage};
 use super::evt_on_load::EvtOnLoad;
 use super::res_loading_state::ResLoadingState;
-use super::res_storage::ResAssetsStorage;
 use super::sup_assets::SupAssets;
 use crate::prelude::GameState;
 
@@ -19,7 +18,6 @@ use crate::prelude::GameState;
 pub struct SupAssetLoader<'w> {
     assets:         SupAssets<'w>,
     server:         Res<'w, AssetServer>,
-    storage:        ResMut<'w, ResAssetsStorage>,
     state:          ResMut<'w, ResLoadingState>,
     on_load_writer: EventWriter<'w, EvtOnLoad>,
     next_state:     ResMut<'w, NextState<GameState>>,
@@ -124,12 +122,50 @@ impl<'w> SupAssetLoader<'w> {
         false
     }
 
-    fn validate(&mut self) -> Result<()> {
-        bail!("not valid at all!")
-        // todo:
-        // for asset in self.assets.all::<AssetMGADoodad>(IdCategory::Doodads) {
-        //     assert_eq!(asset.category.category(), IdCategory::DoodadsCategory);
-        // }
+    fn validate(&self) -> Result<()> {
+        for asset in self.assets.all::<AssetMGADoodad>(IdCategory::Doodads) {
+            self.validate_have_asset_by_id(asset.id, asset.category)?;
+            self.validate_id_must_have_category(
+                asset.id,
+                asset.category,
+                IdCategory::DoodadsCategory,
+            )?;
+        }
+
+        Ok(())
+    }
+
+    fn validate_id_must_have_category(
+        &self,
+        asset_id: Id,
+        dep_id: Id,
+        expected: IdCategory,
+    ) -> Result<()> {
+        if dep_id.category() == expected {
+            return Ok(());
+        }
+
+        bail!(
+            "asset id '{}' have field '{}' that must have category '{}' ({}), but actual is - '{}' ({})",
+            asset_id,
+            dep_id,
+            expected,
+            expected.to_char().unwrap_or('_'),
+            dep_id.category(),
+            dep_id.category().to_char().unwrap_or('_'),
+        )
+    }
+
+    fn validate_have_asset_by_id(&self, asset_id: Id, dep_id: Id) -> Result<()> {
+        if !self.assets.has(dep_id) {
+            bail!(
+                "asset id '{}' have dependency on '{}', but this asset is not known",
+                asset_id,
+                dep_id
+            )
+        }
+
+        Ok(())
     }
 
     fn load_mgas(&mut self) -> Result<()> {

@@ -5,4 +5,20 @@
 # Mold is up to 5× (five times!) faster than LLD, but with a few caveats like limited platform support and occasional stability issues.
 [target.x86_64-unknown-linux-gnu]
 linker = "clang"
-rustflags = ["-C", "link-arg=-fuse-ld=/usr/bin/mold"]
+rustflags = [
+    "-C",
+    # fast unstable linker
+    "link-arg=-fuse-ld=mold",
+    # (Nightly) Make the current crate share its generic instantiations
+    "-Zshare-generics=y",
+    "-Zthreads=0",
+]
+
+[unstable]
+codegen-backend = true
+
+[profile.dev]
+codegen-backend = "cranelift"
+
+[profile.dev.package."*"]
+codegen-backend = "llvm"

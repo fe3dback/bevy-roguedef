@@ -10,7 +10,7 @@ pub fn has_feature(feature: SceneFeature) -> impl Condition<()> {
 
 pub fn has_feature_in_app(app: &mut App, feature: SceneFeature) -> bool {
     app.world_mut()
-        .resource_scope(|w, scene: Mut<SceneType>| -> bool {
+        .resource_scope(|_, scene: Mut<SceneType>| -> bool {
             has_feature_in_scene(scene.as_ref(), &feature)
         })
 }

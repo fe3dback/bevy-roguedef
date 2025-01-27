@@ -1,6 +1,6 @@
-use bevy::prelude::{warn, Assets, Commands, Entity, EventReader, Query, Res, StateScoped};
+use bevy::prelude::{warn, Assets, Entity, EventReader, Query, Res};
 use brg_fundamental::prelude::CmpTransform2D;
-use brg_scene::prelude::{AssetWeapon, Loaded};
+use brg_scene::prelude::AssetWeapon;
 
 use crate::prefabs::prelude::ProjectileSettings;
 use crate::prefabs::sup_prefabs::SupPrefabs;

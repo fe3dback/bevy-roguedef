@@ -1,4 +1,4 @@
-use bevy::prelude::{Asset, Image, TypePath};
+use bevy::prelude::{Asset, TypePath};
 use ron_asset_manager::prelude::RonAsset;
 use ron_asset_manager::Shandle;
 use serde::Deserialize;

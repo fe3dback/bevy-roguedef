@@ -7,7 +7,7 @@ use crate::units::weapon::evt_shot::EvtWeaponShot;
 
 pub fn on_reload(
     mut consumer: EventReader<EvtWeaponReload>,
-    owner_query: Query<(&CmpTransform2D)>,
+    owner_query: Query<&CmpTransform2D>,
     weapons: Res<Assets<AssetWeapon>>,
     mut sounds: SupSound,
 ) {
@@ -30,7 +30,7 @@ pub fn on_reload(
 
 pub fn on_shot(
     mut consumer: EventReader<EvtWeaponShot>,
-    owner_query: Query<(&CmpTransform2D)>,
+    owner_query: Query<&CmpTransform2D>,
     weapons: Res<Assets<AssetWeapon>>,
     mut sounds: SupSound,
 ) {

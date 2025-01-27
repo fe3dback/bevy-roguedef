@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use bevy::prelude::{warn, Asset, Assets, Entity, EventWriter, Query, Res, Time};
+use bevy::prelude::{warn, Assets, Entity, EventWriter, Query, Res, Time};
 use brg_scene::prelude::AssetWeapon;
 
 use crate::units::weapon::cmp_weapon::CmpWeaponHolder;

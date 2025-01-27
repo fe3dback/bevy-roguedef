@@ -1,9 +1,9 @@
 use bevy::ecs::system::SystemState;
-use bevy::prelude::{error, info, Res, World};
+use bevy::prelude::{error, Res, World};
 
 use super::res_state::ResEditorCommandState;
 
-pub fn sys_execute_commands(w: &mut World, params: &mut SystemState<(Res<ResEditorCommandState>)>) {
+pub fn sys_execute_commands(w: &mut World, params: &mut SystemState<Res<ResEditorCommandState>>) {
     let state = params.get(w);
     let unsafe_world = w.as_unsafe_world_cell_readonly();
 
