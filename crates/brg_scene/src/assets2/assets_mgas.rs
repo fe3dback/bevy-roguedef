@@ -7,7 +7,7 @@ use brg_core::prelude::Id;
 use super::assets_mgas_doodads::AssetMGADoodad;
 
 #[derive(Asset, TypePath)]
-pub struct AssetMGA(HashMap<Id, AssetMGAInstance>);
+pub struct AssetMGA(pub HashMap<Id, AssetMGAInstance>);
 
 #[derive(Default)]
 pub struct AssetMGAInstance {

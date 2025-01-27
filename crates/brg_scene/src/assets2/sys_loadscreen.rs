@@ -102,7 +102,6 @@ pub fn sys_check_loading_status(
     mut q_text: Query<&mut Text, With<CmpLoadingText>>,
     mut q_error: Query<&mut Text, (With<CmpErrorText>, Without<CmpLoadingText>)>,
     mut q_progress_bar: Query<(&mut Node, &mut BackgroundColor), With<CmpLoadingProgressBar>>,
-    mut next_state: ResMut<NextState<GameState>>,
 ) {
     let status = s.update_loading_status();
 
@@ -141,13 +140,6 @@ pub fn sys_check_loading_status(
             if status.cnt_failed > 0 {
                 bg.0 = ROSE_600.into();
             }
-        }
-    }
-
-    // exit from loading screen when is done
-    {
-        if status.cnt_loaded >= status.cnt_total {
-            next_state.set(GameState::Loaded { game_paused: false });
         }
     }
 }

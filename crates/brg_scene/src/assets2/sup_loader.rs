@@ -1,20 +1,28 @@
 use std::path::{Path, PathBuf};
 
-use anyhow::Result;
+use anyhow::{bail, Result};
 use bevy::asset::LoadState;
 use bevy::ecs::system::SystemParam;
-use bevy::prelude::{info, warn, Asset, AssetServer, Res, ResMut};
+use bevy::prelude::{info, warn, Asset, AssetServer, EventWriter, NextState, Res, ResMut};
+use brg_core::prelude::IdCategory;
 
 use super::assets_mgas::AssetMGA;
-use super::dto_status::DtoLoadingStatus;
+use super::assets_mgas_doodads::AssetMGADoodad;
+use super::dto_status::{DtoLoadingStatus, ELoadingStage};
+use super::evt_on_load::EvtOnLoad;
 use super::res_loading_state::ResLoadingState;
-use super::res_storage::{ELoadingStage, ResAssetsStorage};
+use super::res_storage::ResAssetsStorage;
+use super::sup_assets::SupAssets;
+use crate::prelude::GameState;
 
 #[derive(SystemParam)]
 pub struct SupAssetLoader<'w> {
-    server:  Res<'w, AssetServer>,
-    storage: ResMut<'w, ResAssetsStorage>,
-    state:   ResMut<'w, ResLoadingState>,
+    assets:         SupAssets<'w>,
+    server:         Res<'w, AssetServer>,
+    storage:        ResMut<'w, ResAssetsStorage>,
+    state:          ResMut<'w, ResLoadingState>,
+    on_load_writer: EventWriter<'w, EvtOnLoad>,
+    next_state:     ResMut<'w, NextState<GameState>>,
 }
 
 impl<'w> SupAssetLoader<'w> {
@@ -29,10 +37,36 @@ impl<'w> SupAssetLoader<'w> {
     }
 
     pub fn update_loading_status(&mut self) -> DtoLoadingStatus {
-        if self.state.status.stage != ELoadingStage::Loading {
-            return self.state.status.clone();
+        match self.state.status.stage {
+            ELoadingStage::CalculateAssetsToLoad => {}
+            ELoadingStage::Loading => match self.load_until_done() {
+                true => self.state.status.stage = ELoadingStage::Validation,
+                false => {}
+            },
+            ELoadingStage::Validation => {
+                info!("[ASSET] validating assets..");
+                match self.validate() {
+                    Ok(_) => self.state.status.stage = ELoadingStage::Ready,
+                    Err(e) => {
+                        self.state.status.last_info_error = Some(format!("{:#}", e));
+                        self.state.status.stage = ELoadingStage::NotValid;
+                    }
+                }
+            }
+            ELoadingStage::NotValid => {}
+            ELoadingStage::Ready => {
+                info!("[ASSET] ALL ASSETS LOADED SUCCESSFULLY!");
+                self.next_state
+                    .set(GameState::Loaded { game_paused: false });
+                self.state.status.stage = ELoadingStage::Completed;
+            }
+            ELoadingStage::Completed => {}
         }
 
+        self.state.status.clone()
+    }
+
+    fn load_until_done(&mut self) -> bool {
         let handles = self.state.loading_handles.clone();
         self.state.loading_handles.clear();
 
@@ -45,6 +79,8 @@ impl<'w> SupAssetLoader<'w> {
 
             match status {
                 LoadState::Loaded => {
+                    self.on_load_writer.send(EvtOnLoad { handle: h.clone() });
+
                     self.state.status.cnt_loaded += 1;
                     if Some(h) == self.state.status.last_info_handle {
                         self.state.status.last_info_handle = None;
@@ -77,11 +113,23 @@ impl<'w> SupAssetLoader<'w> {
             self.state.loading_handles.push(h);
         }
 
-        if self.state.status.cnt_total == self.state.status.cnt_loaded {
-            self.state.status.stage = ELoadingStage::Ready;
+        // check state
+        let all_loaded = self.state.status.cnt_total == self.state.status.cnt_loaded;
+        let all_ready = self.state.status.cnt_total == self.state.status.cnt_ready;
+
+        if all_loaded && all_ready {
+            return true;
         }
 
-        self.state.status.clone()
+        false
+    }
+
+    fn validate(&mut self) -> Result<()> {
+        bail!("not valid at all!")
+        // todo:
+        // for asset in self.assets.all::<AssetMGADoodad>(IdCategory::Doodads) {
+        //     assert_eq!(asset.category.category(), IdCategory::DoodadsCategory);
+        // }
     }
 
     fn load_mgas(&mut self) -> Result<()> {
