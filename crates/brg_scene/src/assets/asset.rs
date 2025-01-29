@@ -4,7 +4,7 @@ use bevy_asset_loader::prelude::AssetCollection;
 
 use super::asset_creatures::AssetCreature;
 use super::asset_doodad::AssetDoodad;
-use super::asset_level::AssetLevel;
+use crate::assets2::asset_level::AssetLevel;
 
 #[derive(AssetCollection, Resource)]
 pub struct GameAssets {

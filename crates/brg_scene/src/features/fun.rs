@@ -32,7 +32,7 @@ pub fn has_feature_in_scene(scene: &SceneType, feature: &SceneFeature) -> bool {
             SceneFeature::Editor => true,
             SceneFeature::EditorGizmos => true,
             SceneFeature::WorldEnvLight => true,
-            SceneFeature::WorldLandscape => false,
+            SceneFeature::WorldLandscape => true,
             SceneFeature::ExampleCubes => false,
             SceneFeature::Units => false,
         },

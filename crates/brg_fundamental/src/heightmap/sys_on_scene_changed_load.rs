@@ -1,16 +1,16 @@
 use bevy::prelude::{error, info, Assets, Res, ResMut};
 use brg_core::prelude::T_LIB_CONT_SIZE_SQ;
-use brg_scene::prelude::{AssetLevel, GameAssets};
+use brg_scene::prelude::{AssetLevel, SupAssets};
 
 use super::dto_landscape::{Landscape, LandscapeArea, LandscapeChunk};
 use super::res::ResLandscape;
 
 pub fn sys_on_scene_changed_load_level(
     mut res: ResMut<ResLandscape>,
-    game: Res<GameAssets>,
+    assets: SupAssets,
     levels: Res<Assets<AssetLevel>>,
 ) {
-    let data = levels.get(&game.level);
+    let data = levels.get(&assets.level());
     if data.is_none() {
         error!("cant find level asset to load");
         return;

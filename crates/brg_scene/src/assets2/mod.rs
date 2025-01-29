@@ -1,3 +1,4 @@
+pub mod asset_level;
 mod assets_mgas;
 mod assets_mgas_doodads;
 mod cmp;
@@ -12,6 +13,7 @@ mod sys_loadscreen;
 mod sys_on_load;
 
 pub mod prelude {
-    pub use super::assets_mgas_doodads::*;
+    pub use super::asset_level::AssetLevel;
+    pub use super::assets_mgas_doodads::{AssetMGADoodad, AssetMGADoodadCategory};
     pub use super::sup_assets::SupAssets;
 }

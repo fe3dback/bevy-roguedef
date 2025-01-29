@@ -3,12 +3,15 @@ use bevy::utils::hashbrown::HashMap;
 use brg_core::prelude::{Id, IdCategory};
 use strum::{EnumCount, IntoEnumIterator};
 
+use super::asset_level::AssetLevel;
 use super::assets_mgas::AssetMGA;
 
 #[derive(Resource)]
 pub struct ResAssetsStorage {
-    pub assets_mga_by_id:       HashMap<Id, Handle<AssetMGA>>,
-    pub assets_mga_by_category: HashMap<IdCategory, Vec<Id>>,
+    pub level: Handle<AssetLevel>,
+
+    pub(super) assets_mga_by_id:       HashMap<Id, Handle<AssetMGA>>,
+    pub(super) assets_mga_by_category: HashMap<IdCategory, Vec<Id>>,
 }
 
 impl Default for ResAssetsStorage {
@@ -21,6 +24,7 @@ impl Default for ResAssetsStorage {
         }
 
         Self {
+            level:                  Default::default(),
             assets_mga_by_id:       HashMap::with_capacity(512),
             assets_mga_by_category: mga_by_category,
         }

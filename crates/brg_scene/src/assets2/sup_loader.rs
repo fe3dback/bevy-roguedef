@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{bail, Result};
 use bevy::asset::LoadState;
 use bevy::ecs::system::SystemParam;
-use bevy::prelude::{info, warn, Asset, AssetServer, EventWriter, NextState, Res, ResMut};
+use bevy::prelude::{info, warn, Asset, AssetServer, EventWriter, Handle, NextState, Res, ResMut};
 use brg_core::prelude::{Id, IdCategory};
 
 use super::assets_mgas::AssetMGA;
@@ -12,6 +12,7 @@ use super::dto_status::{DtoLoadingStatus, ELoadingStage};
 use super::evt_on_load::EvtOnLoad;
 use super::res_loading_state::ResLoadingState;
 use super::sup_assets::SupAssets;
+use super::asset_level::AssetLevel;
 use crate::prelude::GameState;
 
 #[derive(SystemParam)]
@@ -28,6 +29,9 @@ impl<'w> SupAssetLoader<'w> {
         // collect assets info
         info!("[ASSET] start assets loading");
         self.load_mgas()?;
+
+        // load level
+        self.assets.storage.level = self.load::<AssetLevel>("maps/example/x.land.bin".into());
 
         // start loading
         self.state.status.stage = ELoadingStage::Loading;
@@ -177,16 +181,18 @@ impl<'w> SupAssetLoader<'w> {
         Ok(())
     }
 
-    fn load<T: Asset>(&mut self, path: PathBuf) {
+    fn load<T: Asset>(&mut self, path: PathBuf) -> Handle<T> {
         let mut path = path;
         if path.starts_with("assets/") {
             path = path.strip_prefix("assets/").unwrap().into();
         }
 
         info!("[ASSET] - loading '{}'..", path.display());
-        let h = self.server.load::<T>(path).untyped();
-        self.state.loading_handles.push(h);
+        let h = self.server.load::<T>(path);
+        self.state.loading_handles.push(h.clone().untyped());
         self.state.status.cnt_total += 1;
+
+        h
     }
 
     fn find_paths<P: AsRef<Path>>(dir: P, required_ext: &str) -> Result<Vec<PathBuf>> {

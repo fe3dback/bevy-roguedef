@@ -1,18 +1,23 @@
 use bevy::asset::Assets;
 use bevy::ecs::system::SystemParam;
-use bevy::prelude::{error, Res};
+use bevy::prelude::{error, Handle, Res, ResMut};
 use brg_core::prelude::Id;
 
 use super::assets_mgas::{AssetMGA, MgaTypedData};
 use super::res_storage::ResAssetsStorage;
+use super::asset_level::AssetLevel;
 
 #[derive(SystemParam)]
 pub struct SupAssets<'w> {
-    storage:    Res<'w, ResAssetsStorage>,
-    assets_mga: Res<'w, Assets<AssetMGA>>,
+    pub(super) storage:    ResMut<'w, ResAssetsStorage>,
+    pub(super) assets_mga: Res<'w, Assets<AssetMGA>>,
 }
 
 impl<'w> SupAssets<'w> {
+    pub fn level(&self) -> Handle<AssetLevel> {
+        self.storage.level.clone()
+    }
+
     pub fn get<T: MgaTypedData, R: AsRef<Id>>(&self, id: R) -> Option<&T> {
         let id = id.as_ref();
 

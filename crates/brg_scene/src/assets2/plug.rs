@@ -1,6 +1,7 @@
 use bevy::app::App;
 use bevy::prelude::{in_state, AssetApp, IntoSystemConfigs, OnEnter, Plugin, Update};
 
+use super::asset_level::{AssetLevel, AssetLevelLoader};
 use super::assets_mgas::loader::AssetMGALoader;
 use super::assets_mgas::AssetMGA;
 use super::evt_on_load::EvtOnLoad;
@@ -16,6 +17,8 @@ impl Plugin for Plug {
     fn build(&self, app: &mut App) {
         app
             //
+            .register_asset_loader(AssetLevelLoader)
+            .init_asset::<AssetLevel>()
             .init_asset::<AssetMGA>()
             .init_asset_loader::<AssetMGALoader>()
             .insert_resource(ResAssetsStorage::default())
