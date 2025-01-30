@@ -1,0 +1,4 @@
+(
+    format: R8G8B8_SRGB,
+    mip_maps: WithoutMipMaps,
+)

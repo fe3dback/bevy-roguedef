@@ -10,7 +10,7 @@ pub fn sys_on_scene_changed_load_level(
     assets: SupAssets,
     levels: Res<Assets<AssetLevel>>,
 ) {
-    let data = levels.get(&assets.level());
+    let data = levels.get(&assets.landscape().level);
     if data.is_none() {
         error!("cant find level asset to load");
         return;

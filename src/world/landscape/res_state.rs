@@ -1,17 +1,18 @@
-use bevy::prelude::{Entity, Handle, Mesh, Resource, StandardMaterial};
+use bevy::prelude::{Entity, Handle, Mesh, Resource};
 use bevy::utils::hashbrown::HashMap;
 use brg_core::prelude::Chunk;
 use strum::{EnumCount, IntoEnumIterator};
 
 use super::dto::MeshIdent;
 use super::enum_lod_level::EChunkLodLevel;
+use super::material::TerrainMaterial;
 
 #[derive(Resource)]
 pub(crate) struct ResLandscapeState {
     pub(super) terrain:          Option<Entity>,
     pub(super) loaded_chunks:    HashMap<EChunkLodLevel, HashMap<Chunk, Entity>>,
     pub(super) meshes:           HashMap<MeshIdent, Handle<Mesh>>,
-    pub(super) terrain_material: Option<Handle<StandardMaterial>>,
+    pub(super) terrain_material: Option<Handle<TerrainMaterial>>,
 }
 
 impl Default for ResLandscapeState {

@@ -3,6 +3,7 @@ pub mod cmp_actor_initiator;
 mod dto;
 mod enum_lod_level;
 mod evt_actor_move_in_chunk;
+mod material;
 pub mod plug;
 mod res_actor_tracker;
 mod res_state;

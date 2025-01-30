@@ -5,6 +5,7 @@ use bevy::prelude::{Res, ResMut};
 use brg_core::prelude::consts::TERRAIN_HEIGHT;
 use brg_core::prelude::types::NormalizedF32;
 use brg_core::prelude::{
+    Area,
     Block,
     BlockChild,
     BlockParent,
@@ -27,6 +28,13 @@ pub struct SupHeightmap<'w> {
 }
 
 impl<'w> SupHeightmap<'w> {
+    pub fn world_size(&self) -> V2 {
+        V2::new(
+            self.landscape.width as f32 * Area::size_m().x,
+            self.landscape.height as f32 * Area::size_m().y,
+        )
+    }
+
     fn height_at(&mut self, tile: Tile) -> NormalizedF32 {
         let h = self.cache.tiles.get(&tile);
 

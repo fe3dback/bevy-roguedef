@@ -1,8 +1,9 @@
 use bevy::app::{App, Plugin};
-use bevy::prelude::{IntoSystemConfigs, OnEnter, OnExit, Update};
+use bevy::prelude::{IntoSystemConfigs, MaterialPlugin, OnEnter, OnExit, Update};
 use brg_scene::prelude::{has_feature_in_app, GameSystemSet, Loaded, SceneFeature};
 
 use super::evt_actor_move_in_chunk::EvtActorMoveInChunk;
+use super::material::TerrainMaterial;
 use super::res_actor_tracker::ResActorTracker;
 use super::res_state::ResLandscapeState;
 use super::sys_actor_tracker::{
@@ -30,6 +31,8 @@ impl Plugin for Plug {
 
         if has_feature_in_app(app, SceneFeature::WorldLandscape) {
             app
+                //
+                .add_plugins(MaterialPlugin::<TerrainMaterial>::default())
                 //
                 .add_systems(OnEnter(Loaded), sys_spawn_terrain_root.in_set(GameSystemSet::SpawnWorldTerrain))
                 .add_systems(Update, (

@@ -1,11 +1,10 @@
 use bevy::asset::Assets;
 use bevy::ecs::system::SystemParam;
-use bevy::prelude::{error, Handle, Res, ResMut};
+use bevy::prelude::{error, Res, ResMut};
 use brg_core::prelude::Id;
 
 use super::assets_mgas::{AssetMGA, MgaTypedData};
-use super::res_storage::ResAssetsStorage;
-use super::asset_level::AssetLevel;
+use super::res_storage::{Landscape, ResAssetsStorage};
 
 #[derive(SystemParam)]
 pub struct SupAssets<'w> {
@@ -14,8 +13,8 @@ pub struct SupAssets<'w> {
 }
 
 impl<'w> SupAssets<'w> {
-    pub fn level(&self) -> Handle<AssetLevel> {
-        self.storage.level.clone()
+    pub fn landscape(&self) -> &Landscape {
+        &self.storage.landscape
     }
 
     pub fn get<T: MgaTypedData, R: AsRef<Id>>(&self, id: R) -> Option<&T> {

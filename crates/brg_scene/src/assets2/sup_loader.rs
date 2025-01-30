@@ -3,16 +3,27 @@ use std::path::{Path, PathBuf};
 use anyhow::{bail, Result};
 use bevy::asset::LoadState;
 use bevy::ecs::system::SystemParam;
-use bevy::prelude::{info, warn, Asset, AssetServer, EventWriter, Handle, NextState, Res, ResMut};
-use brg_core::prelude::{Id, IdCategory};
+use bevy::prelude::{
+    info,
+    warn,
+    Asset,
+    AssetServer,
+    EventWriter,
+    Handle,
+    Image,
+    NextState,
+    Res,
+    ResMut,
+};
+use brg_core::prelude::{find_files_with_ext_recursive, Id, IdCategory};
 
+use super::asset_level::AssetLevel;
 use super::assets_mgas::AssetMGA;
 use super::assets_mgas_doodads::AssetMGADoodad;
 use super::dto_status::{DtoLoadingStatus, ELoadingStage};
 use super::evt_on_load::EvtOnLoad;
 use super::res_loading_state::ResLoadingState;
 use super::sup_assets::SupAssets;
-use super::asset_level::AssetLevel;
 use crate::prelude::GameState;
 
 #[derive(SystemParam)]
@@ -30,8 +41,15 @@ impl<'w> SupAssetLoader<'w> {
         info!("[ASSET] start assets loading");
         self.load_mgas()?;
 
-        // load level
-        self.assets.storage.level = self.load::<AssetLevel>("maps/example/x.land.bin".into());
+        // load landscape
+        self.assets.storage.landscape.level =
+            self.load::<AssetLevel>("maps/example/x.land.bin".into());
+
+        self.assets.storage.landscape.texture_world_albedo =
+            self.load::<Image>("maps/example/albedo.ktx2".into());
+
+        self.assets.storage.landscape.texture_ground_grass =
+            self.load::<Image>("textures/ground/grass.ktx2".into());
 
         // start loading
         self.state.status.stage = ELoadingStage::Loading;
@@ -173,7 +191,7 @@ impl<'w> SupAssetLoader<'w> {
     }
 
     fn load_mgas(&mut self) -> Result<()> {
-        let paths = Self::find_paths("assets", "mga.ron")?;
+        let paths = find_files_with_ext_recursive("assets", "mga.ron")?;
         for path in paths {
             self.load::<AssetMGA>(path);
         }
@@ -193,36 +211,5 @@ impl<'w> SupAssetLoader<'w> {
         self.state.status.cnt_total += 1;
 
         h
-    }
-
-    fn find_paths<P: AsRef<Path>>(dir: P, required_ext: &str) -> Result<Vec<PathBuf>> {
-        let mut buff: Vec<PathBuf> = Vec::with_capacity(32);
-
-        let content = std::fs::read_dir(dir)?;
-        for entry in content {
-            let Ok(entry) = entry else {
-                continue;
-            };
-
-            let Ok(entry_type) = entry.file_type() else {
-                continue;
-            };
-
-            if entry_type.is_dir() {
-                let child_buff = Self::find_paths(&entry.path(), required_ext)?;
-                buff.extend(child_buff);
-
-                continue;
-            }
-
-            let path = entry.path();
-            if !path.to_string_lossy().ends_with(required_ext) {
-                continue;
-            }
-
-            buff.push(path);
-        }
-
-        Ok(buff)
     }
 }

@@ -1,11 +1,11 @@
 use bevy::asset::RenderAssetUsages;
-use bevy::color::palettes::tailwind::AMBER_900;
-use bevy::prelude::{default, Handle, Mesh, StandardMaterial, Vec3};
+use bevy::prelude::{Handle, Mesh, Vec3};
 use bevy::render::mesh::{Indices, PrimitiveTopology, VertexAttributeValues};
 use brg_core::prelude::{BlockPosition, Chunk, V2};
 
 use super::dto::MeshIdent;
 use super::enum_lod_level::EChunkLodLevel;
+use super::material::TerrainMaterial;
 use super::sup::SupLandscape;
 
 impl<'w, 's> SupLandscape<'w, 's> {
@@ -14,12 +14,11 @@ impl<'w, 's> SupLandscape<'w, 's> {
             return;
         }
 
-        self.state.terrain_material = Some(self.materials.add(StandardMaterial {
-            base_color: AMBER_900.into(),
-            unlit: false,
-
-            ..default()
-        }));
+        self.state.terrain_material = Some(self.materials.add(TerrainMaterial::new(
+            self.heightmap.world_size(),
+            self.assets.landscape().texture_world_albedo.clone(),
+            self.assets.landscape().texture_ground_grass.clone(),
+        )));
     }
 
     pub(super) fn create_mesh(&mut self, chunk: Chunk, lod: EChunkLodLevel) -> Handle<Mesh> {
@@ -51,7 +50,7 @@ impl<'w, 's> SupLandscape<'w, 's> {
                 let abs_pos = chunk.position_tl() + rel_pos;
 
                 // local pos
-                let abs_height = self.hm.height_at_pos(abs_pos);
+                let abs_height = self.heightmap.height_at_pos(abs_pos);
                 positions.push([rel_pos.x, abs_height, rel_pos.y]);
 
                 // uvs
@@ -61,16 +60,16 @@ impl<'w, 's> SupLandscape<'w, 's> {
                 ]);
 
                 // normals
-                let ntl = self.hm.height_at_pos(abs_pos + V2::new(-1.0, -1.0));
-                let nt = self.hm.height_at_pos(abs_pos + V2::new(0.0, -1.0));
-                let ntr = self.hm.height_at_pos(abs_pos + V2::new(1.0, -1.0));
+                let ntl = self.heightmap.height_at_pos(abs_pos + V2::new(-1.0, -1.0));
+                let nt = self.heightmap.height_at_pos(abs_pos + V2::new(0.0, -1.0));
+                let ntr = self.heightmap.height_at_pos(abs_pos + V2::new(1.0, -1.0));
 
-                let nl = self.hm.height_at_pos(abs_pos + V2::new(-1.0, 0.0));
-                let nr = self.hm.height_at_pos(abs_pos + V2::new(1.0, 0.0));
+                let nl = self.heightmap.height_at_pos(abs_pos + V2::new(-1.0, 0.0));
+                let nr = self.heightmap.height_at_pos(abs_pos + V2::new(1.0, 0.0));
 
-                let nbl = self.hm.height_at_pos(abs_pos + V2::new(-1.0, 1.0));
-                let nb = self.hm.height_at_pos(abs_pos + V2::new(0.0, 1.0));
-                let nbr = self.hm.height_at_pos(abs_pos + V2::new(1.0, 1.0));
+                let nbl = self.heightmap.height_at_pos(abs_pos + V2::new(-1.0, 1.0));
+                let nb = self.heightmap.height_at_pos(abs_pos + V2::new(0.0, 1.0));
+                let nbr = self.heightmap.height_at_pos(abs_pos + V2::new(1.0, 1.0));
 
                 let norm_x = (ntr + 2.0 * nr + nbr) - (ntl + 2.0 * nl + nbl);
                 let norm_y = (nbl + 2.0 * nb + nbr) - (ntl + 2.0 * nt + ntr);

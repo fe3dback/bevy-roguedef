@@ -9,8 +9,9 @@ use std::time::Duration;
 use bevy::app::*;
 use bevy::audio::{AudioPlugin, SpatialScale, Volume};
 use bevy::color::palettes::basic::WHITE;
+use bevy::image::{ImageAddressMode, ImageFilterMode, ImageSamplerDescriptor};
 use bevy::pbr::wireframe::{WireframeConfig, WireframePlugin};
-use bevy::prelude::{AssetPlugin, ClearColor, Color, GlobalVolume, Window, WindowPlugin};
+use bevy::prelude::{ClearColor, Color, GlobalVolume, ImagePlugin, Window, WindowPlugin};
 use bevy::render::settings::{RenderCreation, WgpuFeatures, WgpuSettings};
 use bevy::render::RenderPlugin;
 use bevy::utils::default;
@@ -22,6 +23,17 @@ fn main() {
         // std old_plugins
         .add_plugins(
             DefaultPlugins
+                .set(ImagePlugin {
+                    default_sampler: ImageSamplerDescriptor {
+                        min_filter: ImageFilterMode::Linear,
+                        mag_filter: ImageFilterMode::Linear,
+                        mipmap_filter: ImageFilterMode::Linear,
+                        address_mode_u: ImageAddressMode::Repeat,
+                        address_mode_v: ImageAddressMode::Repeat,
+                        address_mode_w: ImageAddressMode::Repeat,
+                        ..default()
+                    },
+                })
                 .set(WindowPlugin {
                     primary_window: Some(Window {
                         name: Some(String::from("bevy roguedef")),
@@ -41,10 +53,6 @@ fn main() {
                         features: WgpuFeatures::POLYGON_MODE_LINE,
                         ..default()
                     }),
-                    ..default()
-                })
-                .set(AssetPlugin {
-                    watch_for_changes_override: Some(true), // only in dev
                     ..default()
                 }),
         )
