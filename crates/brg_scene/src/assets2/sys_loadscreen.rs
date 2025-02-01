@@ -2,6 +2,7 @@ use bevy::color::palettes::tailwind::{LIME_300, ROSE_600};
 use bevy::prelude::*;
 
 use super::cmp::{CmpErrorText, CmpLoadingProgressBar, CmpLoadingText};
+use super::dto_status::ELoadingStage;
 use super::sup_loader::SupAssetLoader;
 use crate::prelude::GameState;
 
@@ -99,7 +100,7 @@ pub fn sys_load_assets(mut s: SupAssetLoader) {
 
 pub fn sys_check_loading_status(
     mut s: SupAssetLoader,
-    mut q_text: Query<&mut Text, With<CmpLoadingText>>,
+    mut q_text: Query<(&mut Text, &mut TextColor), With<CmpLoadingText>>,
     mut q_error: Query<&mut Text, (With<CmpErrorText>, Without<CmpLoadingText>)>,
     mut q_progress_bar: Query<(&mut Node, &mut BackgroundColor), With<CmpLoadingProgressBar>>,
 ) {
@@ -107,9 +108,20 @@ pub fn sys_check_loading_status(
 
     // update text with current loading asset
     {
-        for mut text in &mut q_text {
-            if text.0 != status.last_info_title {
-                text.0 = format!("Loading ({})", status.last_info_title);
+        for (mut text, mut color) in &mut q_text {
+            let label: String = match status.stage {
+                ELoadingStage::Completed | ELoadingStage::Ready => String::from("loaded!"),
+                ELoadingStage::Validation => String::from("validation.."),
+                ELoadingStage::NotValid => String::from("invalid assets"),
+                _ => format!("Loading ({})", status.last_info_title),
+            };
+
+            if text.0 != label {
+                text.0 = label;
+            }
+
+            if status.stage == ELoadingStage::Completed {
+                color.0 = LIME_300.into();
             }
         }
     }
@@ -133,7 +145,7 @@ pub fn sys_check_loading_status(
         for (mut node, mut bg) in &mut q_progress_bar {
             node.width = Val::Percent(percent * 100.0);
 
-            if status.cnt_loaded == status.cnt_total {
+            if status.stage == ELoadingStage::Completed {
                 bg.0 = LIME_300.into();
             }
 
