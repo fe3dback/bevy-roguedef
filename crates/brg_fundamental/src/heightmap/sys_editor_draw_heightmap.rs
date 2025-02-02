@@ -1,15 +1,48 @@
-use bevy::color::palettes::tailwind::{RED_900, SKY_300};
+use bevy::color::palettes::tailwind::{BLUE_900, GREEN_900, ORANGE_800, RED_900, SKY_300};
 use bevy::color::Color;
-use bevy::prelude::{Mix, Query, With};
-use brg_core::prelude::consts::TERRAIN_HEIGHT;
+use bevy::prelude::{Mix, Query, Res, With};
 use brg_core::prelude::{BlockPosition, Range, Tile, VecExt, V2};
 
+use super::res::ResLandscape;
 use crate::prelude::{CmpMarkerCameraTarget, CmpTransform2D, GizmosX};
 
 pub fn editor_draw_heightmap_around_player(
     mut gz: GizmosX,
     cam_target_query: Query<&CmpTransform2D, With<CmpMarkerCameraTarget>>,
+    land: Res<ResLandscape>,
 ) {
+    let half_w = land.width as f32 / 2.0 + 1.0;
+    let half_h = land.height as f32 / 2.0 + 1.0;
+    let z = land.volume as f32;
+
+    let tl = V2::new(-half_w, -half_h);
+    let tr = V2::new(half_w, -half_h);
+    let bl = V2::new(-half_w, half_h);
+    let br = V2::new(half_w, half_h);
+
+    // draw bounding box
+    {
+        // lower
+        gz.line(tl, tr, RED_900);
+        gz.line(tr, br, ORANGE_800);
+        gz.line(br, bl, BLUE_900);
+        gz.line(bl, tl, GREEN_900);
+
+        // upper
+        gz.line_custom_height(tl.with_height(z), tr.with_height(z), RED_900);
+        gz.line_custom_height(tr.with_height(z), br.with_height(z), ORANGE_800);
+        gz.line_custom_height(br.with_height(z), bl.with_height(z), BLUE_900);
+        gz.line_custom_height(bl.with_height(z), tl.with_height(z), GREEN_900);
+
+        // bottom to up lines
+        gz.line_custom_height(tl.with_height(0.0), tl.with_height(z), RED_900);
+        gz.line_custom_height(tr.with_height(0.0), tr.with_height(z), ORANGE_800);
+        gz.line_custom_height(br.with_height(0.0), br.with_height(z), BLUE_900);
+        gz.line_custom_height(bl.with_height(0.0), bl.with_height(z), GREEN_900);
+    }
+
+    // draw height points
+
     let targets_avg_pos = {
         let mut sum_x = 0.0;
         let mut sum_y = 0.0;
@@ -42,7 +75,7 @@ pub fn editor_draw_heightmap_around_player(
     let color_high = SKY_300;
 
     for tile in &range {
-        let height_percent = gz.heightmap.height_at_pos(tile.position_tl()) / TERRAIN_HEIGHT;
+        let height_percent = gz.heightmap.height_at_pos(tile.position_tl()) / land.volume as f32;
         let height_color = Color::mix(&color_low.into(), &color_high.into(), height_percent);
 
         gz.point_custom_height(tile.position_tl().with_height(0.05), height_color);

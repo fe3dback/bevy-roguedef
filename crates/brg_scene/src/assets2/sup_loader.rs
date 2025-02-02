@@ -43,7 +43,7 @@ impl<'w> SupAssetLoader<'w> {
 
         // load landscape
         self.assets.storage.landscape.level =
-            self.load::<AssetLevel>("maps/example/x.land.bin".into());
+            self.load::<AssetLevel>("maps/example/lay0.heightmap.r8".into());
 
         self.assets.storage.landscape.texture_world_albedo =
             self.load::<Image>("maps/example/albedo.ktx2".into());

@@ -3,11 +3,12 @@ use bevy::asset::io::Reader;
 use bevy::asset::{Asset, AssetLoader, LoadContext};
 use bevy::prelude::TypePath;
 
-use crate::prelude::LevelData;
-
 #[derive(Asset, TypePath)]
 pub struct AssetLevel {
-    pub level: LevelData,
+    pub level:  Vec<u8>,
+    pub width:  u32,
+    pub height: u32,
+    pub name:   String,
 }
 
 pub struct AssetLevelLoader;
@@ -21,17 +22,28 @@ impl AssetLoader for AssetLevelLoader {
         &self,
         reader: &mut dyn Reader,
         _settings: &Self::Settings,
-        _: &mut LoadContext<'_>,
+        ctx: &mut LoadContext<'_>,
     ) -> Result<Self::Asset, Self::Error> {
         let mut bytes = Vec::new();
         reader.read_to_end(&mut bytes).await?;
 
+        let width = bytes.len().isqrt() as u32;
+        let height = width;
+        let name = ctx
+            .path()
+            .parent()
+            .map(|path| path.to_string_lossy().to_string())
+            .unwrap_or(String::new());
+
         Ok(AssetLevel {
-            level: LevelData::decode(bytes)?,
+            level: bytes,
+            width,
+            height,
+            name,
         })
     }
 
     fn extensions(&self) -> &[&str] {
-        &["land.bin"]
+        &["heightmap.r8"]
     }
 }

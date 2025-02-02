@@ -7,8 +7,8 @@ use super::sup::SupLandscape;
 
 impl<'w, 's> SupLandscape<'w, 's> {
     pub(super) fn ensure_chunks_is_loaded_around_actors(&mut self, actors: Vec<V2>) {
-        let half_width = 14;
-        let half_height = 14;
+        let half_width = 32;
+        let half_height = 32;
         let total_width = half_width * 2 + 1;
         let total_height = half_height * 2 + 1;
         let size = total_width * total_height;

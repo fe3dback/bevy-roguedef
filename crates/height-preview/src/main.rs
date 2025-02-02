@@ -4,8 +4,7 @@ use std::io::BufWriter;
 use std::path::Path;
 
 use anyhow::{Context, Result};
-use brg_core::prelude::{Area, BlockChild, Chunk, Tile, T_LIB_CONT_SIZE_SQ};
-use brg_scene::prelude::LevelData;
+use brg_core::prelude::{Block, Tile};
 
 struct PixelBuffer {
     width:    u32,
@@ -18,22 +17,27 @@ pub fn main() -> Result<()> {
     let input_directory: &Path =
         Path::new("/home/neo/code/fe3dback/bevy-roguedef/assets/maps/example");
 
-    let file_content = fs::read(input_directory.join("x.land.bin")).context("reading file")?;
-    let data = LevelData::decode(file_content).context("decode bin")?;
+    let file_content =
+        fs::read(input_directory.join("lay0.heightmap.r8")).context("reading file")?;
+    let size = file_content.len() as u32;
+    let width = size.isqrt();
+    let height = width;
 
     // create image
-    let png_width = data.width() * Area::size() as u32 * Chunk::size() as u32;
-    let png_height = data.height() * Area::size() as u32 * Chunk::size() as u32;
-    let mut pixels_buffer = PixelBuffer::new(png_width, png_height, 3);
+    let mut pixels_buffer = PixelBuffer::new(width, height, 3);
 
     // copy to pixel buffer
-    let count = data.width() * data.height();
-    for ind in 0..count {
-        let area = data.area_by_index(ind as usize);
+    let count = width * height;
+    let mut tx = 0;
+    let mut ty = 0;
+    for ind in 0..count as usize {
+        let tile = Tile::at(tx, ty);
+        pixels_buffer.write_at(tile, (file_content[ind] as f32) / 255.0);
 
-        for chunk in &area.child_range() {
-            let chunk_heights = data.landscape_chunk_heights(chunk);
-            pixels_buffer.write_chunk(chunk, &chunk_heights);
+        tx += 1;
+        if tx >= width as i32 {
+            tx = 0;
+            ty += 1;
         }
     }
 
@@ -42,7 +46,7 @@ pub fn main() -> Result<()> {
         .context("creating preview png file")?;
     let png_buff = &mut BufWriter::new(png_file);
 
-    let mut encoder = png::Encoder::new(png_buff, png_width, png_height);
+    let mut encoder = png::Encoder::new(png_buff, width, height);
     encoder.set_color(png::ColorType::Rgb);
     encoder.set_depth(png::BitDepth::Eight);
 
@@ -70,12 +74,6 @@ impl PixelBuffer {
             height,
             channels,
             buffer: buff,
-        }
-    }
-
-    pub fn write_chunk(&mut self, c: Chunk, heights: &[f32; T_LIB_CONT_SIZE_SQ]) {
-        for (ind, tile) in c.child_range().into_iter().enumerate() {
-            self.write_at(tile, heights[ind]);
         }
     }
 

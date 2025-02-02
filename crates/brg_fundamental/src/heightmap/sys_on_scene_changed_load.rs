@@ -1,8 +1,8 @@
 use bevy::prelude::{error, info, Assets, Res, ResMut};
-use brg_core::prelude::T_LIB_CONT_SIZE_SQ;
+use brg_core::prelude::consts::TERRAIN_HEIGHT;
+use brg_core::prelude::{Block, Tile};
 use brg_scene::prelude::{AssetLevel, SupAssets};
 
-use super::dto_landscape::{Landscape, LandscapeArea, LandscapeChunk};
 use super::res::ResLandscape;
 
 pub fn sys_on_scene_changed_load_level(
@@ -18,45 +18,15 @@ pub fn sys_on_scene_changed_load_level(
 
     let data = data.unwrap();
 
-    // copy data to local res
-    let (width, height) = (data.level.width(), data.level.height());
-
-    let mut land = Landscape {
-        width,
-        height,
-        areas: Vec::with_capacity((width * height) as usize),
-    };
-
-    for area in &data.level.landscape().areas {
-        land.areas.push(LandscapeArea {
-            heights:    area.heights,
-            has_chunks: area.has_chunks,
-            chunks:     match area.has_chunks {
-                false => vec![],
-                true => {
-                    let mut chunks = Vec::with_capacity(T_LIB_CONT_SIZE_SQ);
-                    for chunk in &area.chunks {
-                        chunks.push(LandscapeChunk {
-                            heights: chunk.heights,
-                        });
-                    }
-
-                    chunks
-                }
-            },
-        });
-    }
-
-    // set
-    res.width = width;
-    res.height = height;
-    res.landscape = land;
+    res.width = data.width;
+    res.height = data.height;
+    res.volume = TERRAIN_HEIGHT as u32;
+    res.offset = Tile::at(res.width as i32 / 2, res.height as i32 / 2);
+    res.values = data.level.clone();
 
     // notify
     info!(
-        "level {} loaded with [{}x{}] areas - successfully!",
-        data.level.name(),
-        width,
-        height
+        "level loaded with [{}x{}] meters - successfully!",
+        res.width, res.height
     );
 }

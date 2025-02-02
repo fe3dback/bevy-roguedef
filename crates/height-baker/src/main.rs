@@ -4,18 +4,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 use anyhow::{bail, Context, Result};
-use binary_rw::{BinaryWriter, Endian, MemoryStream, SeekStream};
-use brg_core::prelude::{
-    remap,
-    Area,
-    Block,
-    BlockChild,
-    Chunk,
-    Tile,
-    T_LIB_CONT_ROW_LEN,
-    T_LIB_CONT_SIZE_SQ,
-};
-use brg_scene::prelude::{AreaHeights, LevelData, LevelDataLandscapeArea, LevelDataLandscapeChunk};
+use brg_core::prelude::{remap, Block, Chunk, Tile};
 use exr::prelude::{FlatSamples, IntegerBounds};
 
 #[derive(Debug)]
@@ -27,14 +16,10 @@ pub struct Importer {
     input_min_value:  f32, // min pixel grayscale value (aka height/saturation) of all exr pixels
     input_max_value:  f32, // max pixel grayscale value (aka height/saturation) of all exr pixels
 
-    areas_width:         u32, // how many areas in map by width
-    areas_height:        u32, // how many areas in map by height
-    chunks_width:        u32, // how many chunks in map by width
-    chunks_height:       u32, // how many chunks in map by height
-    unreal_verts_width:  u32, // how many vertices in map for unreal engine
-    unreal_verts_height: u32, // how many vertices in map for unreal engine
-    scale_factor_x:      f32, // how many tiles will be mapped to single exr pixel by x
-    scale_factor_y:      f32, // how many tiles will be mapped to single exr pixel bv y
+    width:          u32, // export width
+    height:         u32, // export height
+    scale_factor_x: f32, // how many tiles will be mapped to single exr pixel by x
+    scale_factor_y: f32, // how many tiles will be mapped to single exr pixel bv y
 }
 
 pub enum MapSize {
@@ -51,18 +36,9 @@ impl MapSize {
             MapSize::S4096 => 4096,
         }
     }
-
-    /// see: https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-technical-guide-in-unreal-engine
-    pub fn unreal_units(&self) -> u32 {
-        match self {
-            MapSize::S1024 => 1009,
-            MapSize::S2048 => 2017,
-            MapSize::S4096 => 4033,
-        }
-    }
 }
 
-const MAP_SIZE: MapSize = MapSize::S2048;
+const MAP_SIZE: MapSize = MapSize::S1024;
 const MAP_NAME: &str = "example";
 
 fn main() -> Result<()> {
@@ -81,122 +57,26 @@ fn main() -> Result<()> {
     println!("[LOADED] settings: {:?}", importer);
 
     // build areas
-    let mut level_bevy = LevelData::new(
-        MAP_NAME.to_string(),
-        importer.areas_width,
-        importer.areas_height,
-    );
-    let mut level_unreal: Vec<f32> =
-        vec![0.0; (importer.unreal_verts_width * importer.unreal_verts_height) as usize];
+    let mut data: Vec<u8> = vec![0; (importer.width * importer.height) as usize];
 
-    for abs_area_y in 0..importer.areas_height as i32 {
-        for abs_area_x in 0..importer.areas_width as i32 {
-            let area = Area::at(abs_area_x, abs_area_y);
+    let mut ind: usize = 0;
+    for y in 0..importer.height {
+        for x in 0..importer.width {
+            let tile = Tile::at(x as i32, y as i32);
+            let height = importer.sample(tile);
 
-            let mut area_has_chunks = false;
-            let mut area_heights = AreaHeights::default();
-            let mut area_chunks: Vec<LevelDataLandscapeChunk> =
-                Vec::with_capacity(T_LIB_CONT_SIZE_SQ);
-
-            for chunk in &area.child_range() {
-                // calculate chunk heights
-                {
-                    let mut heights = [0.0; T_LIB_CONT_SIZE_SQ];
-
-                    for (ind, tile) in chunk.child_range().into_iter().enumerate() {
-                        let is_outside_of_unreal = tile.x as u32 >= importer.unreal_verts_width
-                            || tile.y as u32 >= importer.unreal_verts_height;
-
-                        let height = match is_outside_of_unreal {
-                            true => 0.0,
-                            false => importer.sample(tile),
-                        };
-
-                        heights[ind] = height;
-
-                        if !is_outside_of_unreal {
-                            level_unreal[importer.calculate_unreal_index(tile)] = height;
-                        }
-                    }
-
-                    area_chunks.push(LevelDataLandscapeChunk::new(heights));
-                }
-
-                // update area importance
-                {
-                    if chunk_in_center_percent_range(
-                        chunk,
-                        70.0,
-                        importer.chunks_width,
-                        importer.chunks_height,
-                    ) {
-                        area_has_chunks = true;
-                    }
-
-                    // todo: for big maps we not need all data?
-                    area_has_chunks = true;
-                }
-
-                // update area key points
-                {
-                    if area.child_elem_center() == chunk {
-                        area_heights.0 = importer.sample(chunk.child_elem_center());
-                    }
-                    if area.child_elem_tl() == chunk {
-                        area_heights.1[0] = importer.sample(chunk.child_elem_tl());
-                    }
-                    if area.child_elem_tr() == chunk {
-                        area_heights.1[1] = importer.sample(chunk.child_elem_tr());
-                    }
-                    if area.child_elem_bl() == chunk {
-                        area_heights.1[2] = importer.sample(chunk.child_elem_bl());
-                    }
-                    if area.child_elem_br() == chunk {
-                        area_heights.1[3] = importer.sample(chunk.child_elem_br());
-                    }
-                }
-            }
-
-            let area_data = match area_has_chunks {
-                true => LevelDataLandscapeArea::new_with_chunks(
-                    area_heights,
-                    area_chunks.try_into().unwrap(),
-                ),
-                false => LevelDataLandscapeArea::new_without_chunks(area_heights),
-            };
-
-            level_bevy.landscape_add_area(area, area_data);
+            data[ind] = (height * 255.0) as u8;
+            ind += 1;
         }
     }
 
     // write data to bevy output
     {
-        let out_path = out_directory.join("x.land.bin");
+        let out_path = out_directory.join("lay0.heightmap.r8");
         fs::create_dir_all(&out_path.parent().unwrap()).context("creating map directories")?;
 
         let mut file = File::create(out_path).context("failed create area file")?;
-        let file_content = level_bevy.encode().context("failed serialize level data")?;
-        file.write_all(&file_content).context("writing bytes")?;
-    }
-
-    // write data to unreal output
-    {
-        let out_path = out_directory.join("x.land-unreal.r16");
-        fs::create_dir_all(&out_path.parent().unwrap()).context("creating map directories")?;
-
-        let mut buff = MemoryStream::new();
-        let mut data = BinaryWriter::new(&mut buff, Endian::Little);
-
-        for h in level_unreal {
-            let h = (h * 65535.0) as u16;
-            data.write_u16(h)?;
-        }
-
-        let mut file = File::create(out_path).context("failed create area file")?;
-        let bytes: Vec<u8> = buff.into();
-        println!("[unreal] write bytes {} to r16 file", bytes.len());
-
-        file.write_all(&bytes).context("writing bytes")?;
+        file.write_all(&data).context("writing bytes")?;
     }
 
     Ok(())
@@ -232,12 +112,6 @@ fn new_importer(in_bounds: IntegerBounds, samples: FlatSamples) -> Importer {
 
     let (input_min_value, input_max_value) = Importer::find_min_max_height(&samples);
 
-    let areas_width = (map_width_m as f32 / Area::size_m().x).floor() as u32;
-    let areas_height = (map_height_m as f32 / Area::size_m().y).floor() as u32;
-
-    let chunks_width = areas_width * T_LIB_CONT_ROW_LEN as u32;
-    let chunks_height = areas_height * T_LIB_CONT_ROW_LEN as u32;
-
     let scale = want_size.bevy_units() as f32 / input_size.bevy_units() as f32;
 
     Importer {
@@ -248,12 +122,8 @@ fn new_importer(in_bounds: IntegerBounds, samples: FlatSamples) -> Importer {
         input_min_value,
         input_max_value,
 
-        areas_width,
-        areas_height,
-        chunks_width,
-        chunks_height,
-        unreal_verts_width: want_size.unreal_units(),
-        unreal_verts_height: want_size.unreal_units(),
+        width: map_width_m,
+        height: map_height_m,
         scale_factor_x: scale,
         scale_factor_y: scale,
     }
@@ -306,15 +176,6 @@ impl Importer {
         let sample_y = (tile.y as f32 / self.scale_factor_y as f32).floor() as u32;
 
         let pixel_index = (sample_y * self.input_exr_width + sample_x) as usize;
-        pixel_index
-    }
-
-    #[inline(always)]
-    fn calculate_unreal_index(&self, tile: Tile) -> usize {
-        let sample_x = (tile.x as f32).floor() as u32;
-        let sample_y = (tile.y as f32).floor() as u32;
-
-        let pixel_index = (sample_y * self.unreal_verts_width + sample_x) as usize;
         pixel_index
     }
 
