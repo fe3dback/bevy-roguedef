@@ -1,107 +1,89 @@
-use bevy::utils::hashbrown::{HashMap, HashSet};
-use brg_core::prelude::{BlockPosition, Chunk, Range, VecExt, V2};
-use strum::{EnumCount, IntoEnumIterator};
+use bevy::utils::hashbrown::HashSet;
+use brg_core::prelude::V2;
 
-use super::enum_lod_level::EChunkLodLevel;
+use super::dto::MeshIdent;
+use super::lod_quadtree::LodQuadLeaf;
 use super::sup::SupLandscape;
 
 impl<'w, 's> SupLandscape<'w, 's> {
-    pub(super) fn ensure_chunks_is_loaded_around_actors(&mut self, actors: Vec<V2>) {
-        let half_width = 32;
-        let half_height = 32;
-        let total_width = half_width * 2 + 1;
-        let total_height = half_height * 2 + 1;
-        let size = total_width * total_height;
+    pub(super) fn ensure_chunks_is_loaded_around_actors(&mut self, point_of_interest: V2) {
+        // update indexes
+        let prev_quad = self.state.lod_quad_tree.leafs();
+        self.update_load_quadtree(point_of_interest);
+        let next_quad = self.state.lod_quad_tree.leafs();
 
-        let mut staged_chunks: HashMap<EChunkLodLevel, HashSet<Chunk>> =
-            HashMap::with_capacity(EChunkLodLevel::COUNT);
-        let mut should_be_loaded: HashMap<EChunkLodLevel, HashSet<Chunk>> =
-            HashMap::with_capacity(EChunkLodLevel::COUNT);
-        let mut should_be_unloaded: HashMap<EChunkLodLevel, HashSet<Chunk>> =
-            HashMap::with_capacity(EChunkLodLevel::COUNT);
+        // find changes
+        let (created, deleted) = self.diff_between_quads(prev_quad, next_quad);
 
-        for lod in EChunkLodLevel::iter() {
-            staged_chunks.insert(lod, HashSet::with_capacity(size));
-            should_be_loaded.insert(lod, HashSet::with_capacity(size / 3));
-            should_be_unloaded.insert(lod, HashSet::with_capacity(size / 3));
+        // check no need to do anything
+        if created.is_empty() && deleted.is_empty() {
+            return;
         }
 
-        let mut selected_chunks: HashSet<Chunk> = HashSet::with_capacity(actors.len() * size);
-
-        // calculate chunks that should be active
+        // delete blocks
         {
-            for pos in &actors {
-                let chunk = pos.chunk();
-                let me_and_neighbors = Range::<Chunk>::new(
-                    chunk.x - half_width as i32,
-                    chunk.y - half_height as i32,
-                    chunk.x + half_width as i32,
-                    chunk.y + half_height as i32,
+            for block in deleted {
+                self.despawn_chunk(MeshIdent {
+                    pos:   block.position,
+                    size:  block.size,
+                    depth: block.depth,
+                });
+            }
+        }
+
+        // spawn blocks
+        {
+            for block in created {
+                self.spawn_chunk(
+                    MeshIdent {
+                        pos:   block.position,
+                        size:  block.size,
+                        depth: block.depth,
+                    },
+                    block.transitions(),
                 );
-
-                for neighbor in &me_and_neighbors {
-                    selected_chunks.insert(neighbor);
-                }
             }
         }
+    }
 
-        // split active chunks by lod levels and stage to loading
+    // should return list of
+    // - blocks that created since prev
+    // - blocks that deleted since prev
+    pub(super) fn diff_between_quads(
+        &self,
+        prev: Vec<LodQuadLeaf>,
+        next: Vec<LodQuadLeaf>,
+    ) -> (Vec<LodQuadLeaf>, Vec<LodQuadLeaf>) {
+        let mut prev_set: HashSet<LodQuadLeaf> = HashSet::with_capacity(prev.len());
+        let mut next_set: HashSet<LodQuadLeaf> = HashSet::with_capacity(next.len());
+
         {
-            for chunk in selected_chunks {
-                let mut min_dist = 4096.0;
+            for e in prev {
+                prev_set.insert(e);
+            }
 
-                for pos in &actors {
-                    let dist = pos.distance(chunk.position_center());
-                    if dist < min_dist {
-                        min_dist = dist;
-                    }
-                }
-
-                let lod = if min_dist <= (Chunk::size() * 4) as f32 {
-                    EChunkLodLevel::LOD0
-                } else {
-                    EChunkLodLevel::LOD1
-                };
-
-                staged_chunks.get_mut(&lod).unwrap().insert(chunk);
+            for e in next {
+                next_set.insert(e);
             }
         }
 
-        // calculate chunks that not in whitelist
+        let mut created: Vec<LodQuadLeaf> = Vec::with_capacity(32);
+        let mut deleted: Vec<LodQuadLeaf> = Vec::with_capacity(32);
+
         {
-            for (lod, already_loaded) in &self.state.loaded_chunks {
-                for chunk in already_loaded.keys() {
-                    if staged_chunks.get(lod).unwrap().contains(chunk) {
-                        continue;
-                    }
-
-                    should_be_unloaded.get_mut(lod).unwrap().insert(*chunk);
+            for e in &next_set {
+                if !prev_set.contains(e) {
+                    created.push(*e);
                 }
             }
 
-            for (lod, staged) in &staged_chunks {
-                for chunk in staged {
-                    if self.state.is_chunk_loaded(*chunk, *lod) {
-                        continue;
-                    }
-
-                    should_be_loaded.get_mut(lod).unwrap().insert(*chunk);
+            for e in &prev_set {
+                if !next_set.contains(e) {
+                    deleted.push(*e);
                 }
             }
         }
 
-        // unload not required chunks
-        for (lod, chunks) in &should_be_unloaded {
-            for chunk in chunks {
-                self.despawn_chunk(*lod, *chunk);
-            }
-        }
-
-        // load required chunks
-        for (lod, chunks) in &should_be_loaded {
-            for chunk in chunks {
-                self.spawn_chunk(*lod, *chunk);
-            }
-        }
+        (created, deleted)
     }
 }

@@ -1,9 +1,8 @@
-use brg_core::prelude::Chunk;
+use brg_core::prelude::V2;
 
-use super::enum_lod_level::EChunkLodLevel;
-
-#[derive(Hash, PartialEq, Eq)]
+#[derive(Hash, PartialEq, Eq, Debug, Copy, Clone)]
 pub struct MeshIdent {
-    pub chunk: Chunk,
-    pub lod:   EChunkLodLevel,
+    pub pos:   V2,
+    pub size:  V2,
+    pub depth: u8,
 }

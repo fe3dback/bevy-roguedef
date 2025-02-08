@@ -3,6 +3,9 @@ use brg_core::prelude::V2;
 
 use crate::prelude::{CoordsArea, ResCoords, SupRayCastMesh};
 
+// todo: update active camera
+// todo: save raycast of frustum origin to res
+
 pub fn update_world_coords(mut data: ResMut<ResCoords>, mut cast: SupRayCastMesh) {
     let Some(viewport_rect) = cast.viewport() else {
         warn!("can`t get camera viewport rect");

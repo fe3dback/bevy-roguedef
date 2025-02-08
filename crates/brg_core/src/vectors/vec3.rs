@@ -55,6 +55,16 @@ impl V3 {
             y: self.h,
         }
     }
+
+    // --- simple math
+
+    pub fn mid_point(&self, other: V3) -> V3 {
+        V3::new(
+            (other.x - self.x) / 2.0 + self.x,
+            (other.y - self.y) / 2.0 + self.y,
+            (other.h - self.h) / 2.0 + self.h,
+        )
+    }
 }
 
 impl Default for V3 {

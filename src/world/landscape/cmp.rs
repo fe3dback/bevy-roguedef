@@ -1,7 +1,6 @@
 use bevy::prelude::Component;
-use brg_core::prelude::Chunk;
 
-use super::enum_lod_level::EChunkLodLevel;
+use super::dto::MeshIdent;
 
 #[derive(Component)]
 pub struct CmpLandscapeRoot;
@@ -9,6 +8,5 @@ pub struct CmpLandscapeRoot;
 #[derive(Component)]
 #[allow(unused)]
 pub struct CmpLandscapeChild {
-    pub chunk: Chunk,
-    pub lod:   EChunkLodLevel,
+    pub ident: MeshIdent,
 }

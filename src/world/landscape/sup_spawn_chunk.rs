@@ -8,12 +8,14 @@ use bevy::prelude::{
     MeshMaterial3d,
     Visibility,
 };
-use brg_core::prelude::{BlockPosition, Chunk};
+use brg_core::prelude::V2;
 use brg_fundamental::prelude::{CmpTransform2D, TransformHeightKind};
 
 use super::cmp::{CmpLandscapeChild, CmpLandscapeRoot};
-use super::enum_lod_level::EChunkLodLevel;
+use super::dto::MeshIdent;
+use super::lod_quadtree::LodQuadTree;
 use super::sup::SupLandscape;
+use super::sup_mesh::NeighbourSizeTransition;
 
 impl<'w, 's> SupLandscape<'w, 's> {
     pub(super) fn spawn_terrain(&mut self) {
@@ -41,12 +43,19 @@ impl<'w, 's> SupLandscape<'w, 's> {
         }
     }
 
-    pub(super) fn spawn_chunk(&mut self, lod: EChunkLodLevel, chunk: Chunk) {
+    pub(super) fn update_load_quadtree(&mut self, point_of_interest: V2) {
+        let size = self.heightmap.world_size();
+
+        self.state.lod_quad_tree =
+            LodQuadTree::new(V2::ZERO - (size / 2.0), size, point_of_interest);
+    }
+
+    pub(super) fn spawn_chunk(&mut self, ident: MeshIdent, transition: NeighbourSizeTransition) {
         let terrain_id = self.state.terrain;
         if terrain_id.is_none() {
             warn!(
-                "cannot spawn landscape chunk {}, terrain root not exist",
-                chunk
+                "cannot spawn landscape block {:?}, terrain root not exist",
+                ident
             );
             return;
         }
@@ -55,11 +64,11 @@ impl<'w, 's> SupLandscape<'w, 's> {
 
         // create mesh
         self.ensure_terrain_material_exist();
-        let mesh = self.create_mesh(chunk, lod);
+        let mesh = self.create_mesh(ident, transition);
         let Some(material) = self.state.terrain_material.clone() else {
             warn!(
-                "cannot spawn landscape chunk {}, terrain material not exist",
-                chunk
+                "cannot spawn landscape block {:?}, terrain material not exist",
+                ident
             );
 
             return;
@@ -70,16 +79,11 @@ impl<'w, 's> SupLandscape<'w, 's> {
             .cmd
             .spawn((
                 Name::from(format!(
-                    "[{}x{}] lod_{}",
-                    chunk.x,
-                    chunk.y,
-                    match lod {
-                        EChunkLodLevel::LOD0 => 0,
-                        EChunkLodLevel::LOD1 => 1,
-                    }
+                    "[{}x{}] s_{} {:?}",
+                    ident.pos.x, ident.pos.y, ident.size, ident.depth,
                 )),
                 CmpTransform2D {
-                    position: chunk.position_tl(),
+                    position: ident.pos,
                     height: 0.0,
                     height_kind: TransformHeightKind::Absolute,
                     ..default()
@@ -87,33 +91,21 @@ impl<'w, 's> SupLandscape<'w, 's> {
                 Visibility::Visible,
                 Mesh3d(mesh),
                 MeshMaterial3d(material.clone()),
-                CmpLandscapeChild { chunk, lod },
+                CmpLandscapeChild { ident },
             ))
             .id();
 
         // mark as loaded
         self.cmd.entity(terrain_id).add_child(ent);
-        self.state
-            .loaded_chunks
-            .get_mut(&lod)
-            .unwrap()
-            .insert(chunk, ent);
+        self.state.loaded.insert(ident, ent);
     }
 
-    pub(super) fn despawn_chunk(&mut self, lod: EChunkLodLevel, chunk: Chunk) {
-        let Some(loaded_chunks) = self.state.loaded_chunks.get(&lod) else {
-            return;
-        };
-
-        let Some(loaded_ent) = loaded_chunks.get(&chunk) else {
+    pub(super) fn despawn_chunk(&mut self, ident: MeshIdent) {
+        let Some(loaded_ent) = self.state.loaded.get(&ident) else {
             return;
         };
 
         self.cmd.entity(*loaded_ent).despawn_recursive();
-        self.state
-            .loaded_chunks
-            .get_mut(&lod)
-            .unwrap()
-            .remove(&chunk);
+        self.state.loaded.remove(&ident);
     }
 }

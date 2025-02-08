@@ -1,5 +1,4 @@
 use bevy::prelude::{Added, EventReader, Query, With};
-use brg_core::prelude::V2;
 use brg_fundamental::prelude::CmpTransform2D;
 
 use super::cmp_actor_initiator::CmpLandscapeLoadActorInitiator;
@@ -18,17 +17,9 @@ pub fn sys_spawn_initial_chunks(
     mut ls: SupLandscape,
     entities: Query<&CmpTransform2D, Added<CmpLandscapeLoadActorInitiator>>,
 ) {
-    if entities.is_empty() {
-        return;
+    if let Some(trm) = entities.iter().last() {
+        ls.ensure_chunks_is_loaded_around_actors(trm.position);
     }
-
-    let mut just_spawned_actors: Vec<V2> = Vec::with_capacity(4);
-
-    for trm in &entities {
-        just_spawned_actors.push(trm.position);
-    }
-
-    ls.ensure_chunks_is_loaded_around_actors(just_spawned_actors);
 }
 
 pub fn sys_spawn_chunks_on_actor_moves(
@@ -44,11 +35,7 @@ pub fn sys_spawn_chunks_on_actor_moves(
         return;
     }
 
-    let mut actors: Vec<V2> = Vec::with_capacity(4);
-
-    for trm in &entities {
-        actors.push(trm.position);
+    if let Some(trm) = entities.iter().last() {
+        ls.ensure_chunks_is_loaded_around_actors(trm.position);
     }
-
-    ls.ensure_chunks_is_loaded_around_actors(actors);
 }
