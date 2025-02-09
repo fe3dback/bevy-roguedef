@@ -116,12 +116,13 @@ impl Hash for LodQuadLeaf {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.position.hash(state);
         self.depth.hash(state);
+        self.size.hash(state);
     }
 }
 
 impl PartialEq<Self> for LodQuadLeaf {
     fn eq(&self, other: &Self) -> bool {
-        self.position == other.position && self.depth == other.depth
+        self.position == other.position && self.depth == other.depth && self.size == other.size
     }
 }
 

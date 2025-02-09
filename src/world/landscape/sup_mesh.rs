@@ -30,6 +30,11 @@ enum Corner {
     BottomRight,
 }
 
+enum FaceType {
+    Corner(Corner, u16, u16), // (corner_type, add_ind1, add_ind2)
+    Side(Side, u16),          // (side_type, add_ind)
+}
+
 impl<'w, 's> SupLandscape<'w, 's> {
     pub(super) fn ensure_terrain_material_exist(&mut self) {
         if self.state.terrain_material.is_some() {
@@ -123,12 +128,12 @@ impl<'w, 's> SupLandscape<'w, 's> {
             }
         };
 
-        let additional_vert_rel_pos = |side: Side, face_ind: u8| -> V2 {
+        let additional_vert_rel_pos = |side: Side, face_num_on_side: u8| -> V2 {
             let face_rel_pos = match side {
-                Side::Top => V2::new(face_ind as f32, 0.0),
-                Side::Bottom => V2::new(face_ind as f32, (Chunk::size() - 1) as f32),
-                Side::Left => V2::new(0.0, face_ind as f32),
-                Side::Right => V2::new((Chunk::size() - 1) as f32, face_ind as f32),
+                Side::Top => V2::new(face_num_on_side as f32, 0.0),
+                Side::Bottom => V2::new(face_num_on_side as f32, (Chunk::size() - 1) as f32),
+                Side::Left => V2::new(0.0, face_num_on_side as f32),
+                Side::Right => V2::new((Chunk::size() - 1) as f32, face_num_on_side as f32),
             } * scale;
 
             let rel_pos_inside_face = match side {
@@ -147,6 +152,19 @@ impl<'w, 's> SupLandscape<'w, 's> {
                 Side::Bottom => v_y == Chunk::size() - 1,
                 Side::Left => v_x == 0,
                 Side::Right => v_x == Chunk::size() - 1,
+            }
+        };
+
+        let corner_of = |side1: Side, side2: Side| -> Corner {
+            match (side1, side2) {
+                (Side::Top, Side::Left) | (Side::Left, Side::Top) => Corner::TopLeft,
+                (Side::Top, Side::Right) | (Side::Right, Side::Top) => Corner::TopRight,
+                (Side::Bottom, Side::Left) | (Side::Left, Side::Bottom) => Corner::BottomLeft,
+                (Side::Bottom, Side::Right) | (Side::Right, Side::Bottom) => Corner::BottomRight,
+                _ => panic!(
+                    "unexpected mesh sides {:?}, {:?} (should have shared corner)",
+                    side1, side2
+                ),
             }
         };
 
@@ -173,65 +191,89 @@ impl<'w, 's> SupLandscape<'w, 's> {
                     }
                 }
                 NeighbourSizeTransition::TwoSides(side1, side2) => {
-                    // corner info
-                    let corner = match (side1, side2) {
-                        (Side::Top, Side::Left) | (Side::Left, Side::Top) => Corner::TopLeft,
-                        (Side::Top, Side::Right) | (Side::Right, Side::Top) => Corner::TopRight,
-                        (Side::Bottom, Side::Left) | (Side::Left, Side::Bottom) => {
-                            Corner::BottomLeft
-                        }
-                        (Side::Bottom, Side::Right) | (Side::Right, Side::Bottom) => {
-                            Corner::BottomRight
-                        }
-                        _ => panic!(
-                            "unexpected mesh sides {:?}, {:?} (should have shared corner)",
-                            side1, side2
-                        ),
-                    };
+                    let corner = corner_of(side1, side2);
 
+                    // example for top right
+                    //   1 - corner index
+                    //   2 - corner face index
+                    //
+                    //       2    1
+                    //   *---*---*
+                    //   |   |   |
+                    //   *---*---*
+                    //   |   |   |
+                    //   *---*---*
+                    //
+                    // ex: for top left this indexes is same.
+
+                    let s = (Chunk::size() + 1);
                     let corner_idx = match corner {
                         Corner::TopLeft => 0,
-                        Corner::TopRight => Chunk::size() - 1,
-                        Corner::BottomRight => (Chunk::size() * Chunk::size()) - 1,
-                        Corner::BottomLeft => (Chunk::size() * Chunk::size()) - Chunk::size(),
+                        Corner::TopRight => Chunk::size(),
+                        Corner::BottomLeft => (s * s) - s,
+                        Corner::BottomRight => (s * s) - 1,
+                    };
+                    let corner_tl_idx = match corner {
+                        Corner::TopLeft => corner_idx,
+                        Corner::TopRight => corner_idx - 1,
+                        Corner::BottomLeft => corner_idx - s,
+                        Corner::BottomRight => corner_idx - s - 1,
                     };
 
-                    // side 1
+                    // sides
                     {
-                        for face in 0..Chunk::size() - 1 {
-                            if face == corner_idx {
-                                continue;
-                            }
+                        for side in [side1, side2] {
+                            for face_num_on_side in 0..Chunk::size() {
+                                let face_idx = match side {
+                                    Side::Left => (face_num_on_side * s) + 0,
+                                    Side::Right => (face_num_on_side * s) + (Chunk::size() - 1),
+                                    Side::Top => face_num_on_side,
+                                    Side::Bottom => face_num_on_side + (s * (Chunk::size() - 1)),
+                                };
+                                if face_idx == corner_tl_idx {
+                                    continue;
+                                }
 
-                            let rel_pos = additional_vert_rel_pos(side1, face as u8);
-                            let abs_pos = ident.pos + rel_pos;
-                            push_vert(rel_pos, abs_pos);
+                                let rel_pos = additional_vert_rel_pos(side, face_num_on_side as u8);
+                                let abs_pos = ident.pos + rel_pos;
+                                push_vert(rel_pos, abs_pos);
+                            }
                         }
                     }
 
-                    // side 2
+                    // corner (example: topLeft), have 2 additional vertices (V1, V2) and 4 triangles: A,B,C,D
+                    //
+                    //                  V2
+                    //
+                    //      @@@@@@@@@@@@@@@@@@@@@@@@@
+                    //      @            @          @
+                    //      @  @@        @@    A    @
+                    //      @    @    B    @        @
+                    //      @      @       @@       @
+                    //      @        @      @       @
+                    //      @    C     @      @     @
+                    // V1   @@@@         @    @     @
+                    //      @    @@        @    @   @
+                    //      @        @@      @  @@  @
+                    //      @            @@    @    @
+                    //      @    D           @@  @  @
+                    //      @                    @ @@
+                    //      @@@@@@@@@@@@@@@@@@@@@@@@@
                     {
-                        for face in 0..Chunk::size() - 1 {
-                            if face == corner_idx {
-                                continue;
-                            }
-
-                            let rel_pos = additional_vert_rel_pos(side2, face as u8);
-                            let abs_pos = ident.pos + rel_pos;
-                            push_vert(rel_pos, abs_pos);
-                        }
-                    }
-
-                    // corner
-                    {
-                        let (rel_pos1, rel_pos2) = match corner {
+                        let (face_rel_pos1, face_rel_pos2) = match corner {
                             Corner::TopLeft => (V2::new(0.0, 0.5), V2::new(0.5, 0.0)),
                             Corner::TopRight => (V2::new(1.0, 0.5), V2::new(0.5, 0.0)),
                             Corner::BottomLeft => (V2::new(0.0, 0.5), V2::new(0.5, 1.0)),
                             Corner::BottomRight => (V2::new(1.0, 0.5), V2::new(0.5, 1.0)),
                         };
 
-                        let (rel_pos1, rel_pos2) = (rel_pos1 * scale, rel_pos2 * scale);
+                        let (vx, vy) = (corner_tl_idx % s, corner_tl_idx / s);
+                        let face_pos = V2::new(vx as f32, vy as f32) * scale;
+
+                        let (rel_pos1, rel_pos2) = (
+                            face_pos + (face_rel_pos1 * scale),
+                            face_pos + (face_rel_pos2 * scale),
+                        );
                         let (abs_pos1, abs_pos2) = (ident.pos + rel_pos1, ident.pos + rel_pos2);
 
                         push_vert(rel_pos1, abs_pos1);
@@ -286,79 +328,163 @@ impl<'w, 's> SupLandscape<'w, 's> {
             let additional_idx_start_side_1: u16 =
                 ((Chunk::size() + 1) * (Chunk::size() + 1)) as u16;
 
-            let additional_idx_start_side_2 = additional_idx_start_side_1 + Chunk::size() as u16;
+            let additional_idx_start_side_2 =
+                additional_idx_start_side_1 + (Chunk::size() - 1) as u16;
+
+            let additional_idx_start_side_corner =
+                additional_idx_start_side_2 + (Chunk::size() - 1) as u16;
 
             let mut additional_idx_side1: u16 = 0;
             let mut additional_idx_side2: u16 = 0;
 
-            let mut populate_transition_indexes = |side, tl, tr, bl, br, mid| {
-                match side {
-                    Side::Top => {
-                        // triangle A
-                        indices.push(tl);
-                        indices.push(bl);
-                        indices.push(mid);
+            let mut populate_transition_indexes = |face, tl, tr, bl, br| {
+                match face {
+                    FaceType::Side(side, mid) => {
+                        match side {
+                            Side::Top => {
+                                // triangle A
+                                indices.push(tl);
+                                indices.push(bl);
+                                indices.push(mid);
 
-                        // triangle B
-                        indices.push(mid);
-                        indices.push(bl);
-                        indices.push(br);
+                                // triangle B
+                                indices.push(mid);
+                                indices.push(bl);
+                                indices.push(br);
 
-                        // triangle C
-                        indices.push(br);
-                        indices.push(tr);
-                        indices.push(mid);
+                                // triangle C
+                                indices.push(br);
+                                indices.push(tr);
+                                indices.push(mid);
+                            }
+
+                            Side::Bottom => {
+                                // triangle A
+                                indices.push(tl);
+                                indices.push(bl);
+                                indices.push(mid);
+
+                                // triangle B
+                                indices.push(mid);
+                                indices.push(tr);
+                                indices.push(tl);
+
+                                // triangle C
+                                indices.push(tr);
+                                indices.push(mid);
+                                indices.push(br);
+                            }
+
+                            Side::Left => {
+                                // triangle A
+                                indices.push(tr);
+                                indices.push(tl);
+                                indices.push(mid);
+
+                                // triangle B
+                                indices.push(mid);
+                                indices.push(br);
+                                indices.push(tr);
+
+                                // triangle C
+                                indices.push(mid);
+                                indices.push(bl);
+                                indices.push(br);
+                            }
+
+                            Side::Right => {
+                                // triangle A
+                                indices.push(tr);
+                                indices.push(tl);
+                                indices.push(mid);
+
+                                // triangle B
+                                indices.push(mid);
+                                indices.push(tl);
+                                indices.push(bl);
+
+                                // triangle C
+                                indices.push(bl);
+                                indices.push(br);
+                                indices.push(mid);
+                            }
+                        }
                     }
-
-                    Side::Bottom => {
-                        // triangle A
-                        indices.push(tl);
-                        indices.push(bl);
-                        indices.push(mid);
-
-                        // triangle B
-                        indices.push(mid);
-                        indices.push(tr);
-                        indices.push(tl);
-
-                        // triangle C
-                        indices.push(tr);
-                        indices.push(mid);
-                        indices.push(br);
-                    }
-
-                    Side::Left => {
-                        // triangle A
-                        indices.push(tr);
-                        indices.push(tl);
-                        indices.push(mid);
-
-                        // triangle B
-                        indices.push(mid);
-                        indices.push(br);
-                        indices.push(tr);
-
-                        // triangle C
-                        indices.push(mid);
-                        indices.push(bl);
-                        indices.push(br);
-                    }
-
-                    Side::Right => {
-                        // triangle A
-                        indices.push(tr);
-                        indices.push(tl);
-                        indices.push(mid);
-
-                        // triangle B
-                        indices.push(mid);
-                        indices.push(tl);
-                        indices.push(bl);
-
-                        // triangle C
-                        indices.push(bl);
-                        indices.push(br);
-                        indices.push(mid);
+                    FaceType::Corner(corner, crn1, crn2) => {
+                        match corner {
+                            Corner::TopLeft => {
+                                // triangle 1
+                                indices.push(br);
+                                indices.push(tr);
+                                indices.push(crn2);
+                                // triangle 2
+                                indices.push(br);
+                                indices.push(crn2);
+                                indices.push(tl);
+                                // triangle 3
+                                indices.push(br);
+                                indices.push(tl);
+                                indices.push(crn1);
+                                // triangle 4
+                                indices.push(br);
+                                indices.push(crn1);
+                                indices.push(bl);
+                            }
+                            Corner::TopRight => {
+                                // triangle 1
+                                indices.push(bl);
+                                indices.push(crn2);
+                                indices.push(tl);
+                                // triangle 2
+                                indices.push(bl);
+                                indices.push(tr);
+                                indices.push(crn2);
+                                // triangle 3
+                                indices.push(bl);
+                                indices.push(crn1);
+                                indices.push(tr);
+                                // triangle 4
+                                indices.push(bl);
+                                indices.push(br);
+                                indices.push(crn1);
+                            }
+                            Corner::BottomLeft => {
+                                // triangle 1
+                                indices.push(tr);
+                                indices.push(tl);
+                                indices.push(crn1);
+                                // triangle 2
+                                indices.push(tr);
+                                indices.push(crn1);
+                                indices.push(bl);
+                                // triangle 3
+                                indices.push(tr);
+                                indices.push(bl);
+                                indices.push(crn2);
+                                // triangle 4
+                                indices.push(tr);
+                                indices.push(crn2);
+                                indices.push(br);
+                            }
+                            Corner::BottomRight => {
+                                // triangle 1
+                                indices.push(tl);
+                                indices.push(crn1);
+                                indices.push(tr);
+                                // triangle 2
+                                indices.push(tl);
+                                indices.push(br);
+                                indices.push(crn1);
+                                // triangle 3
+                                indices.push(tl);
+                                indices.push(crn2);
+                                indices.push(br);
+                                // triangle 4
+                                indices.push(tl);
+                                indices.push(bl);
+                                indices.push(crn2);
+                            }
+                        }
                     }
                 }
             };
@@ -380,7 +506,13 @@ impl<'w, 's> SupLandscape<'w, 's> {
                     match transitions {
                         NeighbourSizeTransition::None => {}
                         NeighbourSizeTransition::OneSide(side) => {
-                            populate_transition_indexes(side, tl, tr, bl, br, mid_s1);
+                            populate_transition_indexes(
+                                FaceType::Side(side, mid_s1),
+                                tl,
+                                tr,
+                                bl,
+                                br,
+                            );
                             additional_idx_side1 += 1;
                         }
                         NeighbourSizeTransition::TwoSides(side1, side2) => {
@@ -388,12 +520,33 @@ impl<'w, 's> SupLandscape<'w, 's> {
                             let on_side2 = is_face_on_side(side2, v_x, v_y);
 
                             if on_side1 && on_side2 {
-                                // corner
+                                let crn_1 = additional_idx_start_side_corner;
+                                let crn_2 = additional_idx_start_side_corner + 1;
+                                let corner = corner_of(side1, side2);
+                                populate_transition_indexes(
+                                    FaceType::Corner(corner, crn_1, crn_2),
+                                    tl,
+                                    tr,
+                                    bl,
+                                    br,
+                                );
                             } else if on_side1 {
-                                populate_transition_indexes(side1, tl, tr, bl, br, mid_s1);
+                                populate_transition_indexes(
+                                    FaceType::Side(side1, mid_s1),
+                                    tl,
+                                    tr,
+                                    bl,
+                                    br,
+                                );
                                 additional_idx_side1 += 1;
                             } else if on_side2 {
-                                populate_transition_indexes(side2, tl, tr, bl, br, mid_s2);
+                                populate_transition_indexes(
+                                    FaceType::Side(side2, mid_s2),
+                                    tl,
+                                    tr,
+                                    bl,
+                                    br,
+                                );
                                 additional_idx_side2 += 1;
                             }
                         }
