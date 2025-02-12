@@ -56,7 +56,7 @@ impl<'w, 's> SupLandscape<'w, 's> {
         );
     }
 
-    pub(super) fn spawn_chunk(&mut self, ident: MeshIdent, transition: NeighbourSizeTransition) {
+    pub(super) fn spawn_chunk(&mut self, ident: MeshIdent) {
         let terrain_id = self.state.terrain;
         if terrain_id.is_none() {
             warn!(
@@ -70,7 +70,14 @@ impl<'w, 's> SupLandscape<'w, 's> {
 
         // create mesh
         self.ensure_terrain_material_exist();
-        let mesh = self.create_mesh(ident, transition);
+        let mesh = match self.state.created.get(&ident) {
+            Some(c) => c,
+            None => {
+                let c = self.create_mesh(ident);
+                self.state.created.insert(ident, c);
+                self.state.created.get(&ident).unwrap() // safe, because we insert it one line above
+            }
+        };
         let Some(material) = self.state.terrain_material.clone() else {
             warn!(
                 "cannot spawn landscape block {:?}, terrain material not exist",
@@ -102,7 +109,7 @@ impl<'w, 's> SupLandscape<'w, 's> {
                     ..default()
                 },
                 Visibility::Visible,
-                Mesh3d(mesh.handle),
+                Mesh3d(mesh.handle.clone()),
                 MeshMaterial3d(material.clone()),
                 CmpLandscapeChild { ident },
                 CmpMarkerTerrainRayCastSolid,

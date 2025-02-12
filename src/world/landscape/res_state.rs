@@ -5,6 +5,7 @@ use brg_core::prelude::{V2, V3};
 use super::dto::MeshIdent;
 use super::lod_quadtree::LodQuadTree;
 use super::material::TerrainMaterial;
+use super::sup_mesh::CreatedMesh;
 
 #[derive(Resource)]
 pub(crate) struct ResLandscapeState {
@@ -12,6 +13,7 @@ pub(crate) struct ResLandscapeState {
     pub(super) lod_last_origin:       V3,
     pub(super) lod_quad_tree:         LodQuadTree,
     pub(super) terrain:               Option<Entity>,
+    pub(super) created:               HashMap<MeshIdent, CreatedMesh>,
     pub(super) loaded:                HashMap<MeshIdent, Entity>,
     pub(super) meshes:                HashMap<MeshIdent, Handle<Mesh>>,
     pub(super) terrain_material:      Option<Handle<TerrainMaterial>>,
@@ -24,6 +26,7 @@ impl Default for ResLandscapeState {
             lod_last_origin:       V3::ZERO,
             lod_quad_tree:         LodQuadTree::default(),
             terrain:               None,
+            created:               HashMap::with_capacity(512),
             loaded:                HashMap::with_capacity(256),
             meshes:                HashMap::with_capacity(256),
             terrain_material:      None,

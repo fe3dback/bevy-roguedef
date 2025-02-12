@@ -26,11 +26,6 @@ pub fn sys_debug_quad_tree(ls: SupLandscape, mut gz: SupGizmos) {
         let bl = bl.with_height(height);
         let br = br.with_height(height);
 
-        let top = tl.mid_point(tr);
-        let right = tr.mid_point(br);
-        let bottom = bl.mid_point(br);
-        let left = tl.mid_point(bl);
-
         let color = match block.depth {
             0 => LIME_300,
             1 => GREEN_500,
@@ -52,7 +47,14 @@ pub fn sys_debug_quad_tree(ls: SupLandscape, mut gz: SupGizmos) {
 
         // draw transitions to lower level
         {
+            let height_offset = V3::new(0.0, 0.0, 3.0);
+            let top = tl.mid_point(tr) + height_offset;
+            let right = tr.mid_point(br) + height_offset;
+            let bottom = bl.mid_point(br) + height_offset;
+            let left = tl.mid_point(bl) + height_offset;
+
             let arrow_size = 3.0 * (block.depth + 1) as f32;
+
             let mut draw_side_trx = |side: Side| match side {
                 Side::Top => gz.arrow(
                     Point::Rel(top + V3::new(0.0, 5.0, 0.0)),
@@ -76,8 +78,7 @@ pub fn sys_debug_quad_tree(ls: SupLandscape, mut gz: SupGizmos) {
                 ),
             };
 
-            let transition = block.transitions();
-            match transition {
+            match block.transitions() {
                 NeighbourSizeTransition::None => {}
                 NeighbourSizeTransition::OneSide(side) => draw_side_trx(side),
                 NeighbourSizeTransition::TwoSides(side1, side2) => {

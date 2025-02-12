@@ -28,9 +28,10 @@ impl<'w, 's> SupLandscape<'w, 's> {
         {
             for block in deleted {
                 self.despawn_chunk(MeshIdent {
-                    pos:   block.position,
-                    size:  block.size,
-                    depth: block.depth,
+                    pos:        block.position,
+                    size:       block.size,
+                    depth:      block.depth,
+                    transition: block.transitions(),
                 });
             }
         }
@@ -38,14 +39,12 @@ impl<'w, 's> SupLandscape<'w, 's> {
         // spawn blocks
         {
             for block in created {
-                self.spawn_chunk(
-                    MeshIdent {
-                        pos:   block.position,
-                        size:  block.size,
-                        depth: block.depth,
-                    },
-                    block.transitions(),
-                );
+                self.spawn_chunk(MeshIdent {
+                    pos:        block.position,
+                    size:       block.size,
+                    depth:      block.depth,
+                    transition: block.transitions(),
+                });
             }
         }
     }
@@ -75,15 +74,15 @@ impl<'w, 's> SupLandscape<'w, 's> {
         let mut deleted: Vec<LodQuadLeaf> = Vec::with_capacity(32);
 
         {
-            for e in &next_set {
-                if !prev_set.contains(e) {
-                    created.push(*e);
+            for n in &next_set {
+                if !prev_set.contains(n) {
+                    created.push(*n);
                 }
             }
 
-            for e in &prev_set {
-                if !next_set.contains(e) {
-                    deleted.push(*e);
+            for p in &prev_set {
+                if !next_set.contains(p) {
+                    deleted.push(*p);
                 }
             }
         }

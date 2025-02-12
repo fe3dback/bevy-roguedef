@@ -31,6 +31,9 @@ pub enum GameSystemSet {
     // draw editor only egui panels
     EDITOR_ONLY__DrawEditorEguiPanels,
 
+    // handle debug input tools (for editor, and in-game debug). (F2 - rendermode, F12 - fps, etc..)
+    Debug_Input,
+
     // -----------------
     // Initialize
     // -----------------

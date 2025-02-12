@@ -15,9 +15,9 @@ impl SupGizmos<'_, '_> {
         iso.translation = match center {
             Point::Abs(p) => p.xyh().as_3d().into(),
             Point::Rel(p) => {
-                let p2d = p.xyh().xy();
                 let mut p = p.xyh();
-                p.h = self.heightmap.height_at_pos(p2d);
+                let p2d = p.xy();
+                p.h = p.h + self.heightmap.height_at_pos(p2d);
                 p.as_3d().into()
             }
         };

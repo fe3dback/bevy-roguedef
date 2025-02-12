@@ -6,6 +6,7 @@ pub mod common;
 mod coord;
 mod gizmos;
 mod heightmap;
+mod rendermode;
 pub mod sound;
 mod transform;
 
@@ -26,6 +27,7 @@ impl Plugin for BrgFundamentalPlugin {
     fn build(&self, app: &mut App) {
         app
             //
+            .add_plugins(rendermode::plug::Plug)
             .add_plugins(transform::plug::Plug)
             .add_plugins(heightmap::plug::Plug)
             .add_plugins(coord::plug::Plug)

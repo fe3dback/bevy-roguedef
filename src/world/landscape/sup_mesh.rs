@@ -7,14 +7,14 @@ use super::dto::MeshIdent;
 use super::material::TerrainMaterial;
 use super::sup::SupLandscape;
 
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub(super) enum NeighbourSizeTransition {
     None,
     OneSide(Side),
     TwoSides(Side, Side),
 }
 
-#[derive(Copy, Clone, Eq, PartialEq, Debug)]
+#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub(super) enum Side {
     Top    = 0,
     Bottom = 1,
@@ -22,7 +22,7 @@ pub(super) enum Side {
     Right  = 3,
 }
 
-#[derive(Copy, Clone, Eq, PartialEq, Debug)]
+#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 enum Corner {
     TopLeft,
     TopRight,
@@ -55,15 +55,11 @@ impl<'w, 's> SupLandscape<'w, 's> {
         )));
     }
 
-    pub(super) fn create_mesh(
-        &mut self,
-        ident: MeshIdent,
-        transitions: NeighbourSizeTransition,
-    ) -> CreatedMesh {
+    pub(super) fn create_mesh(&mut self, ident: MeshIdent) -> CreatedMesh {
         let key_verts_cnt = (Chunk::size() + 1) * (Chunk::size() + 1);
         let key_indexes_cnt = (Chunk::size() * Chunk::size()) * 2 * 3; // faces * 2D * triangles_per_face * vertices_per_triangle
 
-        let additional_verts_cnt = match transitions {
+        let additional_verts_cnt = match ident.transition {
             NeighbourSizeTransition::None => 0,
             NeighbourSizeTransition::OneSide(_) => Chunk::size(),
             NeighbourSizeTransition::TwoSides(_, _) => {
@@ -75,7 +71,7 @@ impl<'w, 's> SupLandscape<'w, 's> {
                 side_faces + corner_additional_verts
             }
         };
-        let additional_indexes_cnt = match transitions {
+        let additional_indexes_cnt = match ident.transition {
             NeighbourSizeTransition::None => 0,
             NeighbourSizeTransition::OneSide(_) => Chunk::size() * 3, // +1 triangle per face
             NeighbourSizeTransition::TwoSides(_, _) => {
@@ -198,7 +194,7 @@ impl<'w, 's> SupLandscape<'w, 's> {
 
         // populate additional verts
         {
-            match transitions {
+            match ident.transition {
                 NeighbourSizeTransition::None => {}
                 NeighbourSizeTransition::OneSide(side) => {
                     for face in 0..Chunk::size() {
@@ -302,7 +298,7 @@ impl<'w, 's> SupLandscape<'w, 's> {
 
         // indexes
         let is_basic_face = |v_x, v_y| -> bool {
-            match transitions {
+            match ident.transition {
                 NeighbourSizeTransition::None => true,
                 NeighbourSizeTransition::OneSide(side) => !is_face_on_side(side, v_x, v_y),
                 NeighbourSizeTransition::TwoSides(side1, side2) => {
@@ -520,7 +516,7 @@ impl<'w, 's> SupLandscape<'w, 's> {
                     let mid_s1 = additional_idx_start_side_1 + additional_idx_side1;
                     let mid_s2 = additional_idx_start_side_2 + additional_idx_side2;
 
-                    match transitions {
+                    match ident.transition {
                         NeighbourSizeTransition::None => {}
                         NeighbourSizeTransition::OneSide(side) => {
                             populate_transition_indexes(
