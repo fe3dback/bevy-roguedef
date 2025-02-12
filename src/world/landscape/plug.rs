@@ -9,22 +9,16 @@ use brg_scene::prelude::{
     SceneFeature,
 };
 
-use super::evt_actor_move_in_chunk::EvtActorMoveInChunk;
+use super::evt_actor_move_in_chunk::EvtLodPoeMovedIntoNewChunk;
 use super::material::TerrainMaterial;
-use super::res_actor_tracker::ResActorTracker;
 use super::res_state::ResLandscapeState;
-use super::sys_actor_tracker::{
-    sys_on_add_tracker_component,
-    sys_on_remove_tracker_component,
-    sys_track_actors,
-};
 use super::sys_debug_quad_tree::sys_debug_quad_tree;
 use super::sys_spawn_terrain_root::{
     sys_despawn_terrain_root,
-    sys_spawn_chunks_on_actor_moves,
-    sys_spawn_initial_chunks,
+    sys_respawn_chunks_when_lod_poe_changed,
     sys_spawn_terrain_root,
 };
+use super::sys_update_lod_poe::sys_update_lod_poe;
 
 pub struct Plug;
 
@@ -32,8 +26,7 @@ impl Plugin for Plug {
     fn build(&self, app: &mut App) {
         app
             .insert_resource(ResLandscapeState::default())
-            .insert_resource(ResActorTracker::default())
-            .add_event::<EvtActorMoveInChunk>()
+            .add_event::<EvtLodPoeMovedIntoNewChunk>()
         //-
         ;
 
@@ -43,16 +36,10 @@ impl Plugin for Plug {
                 .add_plugins(MaterialPlugin::<TerrainMaterial>::default())
                 //
                 .add_systems(OnEnter(Loaded), sys_spawn_terrain_root.in_set(GameSystemSet::SpawnWorldTerrain))
-                .add_systems(Update, (
-                    sys_spawn_initial_chunks,
-                    sys_spawn_chunks_on_actor_moves,
-                ).in_set(GameSystemSet::SpawnWorldTerrain))
-                .add_systems(Update, sys_track_actors.in_set(GameSystemSet::NOT_ON_PAUSE__UpdateGameplayCaches))
+                .add_systems(Update, sys_respawn_chunks_when_lod_poe_changed.in_set(GameSystemSet::SpawnWorldTerrain))
+                .add_systems(Update, sys_update_lod_poe.in_set(GameSystemSet::NOT_ON_PAUSE__UpdateGameplayCaches))
                 .add_systems(Update, sys_debug_quad_tree.in_set(GameSystemSet::GizmosDraw).run_if(has_editor_feature(EditorFeature::LandscapeHeightmap)))
                 .add_systems(OnExit(Loaded), sys_despawn_terrain_root.in_set(GameSystemSet::NOT_ON_PAUSE__DespawnObjects))
-                // 
-                .add_observer(sys_on_add_tracker_component)
-                .add_observer(sys_on_remove_tracker_component)
             //-
             ;
         }

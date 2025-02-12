@@ -11,11 +11,15 @@
 @group(2) @binding(3) var texture_grass: texture_2d<f32>;
 @group(2) @binding(4) var texture_grass_sampler: sampler;
 
+@group(2) @binding(5) var texture_rock: texture_2d<f32>;
+@group(2) @binding(6) var texture_rock_sampler: sampler;
+
 // consts
 const COLOR_VARIANT_SCALE_SM = 25.0;
 const COLOR_VARIANT_SCALE_BIG = 100.0;
 
-const TEX_GRASS_UV_SCALE = 3.0;
+const TEX_GRASS_UV_SCALE = 5.0;
+const TEX_ROCK_UV_SCALE = 6.0;
 
 
 fn copy_color_hue(src: vec3<f32>, dst: vec3<f32>) -> vec3<f32> {
@@ -55,8 +59,11 @@ fn albedo_grass(uv: vec2<f32>, world_color: vec3<f32>, color_variation_mask: f32
 }
 
 fn albedo_cliffs(uv: vec2<f32>, world_color: vec3<f32>, color_variation_mask: f32) -> vec3<f32> {
-    // todo
-    return world_color * color_variation_mask;
+    let tex_base = textureSample(texture_rock, texture_rock_sampler, uv * TEX_ROCK_UV_SCALE);
+    let colored = copy_color_hue(tex_base.rgb, world_color);
+    let variation = mix(colored, world_color, color_variation_mask);
+
+    return variation.rgb;
 }
 
 @fragment

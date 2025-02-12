@@ -1639,6 +1639,7 @@ dependencies = [
 name = "brg_fundamental"
 version = "0.1.0"
 dependencies = [
+ "auto-impl-ops",
  "bevy",
  "brg_core",
  "brg_scene",

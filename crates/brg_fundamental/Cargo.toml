@@ -8,3 +8,4 @@ bevy = {workspace = true}
 brg_core = {workspace = true}
 brg_scene = {workspace = true}
 strum = {workspace = true}
+auto-impl-ops = {workspace = true}

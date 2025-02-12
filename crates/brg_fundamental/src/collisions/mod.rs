@@ -2,6 +2,7 @@ mod cmp_volume;
 mod dto;
 pub mod plug;
 mod sup_raycast;
+mod sys_show_debug_aabb;
 mod sys_show_debug_collisions;
 
 pub mod prelude {

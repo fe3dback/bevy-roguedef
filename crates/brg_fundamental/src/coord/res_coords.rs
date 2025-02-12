@@ -1,10 +1,12 @@
 use bevy::prelude::{ReflectResource, Resource};
 use bevy::reflect::Reflect;
-use brg_core::prelude::V2;
+use brg_core::prelude::{V2, V3};
 
 #[derive(Resource, Default, Reflect)]
 #[reflect(Resource)]
 pub struct ResCoords {
+    pub camera_origin:    V3,
+    pub camera_target:    V3,
     pub screen_world_box: CoordsArea,
     pub screen_ui_pos:    CoordsArea,
     pub screen_ui_width:  u32,

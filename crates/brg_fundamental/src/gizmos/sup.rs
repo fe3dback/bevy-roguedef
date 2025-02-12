@@ -7,7 +7,7 @@ use crate::prelude::SupHeightmap;
 pub const ISO_IDEN: Isometry3d = Isometry3d::IDENTITY;
 
 #[derive(SystemParam)]
-pub struct GizmosX<'w, 's> {
+pub struct SupGizmos<'w, 's> {
     pub(super) gz: Gizmos<'w, 's>,
 
     pub heightmap: SupHeightmap<'w>,

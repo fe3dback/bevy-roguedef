@@ -24,7 +24,6 @@ use brg_scene::prelude::{Loaded, SceneFeature, SupFeatures};
 use super::cmp::{CmpCameraAutoFollowSettings, CmpMarkerCameraActive};
 use super::enums::CmpCameraType;
 use super::res::ResCameraSettings;
-use crate::world::landscape::cmp_actor_initiator::CmpLandscapeLoadActorInitiator;
 
 pub fn spawn_default_loading_camera(mut cmd: Commands) {
     cmd.spawn((
@@ -51,7 +50,6 @@ pub fn spawn_cameras(
                 is_active: settings.active == CmpCameraType::EditorFly,
                 ..default()
             },
-            CmpLandscapeLoadActorInitiator,
             CmpTransform2D {
                 // actual pos/rot will be in bevy Transform component below
                 master: TransformMasterSlave::BevyTransformIsMaster,
@@ -74,7 +72,6 @@ pub fn spawn_cameras(
                 is_active: settings.active == CmpCameraType::EditorTopDownOrthographic,
                 ..default()
             },
-            CmpLandscapeLoadActorInitiator,
             Projection::Orthographic(OrthographicProjection {
                 near: 0.1,
                 far: 100.0,

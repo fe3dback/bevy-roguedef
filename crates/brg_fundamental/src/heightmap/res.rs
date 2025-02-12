@@ -10,5 +10,5 @@ pub struct ResLandscape {
     pub volume: u32, // z axis
     pub offset: Tile,
     #[reflect(ignore)]
-    pub values: Vec<u8>,
+    pub values: Vec<f32>,
 }

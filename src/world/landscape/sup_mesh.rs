@@ -8,14 +8,14 @@ use super::material::TerrainMaterial;
 use super::sup::SupLandscape;
 
 #[derive(Copy, Clone, Eq, PartialEq)]
-pub enum NeighbourSizeTransition {
+pub(super) enum NeighbourSizeTransition {
     None,
     OneSide(Side),
     TwoSides(Side, Side),
 }
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
-pub enum Side {
+pub(super) enum Side {
     Top    = 0,
     Bottom = 1,
     Left   = 2,
@@ -35,6 +35,12 @@ enum FaceType {
     Side(Side, u16),          // (side_type, add_ind)
 }
 
+pub(super) struct CreatedMesh {
+    pub(super) handle:         Handle<Mesh>,
+    pub(super) min_abs_height: f32,
+    pub(super) max_abs_height: f32,
+}
+
 impl<'w, 's> SupLandscape<'w, 's> {
     pub(super) fn ensure_terrain_material_exist(&mut self) {
         if self.state.terrain_material.is_some() {
@@ -45,6 +51,7 @@ impl<'w, 's> SupLandscape<'w, 's> {
             self.heightmap.world_size(),
             self.assets.landscape().texture_world_albedo.clone(),
             self.assets.landscape().texture_ground_grass.clone(),
+            self.assets.landscape().texture_ground_rock.clone(),
         )));
     }
 
@@ -52,7 +59,7 @@ impl<'w, 's> SupLandscape<'w, 's> {
         &mut self,
         ident: MeshIdent,
         transitions: NeighbourSizeTransition,
-    ) -> Handle<Mesh> {
+    ) -> CreatedMesh {
         let key_verts_cnt = (Chunk::size() + 1) * (Chunk::size() + 1);
         let key_indexes_cnt = (Chunk::size() * Chunk::size()) * 2 * 3; // faces * 2D * triangles_per_face * vertices_per_triangle
 
@@ -91,11 +98,21 @@ impl<'w, 's> SupLandscape<'w, 's> {
         let mut indices: Vec<u16> = Vec::with_capacity(indexes_count);
 
         let scale = 2u32.pow(ident.depth as u32) as f32;
+        let mut min_abs_height = u16::MAX as f32;
+        let mut max_abs_height = 0.0;
 
         let mut push_vert = |rel_pos: V2, abs_pos: V2| {
             // local pos
             {
                 let abs_height = self.heightmap.height_at_pos(abs_pos);
+
+                if abs_height < min_abs_height {
+                    min_abs_height = abs_height;
+                }
+                if abs_height > max_abs_height {
+                    max_abs_height = abs_height;
+                }
+
                 positions.push([rel_pos.x, abs_height, rel_pos.y]);
             }
 
@@ -557,7 +574,7 @@ impl<'w, 's> SupLandscape<'w, 's> {
 
         let mesh = Mesh::new(
             PrimitiveTopology::TriangleList,
-            RenderAssetUsages::RENDER_WORLD,
+            RenderAssetUsages::default(), // we need MAIN_WORLD + RENDER_WORLD (main required for raycasting over landscape)
         )
         .with_inserted_attribute(
             Mesh::ATTRIBUTE_POSITION,
@@ -570,18 +587,22 @@ impl<'w, 's> SupLandscape<'w, 's> {
             VertexAttributeValues::Float32x3(normals),
         );
 
-        match self.state.meshes.get(&ident) {
-            Some(exist_handle) => {
-                // replace already exist mesh
-                self.assets_meshes.insert(exist_handle, mesh);
-                exist_handle.clone()
-            }
-            None => {
-                // create new
-                let new_handle = self.assets_meshes.add(mesh);
-                self.state.meshes.insert(ident, new_handle.clone());
-                new_handle
-            }
+        CreatedMesh {
+            handle: match self.state.meshes.get(&ident) {
+                Some(exist_handle) => {
+                    // replace already exist mesh
+                    self.assets_meshes.insert(exist_handle, mesh);
+                    exist_handle.clone()
+                }
+                None => {
+                    // create new
+                    let new_handle = self.assets_meshes.add(mesh);
+                    self.state.meshes.insert(ident, new_handle.clone());
+                    new_handle
+                }
+            },
+            min_abs_height,
+            max_abs_height,
         }
     }
 }

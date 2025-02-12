@@ -1,5 +1,6 @@
 use bevy::core::Name;
 use bevy::log::warn;
+use bevy::math::bounding::Aabb3d;
 use bevy::prelude::{
     default,
     BuildChildren,
@@ -8,8 +9,9 @@ use bevy::prelude::{
     MeshMaterial3d,
     Visibility,
 };
-use brg_core::prelude::V2;
-use brg_fundamental::prelude::{CmpTransform2D, TransformHeightKind};
+use bevy::render::primitives::Aabb;
+use brg_core::prelude::{Chunk, V2, V3};
+use brg_fundamental::prelude::{CmpMarkerTerrainRayCastSolid, CmpTransform2D, TransformHeightKind};
 
 use super::cmp::{CmpLandscapeChild, CmpLandscapeRoot};
 use super::dto::MeshIdent;
@@ -43,11 +45,15 @@ impl<'w, 's> SupLandscape<'w, 's> {
         }
     }
 
-    pub(super) fn update_load_quadtree(&mut self, point_of_interest: V2) {
+    pub(super) fn update_load_quadtree(&mut self, point_of_interest: V2, dist_to_poe: f32) {
         let size = self.heightmap.world_size();
 
-        self.state.lod_quad_tree =
-            LodQuadTree::new(V2::ZERO - (size / 2.0), size, point_of_interest);
+        self.state.lod_quad_tree = LodQuadTree::new(
+            V2::ZERO - (size / 2.0),
+            size,
+            point_of_interest,
+            dist_to_poe,
+        );
     }
 
     pub(super) fn spawn_chunk(&mut self, ident: MeshIdent, transition: NeighbourSizeTransition) {
@@ -74,6 +80,13 @@ impl<'w, 's> SupLandscape<'w, 's> {
             return;
         };
 
+        let bounding_box_tl = V3::new(0.0, 0.0, mesh.min_abs_height);
+        let bounding_box_br = V3::new(
+            bounding_box_tl.x + ident.size.x,
+            bounding_box_tl.y + ident.size.y,
+            mesh.max_abs_height,
+        );
+
         // spawn
         let ent = self
             .cmd
@@ -89,9 +102,11 @@ impl<'w, 's> SupLandscape<'w, 's> {
                     ..default()
                 },
                 Visibility::Visible,
-                Mesh3d(mesh),
+                Mesh3d(mesh.handle),
                 MeshMaterial3d(material.clone()),
                 CmpLandscapeChild { ident },
+                CmpMarkerTerrainRayCastSolid,
+                Aabb::from_min_max(bounding_box_tl.as_3d(), bounding_box_br.as_3d()),
             ))
             .id();
 

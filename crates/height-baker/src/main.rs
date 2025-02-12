@@ -4,6 +4,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 use anyhow::{bail, Context, Result};
+use binary_rw::{BinaryWriter, Endian, MemoryStream};
 use brg_core::prelude::{remap, Block, Chunk, Tile};
 use exr::prelude::{FlatSamples, IntegerBounds};
 
@@ -38,7 +39,7 @@ impl MapSize {
     }
 }
 
-const MAP_SIZE: MapSize = MapSize::S1024;
+const MAP_SIZE: MapSize = MapSize::S2048;
 const MAP_NAME: &str = "example";
 
 fn main() -> Result<()> {
@@ -57,26 +58,26 @@ fn main() -> Result<()> {
     println!("[LOADED] settings: {:?}", importer);
 
     // build areas
-    let mut data: Vec<u8> = vec![0; (importer.width * importer.height) as usize];
+    let mut data = MemoryStream::from(vec![0; ((importer.width * importer.height) * 2) as usize]);
+    let mut writer = BinaryWriter::new(&mut data, Endian::Little);
 
-    let mut ind: usize = 0;
     for y in 0..importer.height {
         for x in 0..importer.width {
             let tile = Tile::at(x as i32, y as i32);
             let height = importer.sample(tile);
 
-            data[ind] = (height * 255.0) as u8;
-            ind += 1;
+            writer.write_f32(height)?;
         }
     }
 
     // write data to bevy output
     {
-        let out_path = out_directory.join("lay0.heightmap.r8");
+        let out_path = out_directory.join("lay0.heightmap.r32");
         fs::create_dir_all(&out_path.parent().unwrap()).context("creating map directories")?;
 
         let mut file = File::create(out_path).context("failed create area file")?;
-        file.write_all(&data).context("writing bytes")?;
+        let content: Vec<u8> = data.into();
+        file.write_all(&content).context("writing bytes")?;
     }
 
     Ok(())

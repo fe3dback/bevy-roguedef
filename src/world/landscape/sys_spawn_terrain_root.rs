@@ -1,41 +1,27 @@
-use bevy::prelude::{Added, EventReader, Query, With};
-use brg_fundamental::prelude::CmpTransform2D;
+use bevy::prelude::EventReader;
+use brg_core::prelude::{BlockPosition, V2};
 
-use super::cmp_actor_initiator::CmpLandscapeLoadActorInitiator;
-use super::evt_actor_move_in_chunk::EvtActorMoveInChunk;
+use super::evt_actor_move_in_chunk::EvtLodPoeMovedIntoNewChunk;
 use super::sup::SupLandscape;
 
 pub fn sys_spawn_terrain_root(mut ls: SupLandscape) {
     ls.spawn_terrain();
+    ls.ensure_chunks_is_loaded_around_poe(V2::ZERO, 0.0);
 }
 
 pub fn sys_despawn_terrain_root(mut ls: SupLandscape) {
     ls.despawn_terrain();
 }
 
-pub fn sys_spawn_initial_chunks(
+pub fn sys_respawn_chunks_when_lod_poe_changed(
     mut ls: SupLandscape,
-    entities: Query<&CmpTransform2D, Added<CmpLandscapeLoadActorInitiator>>,
+    mut reader: EventReader<EvtLodPoeMovedIntoNewChunk>,
 ) {
-    if let Some(trm) = entities.iter().last() {
-        ls.ensure_chunks_is_loaded_around_actors(trm.position);
-    }
-}
-
-pub fn sys_spawn_chunks_on_actor_moves(
-    mut ls: SupLandscape,
-    mut reader: EventReader<EvtActorMoveInChunk>,
-    entities: Query<&CmpTransform2D, With<CmpLandscapeLoadActorInitiator>>,
-) {
-    // if we have at least one event, this mean
-    // that any active actor move to some new chunk
-    // we don't care about details, and can update state for all of them
     let ev = reader.read().last();
     if ev.is_none() {
         return;
     }
 
-    if let Some(trm) = entities.iter().last() {
-        ls.ensure_chunks_is_loaded_around_actors(trm.position);
-    }
+    let ev = ev.unwrap();
+    ls.ensure_chunks_is_loaded_around_poe(ev.chunk_next.position_center(), ev.dist_to_poe);
 }

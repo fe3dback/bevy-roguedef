@@ -2,21 +2,21 @@ use bevy::prelude::{Component, Reflect, Transform};
 use brg_core::prelude::types::{Angle, Meter};
 use brg_core::prelude::{V2, V3};
 
-#[derive(Default, Reflect)]
+#[derive(Default, Reflect, Debug)]
 pub enum TransformRotationKind {
     #[default]
     NormalYUp,
     YPointOnPosZ,
 }
 
-#[derive(Default, Reflect)]
+#[derive(Default, Reflect, Debug)]
 pub enum TransformHeightKind {
     #[default]
     AboveTerrain,
     Absolute,
 }
 
-#[derive(Default, Reflect)]
+#[derive(Default, Reflect, Debug)]
 pub enum TransformMasterSlave {
     #[default]
     /// map all trm values into bevy transform component
@@ -26,7 +26,7 @@ pub enum TransformMasterSlave {
     BevyTransformIsMaster,
 }
 
-#[derive(Component, Reflect, Default)]
+#[derive(Component, Reflect, Default, Debug)]
 #[require(Transform)]
 pub struct CmpTransform2D {
     pub master:               TransformMasterSlave,

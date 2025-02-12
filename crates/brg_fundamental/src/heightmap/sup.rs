@@ -32,7 +32,7 @@ impl<'w> SupHeightmap<'w> {
             return 0.0;
         }
 
-        (self.landscape.values[ind] as f32) / 255.0
+        self.landscape.values[ind]
     }
 
     pub fn height_at_pos(&mut self, pos: V2) -> f32 {

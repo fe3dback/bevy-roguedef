@@ -6,10 +6,14 @@ use super::lod_quadtree::LodQuadLeaf;
 use super::sup::SupLandscape;
 
 impl<'w, 's> SupLandscape<'w, 's> {
-    pub(super) fn ensure_chunks_is_loaded_around_actors(&mut self, point_of_interest: V2) {
+    pub(super) fn ensure_chunks_is_loaded_around_poe(
+        &mut self,
+        point_of_interest: V2,
+        dist_to_poe: f32,
+    ) {
         // update indexes
         let prev_quad = self.state.lod_quad_tree.leafs();
-        self.update_load_quadtree(point_of_interest);
+        self.update_load_quadtree(point_of_interest, dist_to_poe);
         let next_quad = self.state.lod_quad_tree.leafs();
 
         // find changes

@@ -139,7 +139,7 @@ enum Quad {
 }
 
 impl LodQuadTree {
-    pub fn new(pos: V2, size: V2, poi: V2) -> Self {
+    pub fn new(pos: V2, size: V2, poi: V2, dist_to_poe: f32) -> Self {
         if size == V2::ZERO {
             return LodQuadTree::default();
         }
@@ -177,6 +177,11 @@ impl LodQuadTree {
             child: None,
         };
 
+        let mut min_size = Chunk::size_m() * 2.0;
+        while dist_to_poe > min_size.x {
+            min_size *= 1.5;
+        }
+
         for (ind, center) in child_centers.into_iter().enumerate() {
             let child_quad = match ind {
                 0 => Quad::TL,
@@ -191,11 +196,13 @@ impl LodQuadTree {
             childs[ind].size = quart * 2.0;
             childs[ind].depth = depth - 1;
 
-            if center.distance(poi) < max_dist
-                && size.x > Chunk::size_m().x * 2.0
-                && size.y > Chunk::size_m().y * 2.0
-            {
-                childs[ind] = Box::new(Self::new(childs[ind].pos, childs[ind].size, poi));
+            if center.distance(poi) < max_dist && size.x > min_size.x && size.y > min_size.y {
+                childs[ind] = Box::new(Self::new(
+                    childs[ind].pos,
+                    childs[ind].size,
+                    poi,
+                    dist_to_poe,
+                ));
                 len += childs[ind].len;
             }
         }

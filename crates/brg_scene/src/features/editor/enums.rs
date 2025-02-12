@@ -5,6 +5,8 @@ pub enum EditorFeature {
     GizmosOriginAxis,
     GizmosGridTiles,
     GizmosWorldMouse,
+    GizmosCameraRay,
+    VolumesAabb,
     VolumesCollision,
     VolumesProjectile,
     LandscapeHeightmap,

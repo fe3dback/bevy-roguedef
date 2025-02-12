@@ -3,6 +3,7 @@ use std::ops::{AddAssign, *};
 use bevy::prelude::{Reflect, Vec3};
 
 use crate::prelude::types::Meter;
+use crate::prelude::V2;
 
 // Internal game vector3D struct with inverted Y axis
 // and some helper functions to transform game-space vectors
@@ -56,8 +57,16 @@ impl V3 {
         }
     }
 
+    // --- getters
+
+    #[inline(always)]
+    pub fn xy(&self) -> V2 {
+        V2::new(self.x, self.y)
+    }
+
     // --- simple math
 
+    #[inline(always)]
     pub fn mid_point(&self, other: V3) -> V3 {
         V3::new(
             (other.x - self.x) / 2.0 + self.x,

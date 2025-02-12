@@ -19,6 +19,7 @@ pub struct Landscape {
     pub level:                Handle<AssetLevel>,
     pub texture_world_albedo: Handle<Image>,
     pub texture_ground_grass: Handle<Image>,
+    pub texture_ground_rock:  Handle<Image>,
 }
 
 impl Default for ResAssetsStorage {

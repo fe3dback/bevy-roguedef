@@ -14,6 +14,10 @@ pub struct TerrainMaterial {
     #[texture(3)]
     #[sampler(4)]
     pub texture_grass: Handle<Image>,
+
+    #[texture(5)]
+    #[sampler(6)]
+    pub texture_rock: Handle<Image>,
     // #[texture(0, dimension = "2d_array")]
     // #[sampler(1)]
     // pub textures: Handle<Image>,
@@ -24,11 +28,17 @@ pub struct TerrainMaterial {
 }
 
 impl TerrainMaterial {
-    pub fn new(map_size: V2, world_albedo: Handle<Image>, texture_grass: Handle<Image>) -> Self {
+    pub fn new(
+        map_size: V2,
+        world_albedo: Handle<Image>,
+        texture_grass: Handle<Image>,
+        texture_rock: Handle<Image>,
+    ) -> Self {
         Self {
             map_size: map_size.as_2d_ui(),
             world_albedo,
             texture_grass,
+            texture_rock,
             // color: Color::WHITE,
             // max_height: TERRAIN_MAX_HEIGHT,
             // textures: textures_2d_arr,

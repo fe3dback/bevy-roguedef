@@ -1,18 +1,18 @@
-use bevy::color::palettes::tailwind::{BLUE_900, GREEN_900, ORANGE_800, RED_900, SKY_300};
+use bevy::color::palettes::tailwind::{RED_900, SKY_300, SKY_950};
 use bevy::color::Color;
 use bevy::prelude::{Mix, Query, Res, With};
 use brg_core::prelude::{BlockPosition, Range, Tile, VecExt, V2};
 
 use super::res::ResLandscape;
-use crate::prelude::{CmpMarkerCameraTarget, CmpTransform2D, GizmosX};
+use crate::prelude::{CmpMarkerCameraTarget, CmpTransform2D, Point, SupGizmos};
 
 pub fn editor_draw_heightmap_around_player(
-    mut gz: GizmosX,
+    mut gz: SupGizmos,
     cam_target_query: Query<&CmpTransform2D, With<CmpMarkerCameraTarget>>,
     land: Res<ResLandscape>,
 ) {
-    let half_w = land.width as f32 / 2.0 + 1.0;
-    let half_h = land.height as f32 / 2.0 + 1.0;
+    let half_w = land.width as f32 / 2.0;
+    let half_h = land.height as f32 / 2.0;
     let z = land.volume as f32;
 
     let tl = V2::new(-half_w, -half_h);
@@ -23,22 +23,54 @@ pub fn editor_draw_heightmap_around_player(
     // draw bounding box
     {
         // lower
-        gz.line(tl, tr, RED_900);
-        gz.line(tr, br, ORANGE_800);
-        gz.line(br, bl, BLUE_900);
-        gz.line(bl, tl, GREEN_900);
+        gz.line(Point::Abs(tl), Point::Abs(tr), SKY_950);
+        gz.line(Point::Abs(tr), Point::Abs(br), SKY_950);
+        gz.line(Point::Abs(br), Point::Abs(bl), SKY_950);
+        gz.line(Point::Abs(bl), Point::Abs(tl), SKY_950);
 
         // upper
-        gz.line_custom_height(tl.with_height(z), tr.with_height(z), RED_900);
-        gz.line_custom_height(tr.with_height(z), br.with_height(z), ORANGE_800);
-        gz.line_custom_height(br.with_height(z), bl.with_height(z), BLUE_900);
-        gz.line_custom_height(bl.with_height(z), tl.with_height(z), GREEN_900);
+        gz.line(
+            Point::Abs(tl.with_height(z)),
+            Point::Abs(tr.with_height(z)),
+            SKY_950,
+        );
+        gz.line(
+            Point::Abs(tr.with_height(z)),
+            Point::Abs(br.with_height(z)),
+            SKY_950,
+        );
+        gz.line(
+            Point::Abs(br.with_height(z)),
+            Point::Abs(bl.with_height(z)),
+            SKY_950,
+        );
+        gz.line(
+            Point::Abs(bl.with_height(z)),
+            Point::Abs(tl.with_height(z)),
+            SKY_950,
+        );
 
         // bottom to up lines
-        gz.line_custom_height(tl.with_height(0.0), tl.with_height(z), RED_900);
-        gz.line_custom_height(tr.with_height(0.0), tr.with_height(z), ORANGE_800);
-        gz.line_custom_height(br.with_height(0.0), br.with_height(z), BLUE_900);
-        gz.line_custom_height(bl.with_height(0.0), bl.with_height(z), GREEN_900);
+        gz.line(
+            Point::Abs(tl.with_height(0.0)),
+            Point::Abs(tl.with_height(z)),
+            SKY_300,
+        );
+        gz.line(
+            Point::Abs(tr.with_height(0.0)),
+            Point::Abs(tr.with_height(z)),
+            SKY_950,
+        );
+        gz.line(
+            Point::Abs(br.with_height(0.0)),
+            Point::Abs(br.with_height(z)),
+            SKY_950,
+        );
+        gz.line(
+            Point::Abs(bl.with_height(0.0)),
+            Point::Abs(bl.with_height(z)),
+            SKY_950,
+        );
     }
 
     // draw height points
@@ -78,6 +110,9 @@ pub fn editor_draw_heightmap_around_player(
         let height_percent = gz.heightmap.height_at_pos(tile.position_tl()) / land.volume as f32;
         let height_color = Color::mix(&color_low.into(), &color_high.into(), height_percent);
 
-        gz.point_custom_height(tile.position_tl().with_height(0.05), height_color);
+        gz.point(
+            Point::Rel(tile.position_tl().with_height(0.05)),
+            height_color,
+        );
     }
 }
